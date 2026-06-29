@@ -1,8 +1,9 @@
 package com.zenbank.cilm.repository;
 
-import com.zenbank.cilm.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.zenbank.cilm.entity.Customer;
 
 import java.util.Optional;
 
