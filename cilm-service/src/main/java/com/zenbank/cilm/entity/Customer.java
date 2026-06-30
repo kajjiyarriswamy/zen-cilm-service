@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
 
 import java.time.LocalDate;
 
@@ -50,10 +51,10 @@ public class Customer {
     @Column(nullable = false, name = "Customer Category")
     private String customerCategory;
 
-    @Column(nullable = false, name = "Pan Number")
+    @Column(nullable = false, name = "Pan Number",unique = true)
     private String panNumber;
 
-    @Column(nullable = false, name = "Aadhaar Number")
+    @Column(nullable = false, name = "Aadhaar Number", unique = true)
     private String aadhaarNumber;
 
     @Column(nullable = false, name = "Nationality")
@@ -76,11 +77,15 @@ public class Customer {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String phoneNumber;
 
     @Column(nullable = false)
     private String accountNumber;
+
+    @Column(nullable = false, name = "Age")
+    @Min(value = 18, message = "Age must be greater than 18")
+    private String age;
 
     public Customer() {
     }
