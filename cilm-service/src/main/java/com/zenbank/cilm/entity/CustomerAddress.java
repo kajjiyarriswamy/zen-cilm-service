@@ -54,7 +54,7 @@ public class CustomerAddress {
     private String postalCode;
     
     @Column(name = "is_primary", nullable = false)
-    private boolean isPrimary ;
+    private Boolean isPrimary ;
 
 	public CustomerAddress() {
 		super();
@@ -62,7 +62,7 @@ public class CustomerAddress {
 
 	public CustomerAddress(Long addressId, Customer customer, String addressType, String doorDumber, String street,
 			String area, String city, String district, String state, String country, String postalCode,
-			boolean isPrimary) {
+			Boolean isPrimary) {
 		super();
 		this.addressId = addressId;
 		this.customer = customer;
@@ -167,12 +167,12 @@ public class CustomerAddress {
 		this.postalCode = postalCode;
 	}
 
-	public boolean isPrimary() {
+	public Boolean isPrimary() {
 		return isPrimary;
 	}
 
-	public void setPrimary(boolean isPrimary) {
+	public void setPrimary(Boolean isPrimary) {
 		this.isPrimary = isPrimary;
 	}
-    
+
 }
