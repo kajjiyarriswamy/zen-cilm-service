@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -25,6 +26,23 @@ public class CustomerService {
     }
 
     public CustomerResponseDto createCustomer(CustomerRequestDto requestDto) {
+        if (customerRepository.existsByPanNumber(requestDto.getPanNumber())) {
+            throw new IllegalArgumentException("PAN Number already exists.");
+        }
+
+        if (customerRepository.existsByAadhaarNumber(requestDto.getAadhaarNumber())) {
+            throw new IllegalArgumentException("Aadhaar Number already exists.");
+        }
+
+        if (customerRepository.existsByPhoneNumber(requestDto.getPhoneNumber())) {
+            throw new IllegalArgumentException("Mobile Number already exists.");
+        }
+
+        int age = Period.between(requestDto.getDateOfBirth(), LocalDate.now()).getYears();
+
+        if (age < 18) {
+            throw new IllegalArgumentException("Customer age should be 18 years or above.");
+        }
         Optional<Customer> existing = customerRepository.findByEmail(requestDto.getEmail());
         if (existing.isPresent()) {
             throw new IllegalArgumentException("Customer with this email already exists");
