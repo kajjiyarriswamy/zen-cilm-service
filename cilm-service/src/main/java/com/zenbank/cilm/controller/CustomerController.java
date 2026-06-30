@@ -1,7 +1,8 @@
 package com.zenbank.cilm.controller;
 
-import com.zenbank.cilm.dto.CustomerRequestDto;
 import com.zenbank.cilm.dto.CustomerResponseDto;
+import com.zenbank.cilm.dto.CustomerStatusUpdateRequest;
+import com.zenbank.cilm.dto.CustomerUpdateRequestDto;
 import com.zenbank.cilm.service.CustomerService;
 import com.zenbank.cilm.utility.ApiResponseUtil;
 import jakarta.validation.Valid;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +30,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> createCustomer(@Valid @RequestBody CustomerRequestDto requestDto) {
+    public ResponseEntity<Map<String, Object>> createCustomer(@Valid @RequestBody CustomerUpdateRequestDto requestDto) {
         CustomerResponseDto responseDto = customerService.createCustomer(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseUtil.success(responseDto));
     }
@@ -46,4 +48,14 @@ public class CustomerController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(ApiResponseUtil.error("Customer not found")));
     }
+    
+    @PutMapping("/{customerId}/status")
+    public ResponseEntity<String> updateCustomerStatus(
+            @PathVariable Long customerId,
+            @RequestBody CustomerStatusUpdateRequest request) {
+
+        customerService.updateCustomerStatus(customerId, request.getStatus());
+        return ResponseEntity.ok("Customer status updated successfully");
+    }
+  
 }
