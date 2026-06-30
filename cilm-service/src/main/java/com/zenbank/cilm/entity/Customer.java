@@ -18,60 +18,60 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true,name = "Cif Number")
+    @Column(unique = true,name = "cif_number")
     private String cif_number;
 
-    @Column(nullable = false,name = "First Name")
+    @Column(nullable = false,name = "first_name")
     private String firstName;
 
-    @Column(nullable = false, name = "Middle Name")
+    @Column(nullable = false, name = "middle_name")
     private String middleName;
 
-    @Column(nullable = false, name = "Last Name")
+    @Column(nullable = false, name = "last_name")
     private String lastName;
 
-    @Column(nullable = false, name = "Date Of Birth")
-    private String dateOfBirth;
+    @Column(nullable = false, name = "date_of_birth")
+    private LocalDate dateOfBirth;
 
-    @Column(nullable = false, name = "Gender")
+    @Column(nullable = false)
     private String gender;
 
-    @Column(nullable = false, name = "Marital Status")
+    @Column(nullable = false, name = "marital_status")
     private String maritalStatus;
 
-    @Column(nullable = false, name = "Occupation")
+    @Column(nullable = false)
     private String occupation;
 
-    @Column(nullable = false, name = "Annal Income")
+    @Column(nullable = false, name = "annal_income")
     private String annalIncome;
 
-    @Column(nullable = false, name = "Customer Type")
+    @Column(nullable = false, name = "customer_type")
     private String customerType;
 
-    @Column(nullable = false, name = "Customer Category")
+    @Column(nullable = false, name = "customer_category")
     private String customerCategory;
 
-    @Column(nullable = false, name = "Pan Number",unique = true)
+    @Column(nullable = false, name = "pan_number",unique = true)
     private String panNumber;
 
-    @Column(nullable = false, name = "Aadhaar Number", unique = true)
+    @Column(nullable = false, name = "aadhaar_number", unique = true)
     private String aadhaarNumber;
 
-    @Column(nullable = false, name = "Nationality")
+    @Column(nullable = false)
     private String nationality;
 
-    @Column(nullable = false, name = "Customer Status")
+    @Column(name = "customer_status")
     private String customerStatus;
 
 
-    @Column(nullable = false, name = "Risk Category")
+    @Column(name = "risk_category")
     private String riskCategory;
 
-    @Column(nullable = false, name = "Created Date")
+    @Column(nullable = false, name = "created_date")
     private LocalDate createdDate;
 
-    @Column(nullable = false, name = "Updated Date")
-    private String updatedDate;
+    @Column(name = "updated_date")
+    private LocalDate updatedDate;
 
 
     @Column(nullable = false, unique = true)
@@ -83,9 +83,9 @@ public class Customer {
     @Column(nullable = false)
     private String accountNumber;
 
-    @Column(nullable = false, name = "Age")
+    @Column(nullable = false)
     @Min(value = 18, message = "Age must be greater than 18")
-    private String age;
+    private Integer age;
 
     public Customer() {
     }
@@ -99,11 +99,11 @@ public class Customer {
     }
 
     public Customer(Long id, String cif_number, String firstName, String middleName,
-                    String lastName, String dateOfBirth, String gender,
+                    String lastName, LocalDate dateOfBirth, String gender,
                     String maritalStatus, String occupation, String annalIncome,
                     String customerType, String customerCategory, String panNumber,
                     String aadhaarNumber, String nationality, String customerStatus,
-                    String riskCategory, LocalDate createdDate, String updatedDate,
+                    String riskCategory, LocalDate createdDate, LocalDate updatedDate,
                     String email, String phoneNumber, String accountNumber) {
 
 
@@ -171,11 +171,11 @@ public class Customer {
         this.lastName = lastName;
     }
 
-    public String getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -275,11 +275,11 @@ public class Customer {
         this.createdDate = createdDate;
     }
 
-    public String getUpdatedDate() {
+    public LocalDate getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(String updatedDate) {
+    public void setUpdatedDate(LocalDate updatedDate) {
         this.updatedDate = updatedDate;
     }
 
@@ -305,5 +305,13 @@ public class Customer {
 
     public void setAccountNumber(String accountNumber) {
         this.accountNumber = accountNumber;
+    }
+
+    public  Integer getAge() {
+        return age;
+    }
+
+    public void setAge( Integer age) {
+        this.age = age;
     }
 }
