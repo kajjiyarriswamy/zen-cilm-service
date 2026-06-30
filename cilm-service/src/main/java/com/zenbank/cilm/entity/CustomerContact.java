@@ -1,13 +1,96 @@
+
 package com.zenbank.cilm.entity;
 
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "customer_contact")
 public class CustomerContact {
-	
-	 @ManyToOne(fetch = FetchType.LAZY, optional = false)
-	    @JoinColumn(name = "customer_id", nullable = false)
-	    private Customer customer;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "contact_id")
+	private Long contactId;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
+ 
+
+	@Column(name = "mobile_number", nullable = false, length = 15)
+	private String mobileNumber;
+
+	@Column(name = "alternate_mobile", length = 15)
+	private String alternateMobile;
+
+	@Column(name = "email", length = 100)
+	private String email;
+
+	@Column(name = "landline", length = 20)
+	private String landline;
+
+	@Column(name = "preferred_contact_mode", length = 20)
+	private String preferredContactMode;
+
+	// Default Constructor
+	public CustomerContact() {
+	}
+
+	// Getters and Setters
+
+	public Long getContactId() {
+		return contactId;
+	}
+
+	public void setContactId(Long contactId) {
+		this.contactId = contactId;
+	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	public String getAlternateMobile() {
+		return alternateMobile;
+	}
+
+	public void setAlternateMobile(String alternateMobile) {
+		this.alternateMobile = alternateMobile;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getLandline() {
+		return landline;
+	}
+
+	public void setLandline(String landline) {
+		this.landline = landline;
+	}
+
+	public String getPreferredContactMode() {
+		return preferredContactMode;
+	}
+
+	public void setPreferredContactMode(String preferredContactMode) {
+		this.preferredContactMode = preferredContactMode;
+	}
 }
