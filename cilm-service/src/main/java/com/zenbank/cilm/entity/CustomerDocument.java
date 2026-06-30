@@ -26,14 +26,14 @@ public class CustomerDocument {
 	@JoinColumn(name = "customer_id", nullable = false)
 	private Customer customer;
 
-	@Column(name = "document_number", nullable = false, length = 20)
+	@Column(name = "document_number", nullable = false, length = 110)
 	private String documentNumber;
 
-	@Column(name = "document_path", nullable = false, length = 100)
-	private String path;
+	@Column(name = "document_path", nullable = false, length = 300)
+	private String documentPath;
 
-	@Column(name = "verification_status", columnDefinition = "TEXT")
-	private String status;
+	@Column(name = "verification_status", nullable=false, length=50)
+	private String verificationStatus;
 
 	@CreationTimestamp
 	@Column(name = "uploaded_date", nullable = false, updatable = false)
@@ -45,8 +45,8 @@ public class CustomerDocument {
 		this.documentId = documentId;
 		this.customer = customer;
 		this.documentNumber = documentNumber;
-		this.path = path;
-		this.status = status;
+		this.documentPath = path;
+		this.verificationStatus = status;
 		this.uploadedDate = uploadedDate;
 	}
 
@@ -75,19 +75,19 @@ public class CustomerDocument {
 	}
 
 	public String getPath() {
-		return path;
+		return documentPath;
 	}
 
 	public void setPath(String path) {
-		this.path = path;
+		this.documentPath = path;
 	}
 
 	public String getStatus() {
-		return status;
+		return verificationStatus;
 	}
 
 	public void setStatus(String status) {
-		this.status = status;
+		this.verificationStatus = status;
 	}
 
 	public LocalDateTime getUploadedDate() {
