@@ -30,7 +30,7 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<Map<String, Object>> createCustomer(@Valid @RequestBody CustomerRequestDto requestDto) {
         CustomerResponseDto responseDto = customerService.createCustomer(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseUtil.success(responseDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseUtil.created(responseDto));
     }
 
     @GetMapping
