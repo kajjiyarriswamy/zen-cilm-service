@@ -1,8 +1,11 @@
 package com.zenbank.cilm.service;
 
 import com.zenbank.cilm.dto.CustomerGetRequestDto;
+import com.zenbank.cilm.dto.CustomerRequestDto;
 import com.zenbank.cilm.dto.CustomerResponseDto;
 import com.zenbank.cilm.entity.Customer;
+import com.zenbank.cilm.entity.CustomerNominee;
+import com.zenbank.cilm.repository.CustomerNomineeRepository;
 import com.zenbank.cilm.repository.CustomerRepository;
 
 import org.springframework.data.domain.Page;
@@ -19,18 +22,20 @@ import java.util.Optional;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final CustomerNomineeRepository customerNomineeRepository;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository, CustomerNomineeRepository customerNomineeRepository) {
         this.customerRepository = customerRepository;
+        this.customerNomineeRepository = customerNomineeRepository;
     }
 
-    public CustomerResponseDto createCustomer(CustomerGetRequestDto dto) {
+    public CustomerResponseDto createCustomer(CustomerRequestDto dto) {
         Optional<Customer> existing = customerRepository.findByEmail(dto.getEmail());
         if (existing.isPresent()) {
             throw new IllegalArgumentException("Customer with this email already exists");
         }
 
-        Customer cu = new Customer();
+      /*  Customer cu = new Customer();
         		cu.setCif_number(dto.getCif_number());
         		cu.setFirstName(dto.getFirstName());
         		cu.setMiddleName(dto.getMiddleName());
@@ -52,9 +57,23 @@ public class CustomerService {
         		cu.setEmail(dto.getEmail());
         		cu.setPhoneNumber(dto.getPhoneNumber());
         		cu.setAccountNumber(dto.getAccountNumber());
-        		cu.setAge(dto.getAge());
+        		cu.setAge(dto.getAge());*/
+        
+        Customer customer=customerRepository.findById(dto.getCustomerId())
+        		.orElseThrow(() -> new RuntimeException("Customer Not Found"));
+        CustomerNominee cn=new CustomerNominee();
+        
+        
+        cn.setCustomerId(customer);
+        cn.setNomineeName(dto.getNomineeName());
+        cn.setRelationship(dto.getRelationship());
+        cn.setDob(dto.getDob());
+        cn.setMobile(dto.getMobile());
+        cn.setSharePercentage(dto.getSharePercentage());
+        cn.setVerificationStatus(dto.getVerificationStatus());
+        
 
-        Customer savedCustomer = customerRepository.save(cu);
+        CustomerNominee savedCustomer = customerNomineeRepository.save(cn);
         return CustomerResponseDto.fromEntity(savedCustomer);
     }
 
@@ -96,4 +115,24 @@ public class CustomerService {
 		
 		return response;
 	}
+
+	public void updateNominee(Long customerId, 
+			Long nomineeId, 
+			CustomerRequestDto dto) {
+		
+		Customer customer=customerRepository.findById(customerId)
+				.orElseThrow(() -> new RuntimeException("Customer Not Found"));
+		
+		CustomerNominee nominee=customerNomineeRepository.findByNomineeIdAndCustomerId(nomineeId, customer)
+				.orElseThrow(() -> new RuntimeException("Nominee Not Found"));
+		
+		nominee.setMobile(dto.getMobile());
+		nominee.setSharePercentage(dto.getSharePercentage());
+		
+		customerNomineeRepository.save(nominee);
+		
+		
+	}
+
+
 }

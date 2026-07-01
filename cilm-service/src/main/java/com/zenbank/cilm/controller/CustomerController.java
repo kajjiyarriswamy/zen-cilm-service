@@ -3,6 +3,8 @@ package com.zenbank.cilm.controller;
 import com.zenbank.cilm.dto.CustomerGetRequestDto;
 import com.zenbank.cilm.dto.CustomerRequestDto;
 import com.zenbank.cilm.dto.CustomerResponseDto;
+import com.zenbank.cilm.entity.CustomerNominee;
+import com.zenbank.cilm.repository.CustomerNomineeRepository;
 import com.zenbank.cilm.service.CustomerService;
 import com.zenbank.cilm.utility.ApiResponseUtil;
 import jakarta.validation.Valid;
@@ -13,11 +15,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +29,7 @@ import java.util.Map;
 @RequestMapping("/api/customers")
 public class CustomerController {
 
+	
     private final CustomerService customerService;
 
     public CustomerController(CustomerService customerService) {
@@ -32,7 +37,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> createCustomer(@Valid @RequestBody CustomerGetRequestDto requestDto) {
+    public ResponseEntity<Map<String, Object>> createCustomer(@Valid @RequestBody CustomerRequestDto requestDto) {
         CustomerResponseDto responseDto = customerService.createCustomer(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseUtil.success(responseDto));
     }
@@ -68,5 +73,32 @@ public class CustomerController {
     			pan, aadhaar, 
     			status, page,
     			size)));
+    }
+ 
+    @PutMapping("/{customerId}/nominess/{nomineeId}")
+    public ResponseEntity<Map<String, Object>> updateNominee(
+    		@PathVariable Long customerId,
+    		@PathVariable Long nomineeId,
+    		@RequestBody CustomerRequestDto dto) {
+    	
+    	try{
+    		customerService.updateNominee(customerId, nomineeId, dto);
+  
+    	
+    	Map<String, Object> response = new LinkedHashMap<>();
+    	response.put("status", "SUCCESS");
+    	response.put("massege", "Nominee updated Successfully.");
+    	
+    	return ResponseEntity.ok(response);
+    	}catch(RuntimeException e) {
+    		
+    		Map<String, Object> response= new LinkedHashMap<>();
+    		response.put("status", "FAILED");
+    		response.put("errorCode", "NOM_002");
+    		response.put("message", e.getMessage());
+    		
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    		
+    	}
     }
 }
