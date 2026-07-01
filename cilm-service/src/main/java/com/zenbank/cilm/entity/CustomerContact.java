@@ -13,9 +13,8 @@ public class CustomerContact {
 	private Long contactId;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
- 
+	@JoinColumn(name = "customer_id", nullable = false)
+	private Customer customer;
 
 	@Column(name = "mobile_number", nullable = false, length = 15)
 	private String mobileNumber;
@@ -34,9 +33,21 @@ public class CustomerContact {
 
 	// Default Constructor
 	public CustomerContact() {
+		super();
 	}
 
-	// Getters and Setters
+	public CustomerContact(Long contactId, Customer customer, String mobileNumber, String alternateMobile, String email,
+			String landline, String preferredContactMode) {
+		this.contactId = contactId;
+		this.customer = customer;
+		this.mobileNumber = mobileNumber;
+		this.alternateMobile = alternateMobile;
+		this.email = email;
+		this.landline = landline;
+		this.preferredContactMode = preferredContactMode;
+	}
+
+	// get and set mehtods
 
 	public Long getContactId() {
 		return contactId;
