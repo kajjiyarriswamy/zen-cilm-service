@@ -13,71 +13,72 @@ import jakarta.persistence.GeneratedValue;
 
 	import java.time.LocalDate;
 
+
 import com.zenbank.cilm.Enum.CustomerStatus;
 
-	@Entity
-	@Table(name = "customer")
-	public class Customer {
+@Entity
+@Table(name = "customer")
+public class Customer {
 
 	    @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private Long id;
 
-	    @Column(unique = true,name = "Cif Number")
-	    private String cif_number;
+    @Column(unique = true,name = "cif_number")
+    private String cif_number;
 
-	    @Column(nullable = false,name = "First Name")
-	    private String firstName;
+    @Column(nullable = false,name = "first_name")
+    private String firstName;
 
-	    @Column(nullable = false, name = "Middle Name")
-	    private String middleName;
+    @Column(nullable = false, name = "middle_name")
+    private String middleName;
 
-	    @Column(nullable = false, name = "Last Name")
-	    private String lastName;
+    @Column(nullable = false, name = "last_name")
+    private String lastName;
 
-	    @Column(nullable = false, name = "Date Of Birth")
-	    private String dateOfBirth;
+    @Column(nullable = false, name = "date_of_birth")
+    private LocalDate dateOfBirth;
 
-	    @Column(nullable = false, name = "Gender")
-	    private String gender;
+    @Column(nullable = false)
+    private String gender;
 
-	    @Column(nullable = false, name = "Marital Status")
-	    private String maritalStatus;
+    @Column(nullable = false, name = "marital_status")
+    private String maritalStatus;
 
-	    @Column(nullable = false, name = "Occupation")
-	    private String occupation;
+    @Column(nullable = false)
+    private String occupation;
 
-	    @Column(nullable = false, name = "Annal Income")
-	    private String annalIncome;
+    @Column(nullable = false, name = "annal_income")
+    private String annalIncome;
 
-	    @Column(nullable = false, name = "Customer Type")
-	    private String customerType;
+    @Column(nullable = false, name = "customer_type")
+    private String customerType;
 
-	    @Column(nullable = false, name = "Customer Category")
-	    private String customerCategory;
+    @Column(nullable = false, name = "customer_category")
+    private String customerCategory;
 
-	    @Column(nullable = false, name = "Pan Number",unique = true)
-	    private String panNumber;
+    @Column(nullable = false, name = "pan_number",unique = true)
+    private String panNumber;
 
-	    @Column(nullable = false, name = "Aadhaar Number", unique = true)
-	    private String aadhaarNumber;
+    @Column(nullable = false, name = "aadhaar_number", unique = true)
+    private String aadhaarNumber;
 
-	    @Column(nullable = false, name = "Nationality")
-	    private String nationality;
+    @Column(nullable = false)
+    private String nationality;
 
-	    @Enumerated(EnumType.STRING)
-	    @Column(nullable = false, name = "Customer Status")
-	    private CustomerStatus customerStatus;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "customer_status")
+    private CustomerStatus customerStatus;
 
+    @Column(name = "risk_category")
+    private String riskCategory;
 
-	    @Column(nullable = false, name = "Risk Category")
-	    private String riskCategory;
+    @Column(nullable = false, name = "created_date")
+    private LocalDate createdDate;
 
-	    @Column(nullable = false, name = "Created Date")
-	    private LocalDate createdDate;
+    @Column(name = "updated_date")
+    private LocalDate updatedDate;
 
-	    @Column(nullable = false, name = "Updated Date")
-	    private String updatedDate;
 
 
 	    @Column(nullable = false, unique = true)
@@ -86,15 +87,17 @@ import com.zenbank.cilm.Enum.CustomerStatus;
 	    @Column(nullable = false, unique = true)
 	    private String phoneNumber;
 
+
 	    @Column(nullable = false)
 	    private String accountNumber;
 
 	    @Column(nullable = false, name = "Age")
 	    @Min(value = 18, message = "Age must be greater than 18")
-	    private String age;
+	    private Integer age;
 
 	    public Customer() {
 	    }
+
 
 	    public Customer(String firstName, String lastName, String email, String phoneNumber, String accountNumber) {
 	        this.firstName = firstName;
@@ -104,13 +107,8 @@ import com.zenbank.cilm.Enum.CustomerStatus;
 	        this.accountNumber = accountNumber;
 	    }
 
-	    public Customer(Long id, String cif_number, String firstName, String middleName,
-	                    String lastName, String dateOfBirth, String gender,
-	                    String maritalStatus, String occupation, String annalIncome,
-	                    String customerType, String customerCategory, String panNumber,
-	                    String aadhaarNumber, String nationality, CustomerStatus customerStatus,
-	                    String riskCategory, LocalDate createdDate, String updatedDate,
-	                    String email, String phoneNumber, String accountNumber, String age) {
+
+    public Customer(Long id, String cif_number, String firstName, String middleName, String lastName, LocalDate dateOfBirth, String gender, String maritalStatus, String occupation, String annalIncome, String customerType, String customerCategory, String panNumber, String aadhaarNumber, String nationality, CustomerStatus customerStatus, String riskCategory, LocalDate createdDate, LocalDate updatedDate, String email, String phoneNumber, String accountNumber, Integer age) {
 
 
 	        this.id = id;
@@ -138,190 +136,238 @@ import com.zenbank.cilm.Enum.CustomerStatus;
 	        this.age=age;
 	    }
 
-	    public Long getId() {
-	        return id;
-	    }
 
-	    public void setId(Long id) {
-	        this.id = id;
-	    }
+	public Long getId() {
+		return id;
+	}
 
-	    public String getCif_number() {
-	        return cif_number;
-	    }
 
-	    public void setCif_number(String cif_number) {
-	        this.cif_number = cif_number;
-	    }
+	public void setId(Long id) {
+		this.id =  id;
+	}
 
-	    public String getFirstName() {
-	        return firstName;
-	    }
 
-	    public void setFirstName(String firstName) {
-	        this.firstName = firstName;
-	    }
+	public String getCif_number() {
+		return cif_number;
+	}
 
-	    public String getMiddleName() {
-	        return middleName;
-	    }
 
-	    public void setMiddleName(String middleName) {
-	        this.middleName = middleName;
-	    }
+	public void setCif_number(String cif_number) {
+		this.cif_number = cif_number;
+	}
 
-	    public String getLastName() {
-	        return lastName;
-	    }
 
-	    public void setLastName(String lastName) {
-	        this.lastName = lastName;
-	    }
+	public String getFirstName() {
+		return firstName;
+	}
 
-	    public String getDateOfBirth() {
-	        return dateOfBirth;
-	    }
 
-	    public void setDateOfBirth(String dateOfBirth) {
-	        this.dateOfBirth = dateOfBirth;
-	    }
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-	    public String getGender() {
-	        return gender;
-	    }
 
-	    public void setGender(String gender) {
-	        this.gender = gender;
-	    }
+	public String getMiddleName() {
+		return middleName;
+	}
 
-	    public String getMaritalStatus() {
-	        return maritalStatus;
-	    }
 
-	    public void setMaritalStatus(String maritalStatus) {
-	        this.maritalStatus = maritalStatus;
-	    }
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
+	}
 
-	    public String getOccupation() {
-	        return occupation;
-	    }
 
-	    public void setOccupation(String occupation) {
-	        this.occupation = occupation;
-	    }
+	public String getLastName() {
+		return lastName;
+	}
 
-	    public String getAnnalIncome() {
-	        return annalIncome;
-	    }
 
-	    public void setAnnalIncome(String annalIncome) {
-	        this.annalIncome = annalIncome;
-	    }
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-	    public String getCustomerType() {
-	        return customerType;
-	    }
 
-	    public void setCustomerType(String customerType) {
-	        this.customerType = customerType;
-	    }
+	public LocalDate getDateOfBirth() {
+		return dateOfBirth;
+	}
 
-	    public String getCustomerCategory() {
-	        return customerCategory;
-	    }
 
-	    public void setCustomerCategory(String customerCategory) {
-	        this.customerCategory = customerCategory;
-	    }
+	public void setDateOfBirth(LocalDate dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
 
-	    public String getPanNumber() {
-	        return panNumber;
-	    }
 
-	    public void setPanNumber(String panNumber) {
-	        this.panNumber = panNumber;
-	    }
+	public String getGender() {
+		return gender;
+	}
 
-	    public String getAadhaarNumber() {
-	        return aadhaarNumber;
-	    }
 
-	    public void setAadhaarNumber(String aadhaarNumber) {
-	        this.aadhaarNumber = aadhaarNumber;
-	    }
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 
-	    public String getNationality() {
-	        return nationality;
-	    }
 
-	    public void setNationality(String nationality) {
-	        this.nationality = nationality;
-	    }
+	public String getMaritalStatus() {
+		return maritalStatus;
+	}
 
-	 
 
-	    public CustomerStatus getCustomerStatus() {
-			return customerStatus;
-		}
+	public void setMaritalStatus(String maritalStatus) {
+		this.maritalStatus = maritalStatus;
+	}
 
-		public void setCustomerStatus(CustomerStatus customerStatus) {
-			this.customerStatus = customerStatus;
-		}
 
-		public String getRiskCategory() {
-	        return riskCategory;
-	    }
+	public String getOccupation() {
+		return occupation;
+	}
 
-	    public void setRiskCategory(String riskCategory) {
-	        this.riskCategory = riskCategory;
-	    }
 
-	    public LocalDate getCreatedDate() {
-	        return createdDate;
-	    }
+	public void setOccupation(String occupation) {
+		this.occupation = occupation;
+	}
 
-	    public void setCreatedDate(LocalDate createdDate) {
-	        this.createdDate = createdDate;
-	    }
 
-	    public String getUpdatedDate() {
-	        return updatedDate;
-	    }
+	public String getAnnalIncome() {
+		return annalIncome;
+	}
 
-	    public void setUpdatedDate(String updatedDate) {
-	        this.updatedDate = updatedDate;
-	    }
 
-	    public String getEmail() {
-	        return email;
-	    }
+	public void setAnnalIncome(String annalIncome) {
+		this.annalIncome = annalIncome;
+	}
 
-	    public void setEmail(String email) {
-	        this.email = email;
-	    }
 
-	    public String getPhoneNumber() {
-	        return phoneNumber;
-	    }
+	public String getCustomerType() {
+		return customerType;
+	}
 
-	    public void setPhoneNumber(String phoneNumber) {
-	        this.phoneNumber = phoneNumber;
-	    }
 
-	    public String getAccountNumber() {
-	        return accountNumber;
-	    }
+	public void setCustomerType(String customerType) {
+		this.customerType = customerType;
+	}
 
-	    public void setAccountNumber(String accountNumber) {
-	        this.accountNumber = accountNumber;
-	    }
 
-		public String getAge() {
-			return age;
-		}
+	public String getCustomerCategory() {
+		return customerCategory;
+	}
 
-		public void setAge(String age) {
-			this.age = age;
-		}
+
+	public void setCustomerCategory(String customerCategory) {
+		this.customerCategory = customerCategory;
+	}
+
+
+	public String getPanNumber() {
+		return panNumber;
+	}
+
+
+	public void setPanNumber(String panNumber) {
+		this.panNumber = panNumber;
+	}
+
+
+	public String getAadhaarNumber() {
+		return aadhaarNumber;
+	}
+
+
+	public void setAadhaarNumber(String aadhaarNumber) {
+		this.aadhaarNumber = aadhaarNumber;
+	}
+
+
+	public String getNationality() {
+		return nationality;
+	}
+
+
+	public void setNationality(String nationality) {
+		this.nationality = nationality;
+	}
+
+
+	public CustomerStatus getCustomerStatus() {
+		return customerStatus;
+	}
+
+
+	public void setCustomerStatus(CustomerStatus customerStatus) {
+		this.customerStatus = customerStatus;
+	}
+
+
+	public String getRiskCategory() {
+		return riskCategory;
+	}
+
+
+	public void setRiskCategory(String riskCategory) {
+		this.riskCategory = riskCategory;
+	}
+
+
+	public LocalDate getCreatedDate() {
+		return createdDate;
+	}
+
+
+	public void setCreatedDate(LocalDate createdDate) {
+		this.createdDate = createdDate;
+	}
+
+
+	public LocalDate getUpdatedDate() {
+		return updatedDate;
+	}
+
+
+	public void setUpdatedDate(LocalDate updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+
+	public Integer getAge() {
+		return age;
+	}
+
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	   
 	    
 	}
+
+

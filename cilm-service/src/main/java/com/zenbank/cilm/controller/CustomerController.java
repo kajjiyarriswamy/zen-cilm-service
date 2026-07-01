@@ -1,8 +1,8 @@
 package com.zenbank.cilm.controller;
 
+import com.zenbank.cilm.dto.CustomerRequestDto;
 import com.zenbank.cilm.dto.CustomerResponseDto;
 import com.zenbank.cilm.dto.CustomerStatusUpdateRequest;
-import com.zenbank.cilm.dto.CustomerUpdateRequestDto;
 import com.zenbank.cilm.service.CustomerService;
 import com.zenbank.cilm.utility.ApiResponseUtil;
 import jakarta.validation.Valid;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -30,9 +31,10 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> createCustomer(@Valid @RequestBody CustomerUpdateRequestDto requestDto) {
+    public ResponseEntity<Map<String, Object>> createCustomer(@Valid @RequestBody CustomerRequestDto requestDto) {
+
         CustomerResponseDto responseDto = customerService.createCustomer(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseUtil.success(responseDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseUtil.created(responseDto));
     }
 
     @GetMapping
@@ -48,7 +50,7 @@ public class CustomerController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(ApiResponseUtil.error("Customer not found")));
     }
-    
+
     @PutMapping("/{customerId}/status")
     public ResponseEntity<String> updateCustomerStatus(
             @PathVariable Long customerId,
@@ -58,4 +60,24 @@ public class CustomerController {
         return ResponseEntity.ok("Customer status updated successfully");
     }
   
+
+    @GetMapping("/search")
+    public ResponseEntity<Map<String, Object>> searchCustomer(
+    		@RequestParam(required = false) Long customerId,
+    		@RequestParam(required = false) String cif,
+    		@RequestParam(required = false) String phoneNumber,
+    		@RequestParam(required = false) String pan,
+    		@RequestParam(required = false) String aadhaar,
+    		@RequestParam(required = false) String status,
+    		@RequestParam(defaultValue = "0") int page,
+    		@RequestParam(defaultValue = "10") int size
+    		) {
+    	
+    	return ResponseEntity.ok(ApiResponseUtil.success(customerService.searchCustomer(customerId,
+    			cif, phoneNumber,
+    			pan, aadhaar, 
+    			status, page,
+    			size)));
+    }
+
 }

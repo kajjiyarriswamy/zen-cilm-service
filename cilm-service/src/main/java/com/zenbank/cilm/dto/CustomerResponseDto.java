@@ -2,15 +2,20 @@ package com.zenbank.cilm.dto;
 
 import com.zenbank.cilm.entity.Customer;
 
+import java.time.LocalDate;
+
 public class CustomerResponseDto {
 
 
-	 private Long id;
-	    private String firstName;
-	    private String lastName;
-	    private String email;
-	    private String phoneNumber;
-	    private String accountNumber;
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phoneNumber;
+    private String accountNumber;
+    private String cif_number;
+    private LocalDate createdDate;
+
 
 	    public CustomerResponseDto() {
 	    }
@@ -24,16 +29,31 @@ public class CustomerResponseDto {
 	        this.accountNumber = accountNumber;
 	    }
 
-	    public static CustomerResponseDto fromEntity(Customer customer) {
-	        return new CustomerResponseDto(
-	                customer.getId(),
-	                customer.getFirstName(),
-	                customer.getLastName(),
-	                customer.getEmail(),
-	                customer.getPhoneNumber(),
-	                customer.getAccountNumber()
-	        );
-	    }
+    public CustomerResponseDto(Long id, String firstName, String lastName, String email, String phoneNumber, String accountNumber, String cif_number, LocalDate createdDate) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.accountNumber = accountNumber;
+        this.cif_number = cif_number;
+        this.createdDate = createdDate;
+    }
+
+    public static CustomerResponseDto fromEntity(Customer customer) {
+        return new CustomerResponseDto(
+                customer.getId(),
+                customer.getFirstName(),
+                customer.getLastName(),
+                customer.getEmail(),
+                customer.getPhoneNumber(),
+                customer.getAccountNumber(),
+                customer.getCif_number(),
+                customer.getCreatedDate()
+        );
+    }
+
+
 
 	    public Long getId() {
 	        return id;
@@ -75,6 +95,7 @@ public class CustomerResponseDto {
 	        this.phoneNumber = phoneNumber;
 	    }
 
+
 	    public String getAccountNumber() {
 	        return accountNumber;
 	    }
@@ -82,4 +103,22 @@ public class CustomerResponseDto {
 	    public void setAccountNumber(String accountNumber) {
 	        this.accountNumber = accountNumber;
 	    }
-	}
+
+
+
+    public String getCif_number() {
+        return cif_number;
+    }
+
+    public void setCif_number(String cif_number) {
+        this.cif_number = cif_number;
+    }
+
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+}
