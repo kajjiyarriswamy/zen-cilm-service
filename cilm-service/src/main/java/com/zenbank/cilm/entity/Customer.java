@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Min;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "customers")
+@Table(name = "customer")
 public class Customer {
 
     @Id
@@ -63,8 +63,7 @@ public class Customer {
     @Column(name = "customer_status")
     private String customerStatus;
 
-
-    @Column(name = "risk_category")
+    @Column(nullable = false, name = "risk_category")
     private String riskCategory;
 
     @Column(nullable = false, name = "created_date")
@@ -72,7 +71,6 @@ public class Customer {
 
     @Column(name = "updated_date")
     private LocalDate updatedDate;
-
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -98,15 +96,7 @@ public class Customer {
         this.accountNumber = accountNumber;
     }
 
-    public Customer(Long id, String cif_number, String firstName, String middleName,
-                    String lastName, LocalDate dateOfBirth, String gender,
-                    String maritalStatus, String occupation, String annalIncome,
-                    String customerType, String customerCategory, String panNumber,
-                    String aadhaarNumber, String nationality, String customerStatus,
-                    String riskCategory, LocalDate createdDate, LocalDate updatedDate,
-                    String email, String phoneNumber, String accountNumber) {
-
-
+    public Customer(Long id, String cif_number, String firstName, String middleName, String lastName, LocalDate dateOfBirth, String gender, String maritalStatus, String occupation, String annalIncome, String customerType, String customerCategory, String panNumber, String aadhaarNumber, String nationality, String customerStatus, String riskCategory, LocalDate createdDate, LocalDate updatedDate, String email, String phoneNumber, String accountNumber, Integer age) {
         this.id = id;
         this.cif_number = cif_number;
         this.firstName = firstName;
@@ -129,6 +119,7 @@ public class Customer {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.accountNumber = accountNumber;
+        this.age = age;
     }
 
     public Long getId() {

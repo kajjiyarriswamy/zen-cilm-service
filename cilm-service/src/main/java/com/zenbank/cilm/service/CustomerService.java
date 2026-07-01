@@ -9,9 +9,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.Period;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -72,10 +78,6 @@ public class CustomerService {
         customer.setCreatedDate(LocalDate.now());
 
         Customer savedCustomer = customerRepository.save(customer);
-
-        log.info(
-                savedCustomer.toString()
-        );
         return CustomerResponseDto.fromEntity(savedCustomer);
     }
 
@@ -90,4 +92,31 @@ public class CustomerService {
         return customerRepository.findById(id)
                 .map(CustomerResponseDto::fromEntity);
     }
+
+	public Map<String, Object> searchCustomer(Long customerId, String cif, String phoneNumber, String pan, String aadhaar,
+			String status, int page, int size) {
+		
+		Pageable pageable=PageRequest.of(page, size);
+		
+		Page<Customer> customerPage= customerRepository.searchCustomer(customerId,
+				cif, 
+				phoneNumber, 
+				pan, 
+				aadhaar, 
+				status, pageable);
+		
+		List<CustomerResponseDto> customers = customerPage.getContent()
+				.stream()
+				.map(CustomerResponseDto::fromEntity)
+				.toList();
+		
+		Map<String, Object> response = new LinkedHashMap<>();
+		
+		response.put("content", customers);
+		response.put("page", customerPage.getNumber());
+		response.put("size", customerPage.getSize());
+		response.put("totalElement", customerPage.getTotalElements());
+		
+		return response;
+	}
 }
