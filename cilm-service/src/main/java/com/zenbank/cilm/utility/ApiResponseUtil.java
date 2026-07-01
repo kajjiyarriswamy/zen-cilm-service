@@ -15,6 +15,14 @@ public final class ApiResponseUtil {
         return response;
     }
 
+    public static Map<String, Object> created(Object data) {
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("status", "SUCCESS");
+        response.put("message", "Customer created successfully.");
+        response.put("data", data);
+        return response;
+    }
+
     public static Map<String, Object> error(String message) {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("success", false);
