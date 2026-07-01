@@ -1,8 +1,10 @@
 package com.zenbank.cilm.controller;
 
+import com.zenbank.cilm.dto.CustomerPreferenceResponseDto;
 import com.zenbank.cilm.dto.CustomerRequestDto;
 import com.zenbank.cilm.dto.CustomerResponseDto;
 import com.zenbank.cilm.dto.CustomerStatusUpdateRequest;
+import com.zenbank.cilm.entity.CustomerPreference;
 import com.zenbank.cilm.service.CustomerService;
 import com.zenbank.cilm.utility.ApiResponseUtil;
 import jakarta.validation.Valid;
@@ -79,5 +81,26 @@ public class CustomerController {
     			status, page,
     			size)));
     }
+    @GetMapping("/{customerId}/preferences")
+    public ResponseEntity<Map<String, Object>> getCustomerPreference(
+            @PathVariable Long customerId) {
 
+        CustomerPreferenceResponseDto response =
+                customerService.getCustomerPreference(customerId);
+
+        return ResponseEntity.ok(ApiResponseUtil.success(response));
+    }
+    
+    @PostMapping("/{customerId}/preferences")
+    public ResponseEntity<Map<String, Object>> createPreference(
+            @PathVariable Long customerId,
+            @RequestBody CustomerPreference preference) {
+
+        CustomerPreference saved =
+                customerService.createPreference(customerId, preference);
+
+        return ResponseEntity.ok(ApiResponseUtil.success(saved));
+    }
+
+   
 }

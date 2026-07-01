@@ -1,13 +1,13 @@
 package com.zenbank.cilm.service;
 
 import com.zenbank.cilm.Enum.CustomerStatus;
+import com.zenbank.cilm.dto.CustomerPreferenceResponseDto;
 import com.zenbank.cilm.dto.CustomerRequestDto;
 import com.zenbank.cilm.dto.CustomerResponseDto;
-import com.zenbank.cilm.dto.CustomerUpdateRequestDto;
 import com.zenbank.cilm.entity.Customer;
+import com.zenbank.cilm.entity.CustomerPreference;
 import com.zenbank.cilm.repository.CustomerRepository;
 
-import org.apache.commons.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -141,5 +141,46 @@ public class CustomerService {
 		
 		return response;
 	}
+	
+	public CustomerPreferenceResponseDto getCustomerPreference(Long customerId) {
+
+	    Customer customer = customerRepository.findById(customerId)
+	            .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+	    CustomerPreference preference = customer.getCustomerPreference();
+
+	    if (preference == null) {
+	        throw new RuntimeException("Customer preferences not found.");
+	    }
+	    String preferenceId = "PREF" + String.format("%06d", preference.getPreferenceId());
+
+	    return new CustomerPreferenceResponseDto(
+	    		    preferenceId,
+	    	        preference.getLanguage(),
+	    	        preference.getCommunicationMode(),
+	    	        preference.getEmailEnabled(),
+	    	        preference.getSmsEnabled(),
+	    	        preference.getMarketingEnabled()
+	    );
+	}
+	
+	public CustomerPreference createPreference(Long customerId,
+            CustomerPreference preference) {
+
+           Customer customer = customerRepository.findById(customerId)
+                 .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+                  preference.setCustomer(customer);
+
+                   customer.setCustomerPreference(preference);
+
+                     customerRepository.save(customer);
+
+              return customer.getCustomerPreference();
+}
+
+
+	
+	
 }
 

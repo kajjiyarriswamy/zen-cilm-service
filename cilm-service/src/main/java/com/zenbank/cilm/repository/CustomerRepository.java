@@ -21,6 +21,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     boolean existsByAadhaarNumber(String aadhaarNumber);
 
     boolean existsByPhoneNumber(String phoneNumber);
+    
+    Optional<Customer> findById(Long id);
 
     @Query(""" 
     		select c from Customer c
