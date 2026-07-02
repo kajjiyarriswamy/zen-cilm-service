@@ -116,6 +116,16 @@ public class CustomerController {
     }
     
 
+    @PutMapping("/{customerId}/preferences/notifications")
+    public ResponseEntity<Map<String, Object>> updateNotificationPreferences(
+            @PathVariable Long customerId,
+            @RequestBody CustomerPreference preference) {
+
+        customerService.updateNotificationPreferences(customerId, preference);
+
+        return ResponseEntity.ok(
+                ApiResponseUtil.success("Notification preferences updated successfully"));
+    }
    
 
 }
