@@ -191,6 +191,18 @@ public class CustomerService {
 }
 
 
+	public void updateCustomer(Long customerId, CustomerRequestDto requestDto) {
+		Customer customer = customerRepository.findById(customerId)
+	            .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+	    customer.setOccupation(requestDto.getOccupation());
+	    customer.setAnnalIncome(requestDto.getAnnualIncome());
+	    customer.setMaritalStatus(requestDto.getMaritalStatus());
+
+	    customerRepository.save(customer);
+	}
+
+
 	
 	
 }
