@@ -134,8 +134,6 @@ public class CustomerRequestDto {
 		this.sharePercentage = sharePercentage;
 	}
 
-	
-
 
 
     public  String getMiddleName() {
@@ -270,6 +268,15 @@ public class CustomerRequestDto {
 	    public void setPhoneNumber(String phoneNumber) {
 	        this.phoneNumber = phoneNumber;
 	    }
+
+		public String getAccountNumber() {
+			return accountNumber;
+		}
+
+		public void setAccountNumber(String accountNumber) {
+			this.accountNumber = accountNumber;
+		}
+	    
 
 
 

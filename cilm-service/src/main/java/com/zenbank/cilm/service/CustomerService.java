@@ -197,6 +197,18 @@ public class CustomerService {
 		return customer.getCustomerPreference();
 
 	}
+
+	public void deleteNominee(Long customerId, Long nomineeId) {
+	
+		Customer customer=customerRepository.findById(customerId)
+				.orElseThrow(() -> new RuntimeException("Customer not found"));
+		
+		CustomerNominee nominee=customerNomineeRepository.findByNomineeIdAndCustomerId(nomineeId, customer)
+				.orElseThrow(() -> new RuntimeException("Niminee not found"));
+	
+		customerNomineeRepository.delete(nominee);
+		
+	}
 	
 	
 
