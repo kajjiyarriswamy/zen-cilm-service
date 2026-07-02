@@ -34,4 +34,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 			@Param("aadhaar")String aadhaar,
 			@Param("status")String status, 
 			Pageable pageable);
+
 }

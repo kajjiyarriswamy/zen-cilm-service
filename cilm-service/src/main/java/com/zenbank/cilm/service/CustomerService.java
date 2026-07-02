@@ -1,8 +1,12 @@
 package com.zenbank.cilm.service;
 
+import com.zenbank.cilm.dto.AddressResponseDto;
+
 import com.zenbank.cilm.dto.CustomerGetRequestDto;
 import com.zenbank.cilm.dto.CustomerResponseDto;
 import com.zenbank.cilm.entity.Customer;
+import com.zenbank.cilm.entity.CustomerAddress;
+import com.zenbank.cilm.repository.AddressRepository;
 import com.zenbank.cilm.repository.CustomerRepository;
 
 import org.springframework.data.domain.Page;
@@ -17,11 +21,14 @@ import java.util.Optional;
 
 @Service
 public class CustomerService {
+	   private final CustomerRepository customerRepository;
+	    private final AddressRepository addressRepository;
 
-    private final CustomerRepository customerRepository;
+	    public CustomerService(CustomerRepository customerRepository,
+	                           AddressRepository addressRepository) {
 
-    public CustomerService(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
+	        this.customerRepository = customerRepository;
+	        this.addressRepository = addressRepository;
     }
 
     public CustomerResponseDto createCustomer(CustomerGetRequestDto dto) {
@@ -95,5 +102,44 @@ public class CustomerService {
 		response.put("totalElement", customerPage.getTotalElements());
 		
 		return response;
+	}
+	public Map<String, Object> getCustomerAddresses(Long customerId) {
+
+	    Optional<Customer> customer = customerRepository.findById(customerId);
+
+	    Map<String, Object> response = new LinkedHashMap<>();
+
+	    if (customer.isEmpty()) {
+	        response.put("status", "FAILED");
+	        response.put("message", "Customer not found.");
+	        return response;
+	    }
+
+	    List<CustomerAddress> addressList =
+	            addressRepository.findByCustomer_Id(customerId);
+
+	    List<AddressResponseDto> addresses = addressList.stream()
+	            .map(address -> {
+
+	                AddressResponseDto dto = new AddressResponseDto();
+
+	                dto.setAddressId(address.getAddressId());
+	                dto.setAddressType(address.getAddressType());
+	                dto.setDoorNumber(address.getDoorDumber());
+	                dto.setStreet(address.getStreet());
+	                dto.setCity(address.getCity());
+	                dto.setState(address.getState());
+	                dto.setCountry(address.getCountry());
+	                dto.setPostalCode(address.getPostalCode());
+	                dto.setPrimary(address.isPrimary());
+
+	                return dto;
+	            })
+	            .toList();
+
+	    response.put("status", "SUCCESS");
+	    response.put("addresses", addresses);
+
+	    return response;
 	}
 }

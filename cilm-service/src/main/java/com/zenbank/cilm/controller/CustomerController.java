@@ -69,4 +69,18 @@ public class CustomerController {
     			status, page,
     			size)));
     }
+    
+    @GetMapping("/{customerId}/addresses")
+    public ResponseEntity<Map<String, Object>> getCustomerAddresses(
+            @PathVariable Long customerId) {
+
+        Map<String, Object> response =
+                customerService.getCustomerAddresses(customerId);
+
+        if ("FAILED".equals(response.get("status"))) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        return ResponseEntity.ok(response);
+    }
 }
