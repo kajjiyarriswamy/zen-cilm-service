@@ -17,6 +17,7 @@ public class CustomerResponseDto {
     private LocalDate createdDate;
 
 
+
 	    public CustomerResponseDto() {
 	    }
 
@@ -28,6 +29,7 @@ public class CustomerResponseDto {
 	        this.phoneNumber = phoneNumber;
 	        this.accountNumber = accountNumber;
 	    }
+
 
     public CustomerResponseDto(Long id, String firstName, String lastName, String email, String phoneNumber, String accountNumber, String cif_number, LocalDate createdDate) {
         this.id = id;
@@ -71,54 +73,56 @@ public class CustomerResponseDto {
 	        this.firstName = firstName;
 	    }
 
-	    public String getLastName() {
-	        return lastName;
-	    }
+		public String getLastName() {
+			return lastName;
+		}
 
-	    public void setLastName(String lastName) {
-	        this.lastName = lastName;
-	    }
+		public void setLastName(String lastName) {
+			this.lastName = lastName;
+		}
 
-	    public String getEmail() {
-	        return email;
-	    }
+		public String getEmail() {
+			return email;
+		}
 
-	    public void setEmail(String email) {
-	        this.email = email;
-	    }
+		public void setEmail(String email) {
+			this.email = email;
+		}
 
-	    public String getPhoneNumber() {
-	        return phoneNumber;
-	    }
+		public String getPhoneNumber() {
+			return phoneNumber;
+		}
 
-	    public void setPhoneNumber(String phoneNumber) {
-	        this.phoneNumber = phoneNumber;
-	    }
+		public void setPhoneNumber(String phoneNumber) {
+			this.phoneNumber = phoneNumber;
+		}
 
+		public String getAccountNumber() {
+			return accountNumber;
+		}
 
-	    public String getAccountNumber() {
-	        return accountNumber;
-	    }
+		public void setAccountNumber(String accountNumber) {
+			this.accountNumber = accountNumber;
+		}
 
-	    public void setAccountNumber(String accountNumber) {
-	        this.accountNumber = accountNumber;
-	    }
+		public String getCif_number() {
+			return cif_number;
+		}
 
+		public void setCif_number(String cif_number) {
+			this.cif_number = cif_number;
+		}
 
+		public LocalDate getCreatedDate() {
+			return createdDate;
+		}
 
-    public String getCif_number() {
-        return cif_number;
-    }
-
-    public void setCif_number(String cif_number) {
-        this.cif_number = cif_number;
-    }
-
-    public LocalDate getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDate createdDate) {
-        this.createdDate = createdDate;
-    }
+		public void setCreatedDate(LocalDate createdDate) {
+			this.createdDate = createdDate;
+		}
+	    
+	    
+	    
 }
+
+	    
