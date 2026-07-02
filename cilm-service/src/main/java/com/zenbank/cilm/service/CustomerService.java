@@ -188,7 +188,30 @@ public class CustomerService {
                      customerRepository.save(customer);
 
               return customer.getCustomerPreference();
-}
+	}
+	
+	public void updateNotificationPreferences(Long customerId,
+            CustomerPreference request) {
+
+// Check customer exists
+         Customer customer = customerRepository.findById(customerId)
+         .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+// Check preference exists
+          CustomerPreference preference = customer.getCustomerPreference();
+
+          if (preference == null) {
+          throw new RuntimeException("Customer preferences not found.");
+            }
+
+// Update only notification fields
+           preference.setEmailEnabled(request.getEmailEnabled());
+          preference.setSmsEnabled(request.getSmsEnabled());
+
+// Save
+          customerRepository.save(customer);
+           }
+
 
 
 	
