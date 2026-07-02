@@ -1,6 +1,7 @@
 package com.zenbank.cilm.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,6 +12,6 @@ public interface CustomerNomineeRepository extends JpaRepository<CustomerNominee
 
     List<CustomerNominee> findByCustomer(Customer customer);
 
+    Optional<CustomerNominee> findByNomineeIdAndCustomerId(Long nomineeId, Customer customer);
+
 }
-
-
