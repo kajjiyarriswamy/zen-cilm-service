@@ -6,7 +6,6 @@ import jakarta.persistence.Column;
 	import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 	import jakarta.persistence.GenerationType;
 	import jakarta.persistence.Id;
@@ -26,6 +25,9 @@ public class Customer {
 	    @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private Long id;
+
+    @Column(name = "customer_id", unique = true, length = 20)
+    private String customerId;
 
     @Column(unique = true,name = "cif_number")
     private String cif_number;
@@ -107,6 +109,7 @@ public class Customer {
 	    }
 
 
+
 	    public Customer(String firstName, String lastName, String email, String phoneNumber, String accountNumber) {
 	        this.firstName = firstName;
 	        this.lastName = lastName;
@@ -114,6 +117,16 @@ public class Customer {
 	        this.phoneNumber = phoneNumber;
 	        this.accountNumber = accountNumber;
 	    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+
 
 
     public Customer(Long id, String cif_number, String firstName, String middleName, String lastName, LocalDate dateOfBirth, String gender, String maritalStatus, String occupation, String annalIncome, String customerType, String customerCategory, String panNumber, String aadhaarNumber, String nationality, CustomerStatus customerStatus, String riskCategory, LocalDate createdDate, LocalDate updatedDate, String email, String phoneNumber, String accountNumber, Integer age) {

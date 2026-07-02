@@ -1,7 +1,11 @@
 package com.zenbank.cilm.service;
 
+
 import com.zenbank.cilm.Enum.CustomerStatus;
 import com.zenbank.cilm.dto.CustomerPreferenceResponseDto;
+
+import com.zenbank.cilm.dto.CustomerDetailsResponseDto;
+
 import com.zenbank.cilm.dto.CustomerRequestDto;
 import com.zenbank.cilm.dto.CustomerResponseDto;
 import com.zenbank.cilm.entity.Customer;
@@ -11,7 +15,6 @@ import com.zenbank.cilm.repository.CustomerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -106,6 +109,7 @@ public class CustomerService {
     }
 
 
+
 	public void updateCustomerStatus(Long customerId, CustomerStatus status) {
 		Customer customer = customerRepository.findById(customerId)
 	            .orElseThrow(() -> new RuntimeException("Customer not found with id: " + customerId));
@@ -114,6 +118,13 @@ public class CustomerService {
 	  
 	    customerRepository.save(customer);
 	}
+
+    public CustomerDetailsResponseDto getCustomerDetails(String customerId) {
+        Customer customer = customerRepository.findByCustomerId(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found: " + customerId));
+        return CustomerDetailsResponseDto.fromEntity(customer);
+    }
+
 
 	public Map<String, Object> searchCustomer(Long customerId, String cif, String phoneNumber, String pan, String aadhaar,
 			String status, int page, int size) {

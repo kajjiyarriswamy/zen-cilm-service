@@ -24,6 +24,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     
     Optional<Customer> findById(Long id);
 
+	Optional<Customer> findByCustomerId(String customerId);
+
     @Query(""" 
     		select c from Customer c
     		where (:customerId IS NULL OR c.id= :customerId)
