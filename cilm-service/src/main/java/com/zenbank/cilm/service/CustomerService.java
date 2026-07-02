@@ -1,10 +1,17 @@
 package com.zenbank.cilm.service;
 
+
+import com.zenbank.cilm.Enum.CustomerStatus;
+import com.zenbank.cilm.dto.CustomerPreferenceResponseDto;
+
 import com.zenbank.cilm.dto.CustomerDetailsResponseDto;
+
 import com.zenbank.cilm.dto.CustomerRequestDto;
 import com.zenbank.cilm.dto.CustomerResponseDto;
 import com.zenbank.cilm.entity.Customer;
+import com.zenbank.cilm.entity.CustomerPreference;
 import com.zenbank.cilm.repository.CustomerRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,12 +31,16 @@ import java.util.Random;
 @Service
 public class CustomerService {
 
+	private final CustomerRepository customerRepository;
+
     private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
-    private final CustomerRepository customerRepository;
+   
+
 
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
+
 
     public CustomerResponseDto createCustomer(CustomerRequestDto requestDto) {
         if (customerRepository.existsByPanNumber(requestDto.getPanNumber())) {
@@ -50,9 +61,12 @@ public class CustomerService {
             throw new IllegalArgumentException("Customer age should be 18 years or above.");
         }
         Optional<Customer> existing = customerRepository.findByEmail(requestDto.getEmail());
+
         if (existing.isPresent()) {
             throw new IllegalArgumentException("Customer with this email already exists");
         }
+
+
 
         Customer customer = new Customer();
 
@@ -77,6 +91,7 @@ public class CustomerService {
         customer.setAccountNumber("SBI-"+String.valueOf(10000000+random.nextInt(90000000)));
         customer.setCreatedDate(LocalDate.now());
 
+
         Customer savedCustomer = customerRepository.save(customer);
         return CustomerResponseDto.fromEntity(savedCustomer);
     }
@@ -93,11 +108,23 @@ public class CustomerService {
                 .map(CustomerResponseDto::fromEntity);
     }
 
+
+
+	public void updateCustomerStatus(Long customerId, CustomerStatus status) {
+		Customer customer = customerRepository.findById(customerId)
+	            .orElseThrow(() -> new RuntimeException("Customer not found with id: " + customerId));
+
+	    customer.setCustomerStatus(status);
+	  
+	    customerRepository.save(customer);
+	}
+
     public CustomerDetailsResponseDto getCustomerDetails(String customerId) {
         Customer customer = customerRepository.findByCustomerId(customerId)
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found: " + customerId));
         return CustomerDetailsResponseDto.fromEntity(customer);
     }
+
 
 	public Map<String, Object> searchCustomer(Long customerId, String cif, String phoneNumber, String pan, String aadhaar,
 			String status, int page, int size) {
@@ -125,4 +152,46 @@ public class CustomerService {
 		
 		return response;
 	}
+	
+	public CustomerPreferenceResponseDto getCustomerPreference(Long customerId) {
+
+	    Customer customer = customerRepository.findById(customerId)
+	            .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+	    CustomerPreference preference = customer.getCustomerPreference();
+
+	    if (preference == null) {
+	        throw new RuntimeException("Customer preferences not found.");
+	    }
+	    String preferenceId = "PREF" + String.format("%06d", preference.getPreferenceId());
+
+	    return new CustomerPreferenceResponseDto(
+	    		    preferenceId,
+	    	        preference.getLanguage(),
+	    	        preference.getCommunicationMode(),
+	    	        preference.getEmailEnabled(),
+	    	        preference.getSmsEnabled(),
+	    	        preference.getMarketingEnabled()
+	    );
+	}
+	
+	public CustomerPreference createPreference(Long customerId,
+            CustomerPreference preference) {
+
+           Customer customer = customerRepository.findById(customerId)
+                 .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+                  preference.setCustomer(customer);
+
+                   customer.setCustomerPreference(preference);
+
+                     customerRepository.save(customer);
+
+              return customer.getCustomerPreference();
 }
+
+
+	
+	
+}
+

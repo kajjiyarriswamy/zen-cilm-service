@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 public class CustomerResponseDto {
 
+
     private Long id;
     private String firstName;
     private String lastName;
@@ -15,8 +16,18 @@ public class CustomerResponseDto {
     private String cif_number;
     private LocalDate createdDate;
 
-    public CustomerResponseDto() {
-    }
+
+	    public CustomerResponseDto() {
+	    }
+
+	    public CustomerResponseDto(Long id, String firstName, String lastName, String email, String phoneNumber, String accountNumber) {
+	        this.id = id;
+	        this.firstName = firstName;
+	        this.lastName = lastName;
+	        this.email = email;
+	        this.phoneNumber = phoneNumber;
+	        this.accountNumber = accountNumber;
+	    }
 
     public CustomerResponseDto(Long id, String firstName, String lastName, String email, String phoneNumber, String accountNumber, String cif_number, LocalDate createdDate) {
         this.id = id;
@@ -42,53 +53,58 @@ public class CustomerResponseDto {
         );
     }
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public String getFirstName() {
-        return firstName;
-    }
+	    public Long getId() {
+	        return id;
+	    }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+	    public void setId(Long id) {
+	        this.id = id;
+	    }
 
-    public String getLastName() {
-        return lastName;
-    }
+	    public String getFirstName() {
+	        return firstName;
+	    }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	    public void setFirstName(String firstName) {
+	        this.firstName = firstName;
+	    }
 
-    public String getEmail() {
-        return email;
-    }
+	    public String getLastName() {
+	        return lastName;
+	    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	    public void setLastName(String lastName) {
+	        this.lastName = lastName;
+	    }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+	    public String getEmail() {
+	        return email;
+	    }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+	    public void setEmail(String email) {
+	        this.email = email;
+	    }
 
-    public String getAccountNumber() {
-        return accountNumber;
-    }
+	    public String getPhoneNumber() {
+	        return phoneNumber;
+	    }
 
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
+	    public void setPhoneNumber(String phoneNumber) {
+	        this.phoneNumber = phoneNumber;
+	    }
+
+
+	    public String getAccountNumber() {
+	        return accountNumber;
+	    }
+
+	    public void setAccountNumber(String accountNumber) {
+	        this.accountNumber = accountNumber;
+	    }
+
+
 
     public String getCif_number() {
         return cif_number;

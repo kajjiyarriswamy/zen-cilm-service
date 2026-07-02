@@ -30,12 +30,6 @@ public class CustomerDetailsResponseDto {
                 + customer.getMiddleName() + " "
                 + customer.getLastName();
         return new CustomerDetailsResponseDto(
-                customer.getCustomerId(),
-                customer.getCif_number(),
-                fullName.trim(),
-                customer.getPhoneNumber(),
-                customer.getEmail(),
-                customer.getCustomerStatus()
         );
     }
 
