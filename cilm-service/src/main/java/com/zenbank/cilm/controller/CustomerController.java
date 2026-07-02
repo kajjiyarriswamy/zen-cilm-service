@@ -101,6 +101,19 @@ public class CustomerController {
 
         return ResponseEntity.ok(ApiResponseUtil.success(saved));
     }
+    
+    
+    @PutMapping("/{customerId}")
+    public ResponseEntity<Map<String, Object>> updateCustomer(
+            @PathVariable Long customerId,
+            @RequestBody CustomerRequestDto requestDto) {
+
+        customerService.updateCustomer(customerId, requestDto);
+
+        return ResponseEntity.ok(
+                ApiResponseUtil.success("Customer Updated Successfully")
+        );
+    }
 
    
 }
