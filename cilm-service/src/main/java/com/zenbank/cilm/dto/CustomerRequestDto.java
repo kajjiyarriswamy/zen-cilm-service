@@ -8,11 +8,14 @@ import java.time.LocalDate;
 
 public class CustomerRequestDto {
 
-    @NotBlank(message = "First name is required")
-    private String firstName;
-
+	 @NotBlank(message = "First name is required")
+	    private String firstName;
+	 
+	    
     @NotBlank(message = "Last name is required")
     private String middleName;
+
+    
 
     @NotBlank(message = "Last name is required")
     private String lastName;
@@ -54,8 +57,9 @@ public class CustomerRequestDto {
     @Email(message = "Email should be valid")
     private String email;
 
-    @NotBlank(message = "Phone number is required")
-    private String phoneNumber;
+	    @NotBlank(message = "Phone number is required")
+	    private String phoneNumber;
+
 
 
 
@@ -155,36 +159,43 @@ public class CustomerRequestDto {
         this.nationality = nationality;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
 
-    public String getLastName() {
-        return lastName;
-    }
+   
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	    public String getFirstName() {
+	        return firstName;
+	    }
 
-    public String getEmail() {
-        return email;
-    }
+	    public void setFirstName(String firstName) {
+	        this.firstName = firstName;
+	    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	    public String getLastName() {
+	        return lastName;
+	    }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+	    public void setLastName(String lastName) {
+	        this.lastName = lastName;
+	    }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+	    public String getEmail() {
+	        return email;
+	    }
+
+	    public void setEmail(String email) {
+	        this.email = email;
+	    }
+
+	    public String getPhoneNumber() {
+	        return phoneNumber;
+	    }
+
+	    public void setPhoneNumber(String phoneNumber) {
+	        this.phoneNumber = phoneNumber;
+	    }
+
+
 
 }
+
