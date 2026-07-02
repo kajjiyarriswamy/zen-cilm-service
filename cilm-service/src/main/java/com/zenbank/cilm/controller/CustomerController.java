@@ -1,10 +1,18 @@
 package com.zenbank.cilm.controller;
 
+
 import com.zenbank.cilm.dto.CustomerGetRequestDto;
+import com.zenbank.cilm.dto.CustomerPreferenceResponseDto;
+
 import com.zenbank.cilm.dto.CustomerRequestDto;
 import com.zenbank.cilm.dto.CustomerResponseDto;
+
 import com.zenbank.cilm.entity.CustomerNominee;
 import com.zenbank.cilm.repository.CustomerNomineeRepository;
+
+import com.zenbank.cilm.dto.CustomerStatusUpdateRequest;
+import com.zenbank.cilm.entity.CustomerPreference;
+
 import com.zenbank.cilm.service.CustomerService;
 import com.zenbank.cilm.utility.ApiResponseUtil;
 import jakarta.validation.Valid;
@@ -39,8 +47,9 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<Map<String, Object>> createCustomer(@Valid @RequestBody CustomerRequestDto requestDto) {
         CustomerResponseDto responseDto = customerService.createCustomer(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseUtil.success(responseDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseUtil.created(responseDto));
     }
+    
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllCustomers() {
@@ -55,7 +64,19 @@ public class CustomerController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(ApiResponseUtil.error("Customer not found")));
     }
+
+
+    @PutMapping("/{customerId}/status")
+    public ResponseEntity<String> updateCustomerStatus(
+            @PathVariable Long customerId,
+            @RequestBody CustomerStatusUpdateRequest request) {
+
+        customerService.updateCustomerStatus(customerId, request.getStatus());
+        return ResponseEntity.ok("Customer status updated successfully");
+    }
+  
     
+
     @GetMapping("/search")
     public ResponseEntity<Map<String, Object>> searchCustomer(
     		@RequestParam(required = false) Long customerId,
@@ -74,6 +95,7 @@ public class CustomerController {
     			status, page,
     			size)));
     }
+
  
     @PutMapping("/{customerId}/nominess/{nomineeId}")
     public ResponseEntity<Map<String, Object>> updateNominee(
@@ -101,4 +123,33 @@ public class CustomerController {
     		
     	}
     }
+
+
+    @GetMapping("/{customerId}/preferences")
+    public ResponseEntity<Map<String, Object>> getCustomerPreference(
+            @PathVariable Long customerId) {
+
+        CustomerPreferenceResponseDto response =
+                customerService.getCustomerPreference(customerId);
+
+        return ResponseEntity.ok(ApiResponseUtil.success(response));
+    }
+    
+    @PostMapping("/{customerId}/preferences")
+    public ResponseEntity<Map<String, Object>> createPreference(
+            @PathVariable Long customerId,
+            @RequestBody CustomerPreference preference){
+
+        CustomerPreference saved =
+                customerService.createPreference(customerId, preference);
+
+        return ResponseEntity.ok(ApiResponseUtil.success(saved));
+    }
+    
+
+   
+
+
 }
+
+

@@ -5,7 +5,10 @@ import java.time.LocalDate;
 import com.zenbank.cilm.entity.Customer;
 import com.zenbank.cilm.entity.CustomerNominee;
 
+import java.time.LocalDate;
+
 public class CustomerResponseDto {
+
 
     private Long id;
     private String firstName;
@@ -13,6 +16,7 @@ public class CustomerResponseDto {
     private String email;
     private String phoneNumber;
     private String accountNumber;
+
     private Long nomineeId;
     private Long customerId;
     private String nomineeName;
@@ -22,16 +26,33 @@ public class CustomerResponseDto {
     private String mobile;
     private Double sharePercentage;
 
-    public CustomerResponseDto() {
-    }
+    private String cif_number;
+    private LocalDate createdDate;
 
-    public CustomerResponseDto(Long id, String firstName, String lastName, String email, String phoneNumber, String accountNumber) {
+
+
+	    public CustomerResponseDto() {
+	    }
+
+	    public CustomerResponseDto(Long id, String firstName, String lastName, String email, String phoneNumber, String accountNumber) {
+	        this.id = id;
+	        this.firstName = firstName;
+	        this.lastName = lastName;
+	        this.email = email;
+	        this.phoneNumber = phoneNumber;
+	        this.accountNumber = accountNumber;
+	    }
+
+
+    public CustomerResponseDto(Long id, String firstName, String lastName, String email, String phoneNumber, String accountNumber, String cif_number, LocalDate createdDate) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.accountNumber = accountNumber;
+        this.cif_number = cif_number;
+        this.createdDate = createdDate;
     }
 
     public CustomerResponseDto(Long nomineeId, 
@@ -57,59 +78,50 @@ public class CustomerResponseDto {
                 customer.getLastName(),
                 customer.getEmail(),
                 customer.getPhoneNumber(),
-                customer.getAccountNumber()
+                customer.getAccountNumber(),
+                customer.getCif_number(),
+                customer.getCreatedDate()
         );
     }
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public String getFirstName() {
-        return firstName;
-    }
+	    public Long getId() {
+	        return id;
+	    }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+	    public void setId(Long id) {
+	        this.id = id;
+	    }
 
-    public String getLastName() {
-        return lastName;
-    }
+	    public String getFirstName() {
+	        return firstName;
+	    }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	    public void setFirstName(String firstName) {
+	        this.firstName = firstName;
+	    }
 
-    public String getEmail() {
-        return email;
-    }
+		public String getLastName() {
+			return lastName;
+		}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+		public void setLastName(String lastName) {
+			this.lastName = lastName;
+		}
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+		public String getEmail() {
+			return email;
+		}
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+		public void setEmail(String email) {
+			this.email = email;
+		}
 
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
+		public String getPhoneNumber() {
+			return phoneNumber;
+		}
     
-
 	public Long getNomineeId() {
 		return nomineeId;
 	}
@@ -189,4 +201,37 @@ public class CustomerResponseDto {
 				);
 				
 	}
+		public void setPhoneNumber(String phoneNumber) {
+			this.phoneNumber = phoneNumber;
+		}
+
+		public String getAccountNumber() {
+			return accountNumber;
+		}
+
+		public void setAccountNumber(String accountNumber) {
+			this.accountNumber = accountNumber;
+		}
+
+		public String getCif_number() {
+			return cif_number;
+		}
+
+		public void setCif_number(String cif_number) {
+			this.cif_number = cif_number;
+		}
+
+		public LocalDate getCreatedDate() {
+			return createdDate;
+		}
+
+		public void setCreatedDate(LocalDate createdDate) {
+			this.createdDate = createdDate;
+		}
+	    
+	    
+	    
+
 }
+
+	    
