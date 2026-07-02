@@ -1,11 +1,13 @@
 package com.zenbank.cilm.service;
 
-import com.zenbank.cilm.dto.CustomerRequestDto;
-import com.zenbank.cilm.dto.CustomerResponseDto;
+import com.zenbank.cilm.dto.*;
 import com.zenbank.cilm.entity.Customer;
+import com.zenbank.cilm.entity.CustomerAddress;
+import com.zenbank.cilm.repository.AddressRepository;
 import com.zenbank.cilm.repository.CustomerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -31,7 +33,10 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    public CustomerResponseDto createCustomer(CustomerRequestDto requestDto) {
+    @Autowired
+    private AddressRepository customerAddressRepository;
+
+    public CustomerResponseDto createCustomer(CustomerGetRequestDto requestDto) {
         if (customerRepository.existsByPanNumber(requestDto.getPanNumber())) {
             throw new IllegalArgumentException("PAN Number already exists.");
         }
@@ -66,7 +71,7 @@ public class CustomerService {
         customer.setGender(requestDto.getGender());
         customer.setMaritalStatus(requestDto.getMaritalStatus());
         customer.setOccupation(requestDto.getOccupation());
-        customer.setAnnalIncome(requestDto.getAnnualIncome());
+        customer.setAnnalIncome(requestDto.getAnnalIncome());
         customer.setCustomerType(requestDto.getCustomerType());
         customer.setCustomerCategory(requestDto.getCustomerCategory());
         customer.setEmail(requestDto.getEmail());
@@ -76,6 +81,8 @@ public class CustomerService {
         customer.setNationality(requestDto.getNationality());
         customer.setAccountNumber("SBI-"+String.valueOf(10000000+random.nextInt(90000000)));
         customer.setCreatedDate(LocalDate.now());
+        customer.setCustomerStatus(requestDto.getCustomerStatus());
+        customer.setRiskCategory(requestDto.getRiskCategory());
 
         Customer savedCustomer = customerRepository.save(customer);
         return CustomerResponseDto.fromEntity(savedCustomer);
@@ -119,4 +126,53 @@ public class CustomerService {
 		
 		return response;
 	}
+
+    public AddressResponseDto addAddress(Long customerId, AddressRequestDto requestDto) {
+        Customer customer =  customerRepository.findById(customerId)
+                .orElseThrow(() ->
+                        new RuntimeException("customer not found"));
+
+        if (requestDto.getCountry() == null || requestDto.getCountry().isBlank()) {
+            throw new RuntimeException("Country cannot be null");
+        }
+
+        if (!requestDto.getPostalCode().matches("\\d{6}")) {
+            throw new RuntimeException("Invalid Postal Code");
+        }
+
+        if (Boolean.TRUE.equals(requestDto.getIsPrimary())) {
+
+            boolean exists = customerAddressRepository
+                    .existsByCustomerAndIsPrimaryTrue(customer);
+
+            if (exists) {
+                throw new RuntimeException("Primary Address already exists");
+            }
+        }
+
+
+        CustomerAddress customerAddress = new CustomerAddress();
+        customerAddress.setCustomer(customer);
+        customerAddress.setAddressType(requestDto.getAddressType());
+        customerAddress.setDoorNumber(requestDto.getDoorNumber());
+        customerAddress.setStreet(requestDto.getStreet());
+        customerAddress.setArea(requestDto.getArea());
+        customerAddress.setCity(requestDto.getCity());
+        customerAddress.setDistrict(requestDto.getDistrict());
+        customerAddress.setState(requestDto.getState());
+        customerAddress.setCountry(requestDto.getCountry());
+        customerAddress.setPostalCode(requestDto.getPostalCode());
+        customerAddress.setPrimary(requestDto.getIsPrimary());
+
+        customerAddressRepository.save(customerAddress);
+
+        AddressResponseDto response = new AddressResponseDto();
+        response.setStatus("SUCCESS");
+        response.setMessage("Customer address added successfully.");
+        response.setAddressId(customerAddress.getAddressId());
+        response.setCustomerId(customer.getId());
+
+        return response;
+    }
+
 }

@@ -57,6 +57,8 @@ public class CustomerRequestDto {
     @NotBlank(message = "Phone number is required")
     private String phoneNumber;
 
+    private String customerStatus;
+
 
 
     public  String getMiddleName() {
@@ -187,4 +189,11 @@ public class CustomerRequestDto {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getCustomerStatus() {
+        return customerStatus;
+    }
+
+    public void setCustomerStatus(String customerStatus) {
+        this.customerStatus = customerStatus;
+    }
 }

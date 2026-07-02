@@ -1,14 +1,11 @@
 package com.zenbank.cilm.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "customer")
@@ -17,6 +14,12 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToMany(mappedBy = "customer",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<CustomerAddress> addresses;
 
     @Column(unique = true,name = "cif_number")
     private String cif_number;
@@ -304,5 +307,13 @@ public class Customer {
 
     public void setAge( Integer age) {
         this.age = age;
+    }
+
+    public List<CustomerAddress> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<CustomerAddress> addresses) {
+        this.addresses = addresses;
     }
 }

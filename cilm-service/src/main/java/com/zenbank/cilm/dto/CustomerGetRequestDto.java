@@ -8,7 +8,7 @@ public class CustomerGetRequestDto {
     private String firstName;
     private String middleName;
     private String lastName;
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
     private String gender;
     private String maritalStatus;
     private String occupation;
@@ -25,7 +25,7 @@ public class CustomerGetRequestDto {
     private String email;
     private String phoneNumber;
     private String accountNumber;
-    private String age;
+    private Integer age;
 	public String getCif_number() {
 		return cif_number;
 	}
@@ -50,10 +50,10 @@ public class CustomerGetRequestDto {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	public String getDateOfBirth() {
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
-	public void setDateOfBirth(String dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 	public String getGender() {
@@ -98,12 +98,15 @@ public class CustomerGetRequestDto {
 	public void setPanNumber(String panNumber) {
 		this.panNumber = panNumber;
 	}
+
 	public String getAadhaarNumber() {
 		return aadhaarNumber;
 	}
+
 	public void setAadhaarNumber(String aadhaarNumber) {
 		this.aadhaarNumber = aadhaarNumber;
 	}
+
 	public String getNationality() {
 		return nationality;
 	}
@@ -115,12 +118,6 @@ public class CustomerGetRequestDto {
 	}
 	public void setCustomerStatus(String customerStatus) {
 		this.customerStatus = customerStatus;
-	}
-	public String getRiskCategory() {
-		return riskCategory;
-	}
-	public void setRiskCategory(String riskCategory) {
-		this.riskCategory = riskCategory;
 	}
 	public LocalDate getCreatedDate() {
 		return createdDate;
@@ -152,13 +149,18 @@ public class CustomerGetRequestDto {
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
 	}
-	public String getAge() {
+	public Integer getAge() {
 		return age;
 	}
-	public void setAge(String age) {
+	public void setAge(Integer age) {
 		this.age = age;
 	}
-    
-    
 
+	public String getRiskCategory() {
+		return riskCategory;
+	}
+
+	public void setRiskCategory(String riskCategory) {
+		this.riskCategory = riskCategory;
+	}
 }

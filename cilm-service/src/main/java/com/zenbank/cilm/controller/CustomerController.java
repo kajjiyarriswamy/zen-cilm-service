@@ -1,8 +1,6 @@
 package com.zenbank.cilm.controller;
 
-import com.zenbank.cilm.dto.CustomerGetRequestDto;
-import com.zenbank.cilm.dto.CustomerRequestDto;
-import com.zenbank.cilm.dto.CustomerResponseDto;
+import com.zenbank.cilm.dto.*;
 import com.zenbank.cilm.service.CustomerService;
 import com.zenbank.cilm.utility.ApiResponseUtil;
 import jakarta.validation.Valid;
@@ -69,4 +67,12 @@ public class CustomerController {
     			status, page,
     			size)));
     }
+
+    @PostMapping("/{customerId}/addresses")
+    public ResponseEntity<AddressResponseDto> addAddress(@Valid  @PathVariable Long customerId,
+                                                         @RequestBody AddressRequestDto request) {
+        AddressResponseDto response = customerService.addAddress(customerId, request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
 }
