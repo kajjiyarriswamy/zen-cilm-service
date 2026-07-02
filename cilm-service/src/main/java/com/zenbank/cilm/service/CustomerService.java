@@ -12,6 +12,11 @@ import com.zenbank.cilm.entity.Customer;
 import com.zenbank.cilm.entity.CustomerPreference;
 import com.zenbank.cilm.repository.CustomerRepository;
 
+import com.zenbank.cilm.dto.CustomerContactRequestDto;
+import com.zenbank.cilm.dto.CustomerContactResponseDto;
+import com.zenbank.cilm.entity.CustomerContact;
+import com.zenbank.cilm.repository.CustomerContactRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,17 +38,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
-import com.zenbank.cilm.dto.CustomerContactRequestDto;
-import com.zenbank.cilm.dto.CustomerContactResponseDto;
-import com.zenbank.cilm.entity.CustomerContact;
-import com.zenbank.cilm.repository.CustomerContactRepository;
-
 @Service
 public class CustomerService {
 
 	private final CustomerRepository customerRepository;
 	private final CustomerContactRepository customerContactRepository;
-
 
 	private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
 
