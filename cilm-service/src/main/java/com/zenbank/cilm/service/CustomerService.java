@@ -12,6 +12,11 @@ import com.zenbank.cilm.entity.Customer;
 import com.zenbank.cilm.entity.CustomerPreference;
 import com.zenbank.cilm.repository.CustomerRepository;
 
+import com.zenbank.cilm.dto.CustomerContactRequestDto;
+import com.zenbank.cilm.dto.CustomerContactResponseDto;
+import com.zenbank.cilm.entity.CustomerContact;
+import com.zenbank.cilm.repository.CustomerContactRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -37,11 +42,14 @@ import java.util.Random;
 public class CustomerService {
 
 	private final CustomerRepository customerRepository;
+	private final CustomerContactRepository customerContactRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
 
-	public CustomerService(CustomerRepository customerRepository) {
+	public CustomerService(CustomerRepository customerRepository,
+	                       CustomerContactRepository customerContactRepository) {
 		this.customerRepository = customerRepository;
+		this.customerContactRepository = customerContactRepository;
 	}
 
 	public CustomerResponseDto createCustomer(CustomerRequestDto requestDto) {
@@ -169,6 +177,57 @@ public class CustomerService {
 
 		return customer.getCustomerPreference();
 
+	}
+
+	public CustomerContactResponseDto addContact(String customerId, CustomerContactRequestDto requestDto) {
+
+		Customer customer = customerRepository.findByCustomerId(customerId)
+				.orElseThrow(() -> new IllegalArgumentException("Customer does not exist."));
+
+		if (customerContactRepository.existsByMobileNumber(requestDto.getMobileNumber())) {
+			throw new IllegalArgumentException("Mobile number already exists.");
+		}
+
+		if (requestDto.getAlternateMobile() != null &&
+				requestDto.getAlternateMobile().equals(requestDto.getMobileNumber())) {
+			throw new IllegalArgumentException("Alternate mobile cannot be the same as primary mobile.");
+		}
+
+		if (requestDto.getEmail() != null &&
+				customerContactRepository.existsByEmail(requestDto.getEmail())) {
+			throw new IllegalArgumentException("Email already exists.");
+		}
+
+		String[] validModes = {"SMS", "EMAIL", "PHONE"};
+		boolean validMode = false;
+		for (String mode : validModes) {
+			if (mode.equals(requestDto.getPreferredContactMode())) {
+				validMode = true;
+				break;
+			}
+		}
+		if (!validMode) {
+			throw new IllegalArgumentException("Preferred contact mode must be SMS, EMAIL or PHONE.");
+		}
+
+		CustomerContact contact = new CustomerContact();
+		contact.setCustomer(customer);
+		contact.setMobileNumber(requestDto.getMobileNumber());
+		contact.setAlternateMobile(requestDto.getAlternateMobile());
+		contact.setEmail(requestDto.getEmail());
+		contact.setLandline(requestDto.getLandline());
+		contact.setPreferredContactMode(requestDto.getPreferredContactMode());
+
+		CustomerContact saved = customerContactRepository.save(contact);
+
+		String contactId = "CNT" + String.format("%06d", saved.getContactId());
+
+		return new CustomerContactResponseDto(
+				"SUCCESS",
+				"Customer contact details added successfully.",
+				contactId,
+				customerId
+		);
 	}
 
 }
