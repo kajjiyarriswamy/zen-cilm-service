@@ -1,20 +1,12 @@
 
 package com.zenbank.cilm.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import jakarta.validation.constraints.Min;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.zenbank.cilm.Enum.CustomerStatus;
@@ -96,6 +88,12 @@ public class Customer {
 	@Column(nullable = false)
 	@Min(value = 18, message = "Age must be greater than 18")
 	private Integer age;
+
+	@OneToMany(mappedBy = "customer",
+			cascade = CascadeType.ALL,
+			fetch = FetchType.LAZY)
+	@JsonManagedReference
+	private List<CustomerAddress> addresses;
 	
 	
 	 @Column(nullable = false)

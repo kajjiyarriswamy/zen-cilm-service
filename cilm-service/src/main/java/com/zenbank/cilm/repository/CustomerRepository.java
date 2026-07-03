@@ -1,6 +1,7 @@
 package com.zenbank.cilm.repository;
 
 import com.zenbank.cilm.entity.Customer;
+import com.zenbank.cilm.entity.CustomerNominee;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,9 +22,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     boolean existsByAadhaarNumber(String aadhaarNumber);
 
     boolean existsByPhoneNumber(String phoneNumber);
-
-    
-    Optional<Customer> findById(Long id);
 
 	Optional<Customer> findByCustomerId(String customerId);
 
@@ -46,4 +44,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 			@Param("aadhaar")String aadhaar,
 			@Param("status")String status, 
 			Pageable pageable);
+
+	
 }
