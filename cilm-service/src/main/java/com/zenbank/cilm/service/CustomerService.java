@@ -200,6 +200,7 @@ public class CustomerService {
 		customerRepository.save(customer);
 
 		return customer.getCustomerPreference();
+	}
 
 	public void updateCustomer(Long customerId, CustomerRequestDto requestDto) {
 		Customer customer = customerRepository.findById(customerId)
@@ -211,22 +212,8 @@ public class CustomerService {
 
 	    customerRepository.save(customer);
 	}
-<<<<<<< HEAD
+
 	
-	public CustomerPreference createPreference(Long customerId,
-            CustomerPreference preference) {
-
-           Customer customer = customerRepository.findById(customerId)
-                 .orElseThrow(() -> new RuntimeException("Customer not found"));
-
-                  preference.setCustomer(customer);
-
-                   customer.setCustomerPreference(preference);
-
-                     customerRepository.save(customer);
-
-              return customer.getCustomerPreference();
-	}
 	
 	public void updateNotificationPreferences(Long customerId,
             CustomerPreference request) {
@@ -249,13 +236,6 @@ public class CustomerService {
 // Save
           customerRepository.save(customer);
            }
-
-=======
->>>>>>> 0173c8b8d4a8762dac684c0cf7f90eb83f45c306
-
-
-	
-	
 }
 
-}
+
