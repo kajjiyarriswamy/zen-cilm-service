@@ -1,31 +1,18 @@
 package com.zenbank.cilm.service;
 
 
-import com.zenbank.cilm.dto.CustomerGetRequestDto;
-import com.zenbank.cilm.dto.CustomerRequestDto;
-import com.zenbank.cilm.dto.CustomerResponseDto;
-import com.zenbank.cilm.entity.Customer;
-import com.zenbank.cilm.entity.CustomerNominee;
+import com.zenbank.cilm.dto.*;
+import com.zenbank.cilm.entity.*;
+import com.zenbank.cilm.repository.AddressRepository;
 import com.zenbank.cilm.repository.CustomerNomineeRepository;
 
 import com.zenbank.cilm.Enum.CustomerStatus;
 
-import com.zenbank.cilm.dto.CustomerPreferenceResponseDto;
-
-import com.zenbank.cilm.dto.CustomerDetailsResponseDto;
-
-import com.zenbank.cilm.dto.CustomerRequestDto;
-import com.zenbank.cilm.dto.CustomerResponseDto;
-import com.zenbank.cilm.entity.Customer;
-import com.zenbank.cilm.entity.CustomerPreference;
-
 import com.zenbank.cilm.repository.CustomerRepository;
 
-import com.zenbank.cilm.dto.CustomerContactRequestDto;
-import com.zenbank.cilm.dto.CustomerContactResponseDto;
-import com.zenbank.cilm.entity.CustomerContact;
 import com.zenbank.cilm.repository.CustomerContactRepository;
 
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,7 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 
 import org.springframework.data.domain.Page;
@@ -53,10 +42,12 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerNomineeRepository customerNomineeRepository;
+	private final AddressRepository customerAddressRepository;
 
-    public CustomerService(CustomerRepository customerRepository, CustomerNomineeRepository customerNomineeRepository) {
+    public CustomerService(CustomerRepository customerRepository, CustomerNomineeRepository customerNomineeRepository,AddressRepository customerAddressRepository) {
         this.customerRepository = customerRepository;
         this.customerNomineeRepository = customerNomineeRepository;
+		this.customerAddressRepository = customerAddressRepository;
     }
 
     public CustomerResponseDto createCustomer(CustomerRequestDto dto) {
@@ -65,7 +56,7 @@ public class CustomerService {
             throw new IllegalArgumentException("Customer with this email already exists");
         }
 
-      /*  Customer cu = new Customer();
+       Customer cu = new Customer();
         		cu.setCif_number(dto.getCif_number());
         		cu.setFirstName(dto.getFirstName());
         		cu.setMiddleName(dto.getMiddleName());
@@ -74,7 +65,7 @@ public class CustomerService {
         		cu.setGender(dto.getGender());
         		cu.setMaritalStatus(dto.getMaritalStatus());
         		cu.setOccupation(dto.getOccupation());
-        		cu.setAnnalIncome(dto.getAnnalIncome());
+        		cu.setAnnalIncome(dto.getAnnualIncome());
         		cu.setCustomerType(dto.getCustomerType());
         		cu.setCustomerCategory(dto.getCustomerCategory());
         		cu.setPanNumber(dto.getPanNumber());
@@ -82,28 +73,31 @@ public class CustomerService {
         		cu.setNationality(dto.getNationality());
         		cu.setCustomerStatus(dto.getCustomerStatus());
         		cu.setRiskCategory(dto.getRiskCategory());
-        		cu.setCreatedDate(dto.getCreatedDate());
-        		cu.setUpdatedDate(dto.getUpdatedDate());
+        		cu.setCreatedDate(LocalDate.now());
+        		cu.setUpdatedDate(LocalDate.now());
         		cu.setEmail(dto.getEmail());
         		cu.setPhoneNumber(dto.getPhoneNumber());
         		cu.setAccountNumber(dto.getAccountNumber());
-        		cu.setAge(dto.getAge());*/
-        
-        Customer customer=customerRepository.findById(dto.getCustomerId())
-        		.orElseThrow(() -> new RuntimeException("Customer Not Found"));
-        CustomerNominee cn=new CustomerNominee();
-        
-        
-        cn.setCustomerId(customer);
-        cn.setNomineeName(dto.getNomineeName());
-        cn.setRelationship(dto.getRelationship());
-        cn.setDob(dto.getDob());
-        cn.setMobile(dto.getMobile());
-        cn.setSharePercentage(dto.getSharePercentage());
-        cn.setVerificationStatus(dto.getVerificationStatus());
-        
+        		cu.setAge(dto.getAge());
+				cu.setCustomerId(String.valueOf(dto.getCustomerId()));
 
-        CustomerNominee savedCustomer = customerNomineeRepository.save(cn);
+//        Customer customer=customerRepository.findById(dto.getCustomerId())
+//        		.orElseThrow(() -> new RuntimeException("Customer Not Found"));
+//        CustomerNominee cn=new CustomerNominee();
+//
+//
+//        cn.setCustomerId(customer);
+//        cn.setNomineeName(dto.getNomineeName());
+//        cn.setRelationship(dto.getRelationship());
+//        cn.setDob(dto.getDob());
+//        cn.setMobile(dto.getMobile());
+//        cn.setSharePercentage(dto.getSharePercentage());
+//        cn.setVerificationStatus(dto.getVerificationStatus());
+
+		Customer savedCustomer = customerRepository.save(cu);
+
+
+//        CustomerNominee savedCustomer = customerNomineeRepository.save(cn);
         return CustomerResponseDto.fromEntity(savedCustomer);
     }
 
@@ -162,8 +156,8 @@ public class CustomerService {
 		CustomerNominee nominee=customerNomineeRepository.findByNomineeIdAndCustomerId(nomineeId, customer)
 				.orElseThrow(() -> new RuntimeException("Nominee Not Found"));
 		
-		nominee.setMobile(dto.getMobile());
-		nominee.setSharePercentage(dto.getSharePercentage());
+//		nominee.setMobile(dto.getMobile());
+//		nominee.setSharePercentage(dto.getSharePercentage());
 		
 		customerNomineeRepository.save(nominee);
 		
@@ -213,6 +207,7 @@ public class CustomerService {
 	    customerRepository.save(customer);
 	}
 
+<<<<<<< HEAD
 	
 	
 	public void updateNotificationPreferences(Long customerId,
@@ -236,6 +231,60 @@ public class CustomerService {
 // Save
           customerRepository.save(customer);
            }
+=======
+
+	public CustomerContactResponseDto addContact(String customerId, @Valid CustomerContactRequestDto requestDto) {
+		return null;
+	}
+
+	public AddressResponseDto addAddress(Long customerId, AddressRequestDto requestDto) {
+		Customer customer =  customerRepository.findByCustomerId(String.valueOf(customerId))
+				.orElseThrow(() ->
+						new RuntimeException("customer not found"));
+
+		if (requestDto.getCountry() == null || requestDto.getCountry().isBlank()) {
+			throw new RuntimeException("Country cannot be null");
+		}
+
+		if (!requestDto.getPostalCode().matches("\\d{6}")) {
+			throw new RuntimeException("Invalid Postal Code");
+		}
+
+		if (Boolean.TRUE.equals(requestDto.getPrimary())) {
+
+			boolean exists = customerAddressRepository
+					.existsByCustomerAndIsPrimaryTrue(customer);
+
+			if (exists) {
+				throw new RuntimeException("Primary Address already exists");
+			}
+		}
+
+
+		CustomerAddress customerAddress = new CustomerAddress();
+		customerAddress.setCustomer(customer);
+		customerAddress.setAddressType(requestDto.getAddressType());
+		customerAddress.setDoorNumber(requestDto.getDoorNumber());
+		customerAddress.setStreet(requestDto.getStreet());
+		customerAddress.setArea(requestDto.getArea());
+		customerAddress.setCity(requestDto.getCity());
+		customerAddress.setDistrict(requestDto.getDistrict());
+		customerAddress.setState(requestDto.getState());
+		customerAddress.setCountry(requestDto.getCountry());
+		customerAddress.setPostalCode(requestDto.getPostalCode());
+		customerAddress.setPrimary(requestDto.getPrimary());
+
+		customerAddressRepository.save(customerAddress);
+
+		AddressResponseDto response = new AddressResponseDto();
+		response.setStatus("SUCCESS");
+		response.setMessage("Customer address added successfully.");
+		response.setAddressId(customerAddress.getAddressId());
+		response.setCustomerId(customer.getId());
+
+		return response;
+	}
+>>>>>>> a6df009a536f2aa489210718f0b1e8a4ba5d7118
 }
 
 
