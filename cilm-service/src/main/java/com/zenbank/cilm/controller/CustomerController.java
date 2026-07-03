@@ -174,6 +174,16 @@ public class CustomerController {
 		AddressResponseDto response = customerService.addAddress(customerId, request);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
+	
+	@GetMapping("/{customerId}/kyc")
+	public ResponseEntity<Map<String, Object>> getCustomerKyc(
+	        @PathVariable Long customerId) {
+
+	    CustomerKycResponseDto response =
+	            customerService.getCustomerKyc(customerId);
+
+	    return ResponseEntity.ok(ApiResponseUtil.success(response));
+	}
 
 }
 

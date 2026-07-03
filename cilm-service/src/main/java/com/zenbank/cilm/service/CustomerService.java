@@ -11,6 +11,7 @@ import com.zenbank.cilm.Enum.CustomerStatus;
 import com.zenbank.cilm.repository.CustomerRepository;
 
 import com.zenbank.cilm.repository.CustomerContactRepository;
+import com.zenbank.cilm.repository.CustomerKycRepository;
 
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -43,11 +44,14 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerNomineeRepository customerNomineeRepository;
 	private final AddressRepository customerAddressRepository;
+	private final CustomerKycRepository customerKycRepository;
+	
 
-    public CustomerService(CustomerRepository customerRepository, CustomerNomineeRepository customerNomineeRepository,AddressRepository customerAddressRepository) {
+    public CustomerService(CustomerRepository customerRepository, CustomerNomineeRepository customerNomineeRepository,AddressRepository customerAddressRepository,CustomerKycRepository customerKycRepository) {
         this.customerRepository = customerRepository;
         this.customerNomineeRepository = customerNomineeRepository;
 		this.customerAddressRepository = customerAddressRepository;
+		this. customerKycRepository=customerKycRepository;
     }
 
     public CustomerResponseDto createCustomer(CustomerRequestDto dto) {
@@ -281,6 +285,24 @@ public class CustomerService {
 		response.setCustomerId(customer.getId());
 
 		return response;
+	}
+	
+	public CustomerKycResponseDto getCustomerKyc(Long customerId) {
+
+	    Customer customer = customerRepository.findById(customerId)
+	            .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+	    CustomerKyc customerKyc = customerKycRepository.findByCustomer(customer)
+	            .orElseThrow(() -> new RuntimeException("KYC record not found."));
+
+	    return new CustomerKycResponseDto(
+	            customer.getCustomerId(),
+	            customerKyc.getPanVerified(),
+	            customerKyc.getAadhaarVerified(),
+	            customerKyc.getKycStatus(),
+	            customerKyc.getVerifiedBy(),
+	            customerKyc.getVerifiedDate()
+	    );
 	}
 
 }
