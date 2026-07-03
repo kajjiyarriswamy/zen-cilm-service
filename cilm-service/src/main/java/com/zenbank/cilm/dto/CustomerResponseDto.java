@@ -1,6 +1,9 @@
 package com.zenbank.cilm.dto;
 
+import java.time.LocalDate;
+
 import com.zenbank.cilm.entity.Customer;
+import com.zenbank.cilm.entity.CustomerNominee;
 
 import java.time.LocalDate;
 
@@ -13,6 +16,16 @@ public class CustomerResponseDto {
     private String email;
     private String phoneNumber;
     private String accountNumber;
+
+    private Long nomineeId;
+    private Long customerId;
+    private String nomineeName;
+    private String relationship;
+    private String verificationStatus;
+    private LocalDate dob;
+    private String mobile;
+    private Double sharePercentage;
+
     private String cif_number;
     private LocalDate createdDate;
 
@@ -42,7 +55,23 @@ public class CustomerResponseDto {
         this.createdDate = createdDate;
     }
 
-    public static CustomerResponseDto fromEntity(Customer customer) {
+    public CustomerResponseDto(Long nomineeId, 
+    		String nomineeName, 
+    		String mobile, 
+    		String relationship,
+			Long customer, 
+			Double sharePercentage, LocalDate dob) {
+		
+    	this.nomineeId=nomineeId;
+    	this.nomineeName=nomineeName;
+    	this.mobile=mobile;
+    	this.relationship=relationship;
+    	this.customerId=customer;
+    	this.sharePercentage=sharePercentage;
+    	this.dob=dob;
+	}
+
+	public static CustomerResponseDto fromEntity(Customer customer) {
         return new CustomerResponseDto(
                 customer.getId(),
                 customer.getFirstName(),
@@ -92,7 +121,86 @@ public class CustomerResponseDto {
 		public String getPhoneNumber() {
 			return phoneNumber;
 		}
+    
+	public Long getNomineeId() {
+		return nomineeId;
+	}
 
+	public void setNomineeId(Long nomineeId) {
+		this.nomineeId = nomineeId;
+	}
+
+	
+
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
+
+	public String getNomineeName() {
+		return nomineeName;
+	}
+
+	public void setNomineeName(String nomineeName) {
+		this.nomineeName = nomineeName;
+	}
+
+	public String getRelationship() {
+		return relationship;
+	}
+
+	public void setRelationship(String relationship) {
+		this.relationship = relationship;
+	}
+
+	public String getVerificationStatus() {
+		return verificationStatus;
+	}
+
+	public void setVerificationStatus(String verificationStatus) {
+		this.verificationStatus = verificationStatus;
+	}
+
+	public LocalDate getDob() {
+		return dob;
+	}
+
+	public void setDob(LocalDate dob) {
+		this.dob = dob;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public Double getSharePercentage() {
+		return sharePercentage;
+	}
+
+	public void setSharePercentage(Double sharePercentage) {
+		this.sharePercentage = sharePercentage;
+	}
+
+	public static CustomerResponseDto fromEntity(CustomerNominee savedCustomer) {
+	
+		return new CustomerResponseDto(
+				savedCustomer.getNomineeId(),
+				savedCustomer.getNomineeName(),
+				savedCustomer.getMobile(),
+				savedCustomer.getRelationship(),
+				savedCustomer.getCustomerId().getId(),
+				savedCustomer.getSharePercentage(),
+				savedCustomer.getDob()
+				);
+				
+	}
 		public void setPhoneNumber(String phoneNumber) {
 			this.phoneNumber = phoneNumber;
 		}
@@ -123,6 +231,7 @@ public class CustomerResponseDto {
 	    
 	    
 	    
+
 }
 
 	    
