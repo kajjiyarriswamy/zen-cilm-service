@@ -1,16 +1,11 @@
 package com.zenbank.cilm.controller;
 
 
-import com.zenbank.cilm.dto.CustomerGetRequestDto;
-import com.zenbank.cilm.dto.CustomerPreferenceResponseDto;
-
-import com.zenbank.cilm.dto.CustomerRequestDto;
-import com.zenbank.cilm.dto.CustomerResponseDto;
+import com.zenbank.cilm.dto.*;
 
 import com.zenbank.cilm.entity.CustomerNominee;
 import com.zenbank.cilm.repository.CustomerNomineeRepository;
 
-import com.zenbank.cilm.dto.CustomerStatusUpdateRequest;
 import com.zenbank.cilm.entity.CustomerPreference;
 
 import com.zenbank.cilm.service.CustomerService;
@@ -172,6 +167,12 @@ public class CustomerController {
     		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     	}
     }
+	@PostMapping("/{customerId}/addresses")
+	public ResponseEntity<AddressResponseDto> addAddress(@Valid  @PathVariable Long customerId,
+	                                                     @RequestBody AddressRequestDto request) {
+		AddressResponseDto response = customerService.addAddress(customerId, request);
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
 }
 
 
