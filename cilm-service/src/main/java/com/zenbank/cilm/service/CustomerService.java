@@ -1,5 +1,13 @@
 package com.zenbank.cilm.service;
 
+
+import com.zenbank.cilm.dto.CustomerGetRequestDto;
+import com.zenbank.cilm.dto.CustomerRequestDto;
+import com.zenbank.cilm.dto.CustomerResponseDto;
+import com.zenbank.cilm.entity.Customer;
+import com.zenbank.cilm.entity.CustomerNominee;
+import com.zenbank.cilm.repository.CustomerNomineeRepository;
+
 import com.zenbank.cilm.Enum.CustomerStatus;
 
 import com.zenbank.cilm.dto.CustomerPreferenceResponseDto;
@@ -10,7 +18,13 @@ import com.zenbank.cilm.dto.CustomerRequestDto;
 import com.zenbank.cilm.dto.CustomerResponseDto;
 import com.zenbank.cilm.entity.Customer;
 import com.zenbank.cilm.entity.CustomerPreference;
+
 import com.zenbank.cilm.repository.CustomerRepository;
+
+import com.zenbank.cilm.dto.CustomerContactRequestDto;
+import com.zenbank.cilm.dto.CustomerContactResponseDto;
+import com.zenbank.cilm.entity.CustomerContact;
+import com.zenbank.cilm.repository.CustomerContactRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,64 +50,62 @@ import java.util.Random;
 @Service
 public class CustomerService {
 
-	private final CustomerRepository customerRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
+    private final CustomerRepository customerRepository;
+    private final CustomerNomineeRepository customerNomineeRepository;
 
-	public CustomerService(CustomerRepository customerRepository) {
-		this.customerRepository = customerRepository;
-	}
+    public CustomerService(CustomerRepository customerRepository, CustomerNomineeRepository customerNomineeRepository) {
+        this.customerRepository = customerRepository;
+        this.customerNomineeRepository = customerNomineeRepository;
+    }
 
-	public CustomerResponseDto createCustomer(CustomerRequestDto requestDto) {
-		if (customerRepository.existsByPanNumber(requestDto.getPanNumber())) {
-			throw new IllegalArgumentException("PAN Number already exists.");
-		}
+    public CustomerResponseDto createCustomer(CustomerRequestDto dto) {
+        Optional<Customer> existing = customerRepository.findByEmail(dto.getEmail());
+        if (existing.isPresent()) {
+            throw new IllegalArgumentException("Customer with this email already exists");
+        }
 
-		if (customerRepository.existsByAadhaarNumber(requestDto.getAadhaarNumber())) {
-			throw new IllegalArgumentException("Aadhaar Number already exists.");
-		}
+      /*  Customer cu = new Customer();
+        		cu.setCif_number(dto.getCif_number());
+        		cu.setFirstName(dto.getFirstName());
+        		cu.setMiddleName(dto.getMiddleName());
+        		cu.setLastName(dto.getLastName());
+        		cu.setDateOfBirth(dto.getDateOfBirth());
+        		cu.setGender(dto.getGender());
+        		cu.setMaritalStatus(dto.getMaritalStatus());
+        		cu.setOccupation(dto.getOccupation());
+        		cu.setAnnalIncome(dto.getAnnalIncome());
+        		cu.setCustomerType(dto.getCustomerType());
+        		cu.setCustomerCategory(dto.getCustomerCategory());
+        		cu.setPanNumber(dto.getPanNumber());
+        		cu.setAadhaarNumber(dto.getAadhaarNumber());
+        		cu.setNationality(dto.getNationality());
+        		cu.setCustomerStatus(dto.getCustomerStatus());
+        		cu.setRiskCategory(dto.getRiskCategory());
+        		cu.setCreatedDate(dto.getCreatedDate());
+        		cu.setUpdatedDate(dto.getUpdatedDate());
+        		cu.setEmail(dto.getEmail());
+        		cu.setPhoneNumber(dto.getPhoneNumber());
+        		cu.setAccountNumber(dto.getAccountNumber());
+        		cu.setAge(dto.getAge());*/
+        
+        Customer customer=customerRepository.findById(dto.getCustomerId())
+        		.orElseThrow(() -> new RuntimeException("Customer Not Found"));
+        CustomerNominee cn=new CustomerNominee();
+        
+        
+        cn.setCustomerId(customer);
+        cn.setNomineeName(dto.getNomineeName());
+        cn.setRelationship(dto.getRelationship());
+        cn.setDob(dto.getDob());
+        cn.setMobile(dto.getMobile());
+        cn.setSharePercentage(dto.getSharePercentage());
+        cn.setVerificationStatus(dto.getVerificationStatus());
+        
 
-		if (customerRepository.existsByPhoneNumber(requestDto.getPhoneNumber())) {
-			throw new IllegalArgumentException("Mobile Number already exists.");
-		}
-
-		int age = Period.between(requestDto.getDateOfBirth(), LocalDate.now()).getYears();
-
-		if (age < 18) {
-			throw new IllegalArgumentException("Customer age should be 18 years or above.");
-		}
-		Optional<Customer> existing = customerRepository.findByEmail(requestDto.getEmail());
-
-		if (existing.isPresent()) {
-			throw new IllegalArgumentException("Customer with this email already exists");
-		}
-
-		Customer customer = new Customer();
-
-		Random random = new Random();
-		customer.setCif_number("CIF" + String.valueOf(10000000 + random.nextInt(90000000)));
-		customer.setFirstName(requestDto.getFirstName());
-		customer.setMiddleName(requestDto.getMiddleName());
-		customer.setLastName(requestDto.getLastName());
-		customer.setAge(requestDto.getAge());
-		customer.setDateOfBirth(requestDto.getDateOfBirth());
-		customer.setGender(requestDto.getGender());
-		customer.setMaritalStatus(requestDto.getMaritalStatus());
-		customer.setOccupation(requestDto.getOccupation());
-		customer.setAnnalIncome(requestDto.getAnnualIncome());
-		customer.setCustomerType(requestDto.getCustomerType());
-		customer.setCustomerCategory(requestDto.getCustomerCategory());
-		customer.setEmail(requestDto.getEmail());
-		customer.setPhoneNumber(requestDto.getPhoneNumber());
-		customer.setAadhaarNumber(requestDto.getAadhaarNumber());
-		customer.setPanNumber(requestDto.getPanNumber());
-		customer.setNationality(requestDto.getNationality());
-		customer.setAccountNumber("SBI-" + String.valueOf(10000000 + random.nextInt(90000000)));
-		customer.setCreatedDate(LocalDate.now());
-
-		Customer savedCustomer = customerRepository.save(customer);
-		return CustomerResponseDto.fromEntity(savedCustomer);
-	}
+        CustomerNominee savedCustomer = customerNomineeRepository.save(cn);
+        return CustomerResponseDto.fromEntity(savedCustomer);
+    }
 
 	public List<CustomerResponseDto> getAllCustomers() {
 		return customerRepository.findAll().stream().map(CustomerResponseDto::fromEntity).toList();
@@ -138,6 +150,26 @@ public class CustomerService {
 
 		return response;
 	}
+
+
+	public void updateNominee(Long customerId, 
+			Long nomineeId, 
+			CustomerRequestDto dto) {
+		
+		Customer customer=customerRepository.findById(customerId)
+				.orElseThrow(() -> new RuntimeException("Customer Not Found"));
+		
+		CustomerNominee nominee=customerNomineeRepository.findByNomineeIdAndCustomerId(nomineeId, customer)
+				.orElseThrow(() -> new RuntimeException("Nominee Not Found"));
+		
+		nominee.setMobile(dto.getMobile());
+		nominee.setSharePercentage(dto.getSharePercentage());
+		
+		customerNomineeRepository.save(nominee);
+		
+		
+	}
+
 
 	public CustomerPreferenceResponseDto getCustomerPreference(Long customerId) {
 
