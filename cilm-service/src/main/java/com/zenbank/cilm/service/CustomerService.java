@@ -200,6 +200,7 @@ public class CustomerService {
 		customerRepository.save(customer);
 
 		return customer.getCustomerPreference();
+	}
 
 	public void updateCustomer(Long customerId, CustomerRequestDto requestDto) {
 		Customer customer = customerRepository.findById(customerId)
@@ -211,10 +212,6 @@ public class CustomerService {
 
 	    customerRepository.save(customer);
 	}
-
-
-	
 	
 }
 
-}
