@@ -1,6 +1,7 @@
 package com.zenbank.cilm.repository;
 
 import com.zenbank.cilm.entity.Customer;
+import com.zenbank.cilm.entity.CustomerNominee;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,4 +47,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 			@Param("aadhaar")String aadhaar,
 			@Param("status")String status, 
 			Pageable pageable);
+
+	
 }
