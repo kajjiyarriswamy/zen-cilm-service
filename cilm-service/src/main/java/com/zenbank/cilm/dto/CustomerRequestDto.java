@@ -15,6 +15,8 @@ public class CustomerRequestDto {
     @NotBlank(message = "Last name is required")
     private String middleName;
 
+    
+
     @NotBlank(message = "Last name is required")
     private String lastName;
 
@@ -158,6 +160,9 @@ public class CustomerRequestDto {
     }
 
 
+
+   
+
 	    public String getFirstName() {
 	        return firstName;
 	    }
@@ -189,6 +194,7 @@ public class CustomerRequestDto {
 	    public void setPhoneNumber(String phoneNumber) {
 	        this.phoneNumber = phoneNumber;
 	    }
+
 
 
 }
