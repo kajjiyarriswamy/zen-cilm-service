@@ -259,5 +259,24 @@ public class CustomerService {
 
 		return response;
 	}
+
+	public void verifyNominee(Long customerId, Long nomineeId, CustomerRequestDto dto) {
+		
+		Customer customer=customerRepository.findById(customerId)
+				.orElseThrow(() -> new RuntimeException("Customer not found"));
+		
+		CustomerNominee nominee=customerNomineeRepository.findByNomineeIdAndCustomerId(nomineeId, customer)
+				.orElseThrow(() -> new RuntimeException("Nominee not found"));
+		
+		if ("VERIFIED".equalsIgnoreCase(nominee.getVerificationStatus())) {
+			
+			throw new RuntimeException("Nominee already verified");
+		}
+		
+		nominee.setVerificationStatus("VERIFIED");
+		
+		customerNomineeRepository.save(nominee);
+		
+	}
 }
 

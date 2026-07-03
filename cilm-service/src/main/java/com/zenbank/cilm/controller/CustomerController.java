@@ -160,6 +160,35 @@ public class CustomerController {
 		AddressResponseDto response = customerService.addAddress(customerId, request);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
+	@PutMapping("/{customerId}/nominees/{nomineeId}/verify")
+	public ResponseEntity<Map<String, Object>> checkverify(
+			@PathVariable Long customerId,
+			@PathVariable Long nomineeId,
+			@RequestBody CustomerRequestDto dto
+			) {
+		
+		try {
+			
+			customerService.verifyNominee(customerId, nomineeId, dto);
+			
+			Map<String, Object> response= new LinkedHashMap<>();
+			response.put("status", "SUCCESS");
+			response.put("message", "Nominee verified successfully");
+			response.put("verificationStatus", "VERIFIED");
+			
+			return ResponseEntity.ok(response);
+			
+		}catch(RuntimeException e) {
+			
+			Map<String, Object> response=new LinkedHashMap<>();
+			
+			response.put("status", "FAILED");
+			response.put("errorCode", "NOM_004");
+			response.put("message", e.getMessage());
+			
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}
+	}
 }
 
 
