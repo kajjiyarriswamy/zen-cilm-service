@@ -154,7 +154,6 @@ public class CustomerController {
                 ApiResponseUtil.success("Customer Updated Successfully")
         );
     }
-<<<<<<< HEAD
 
     @PutMapping("/{customerId}/preferences/notifications")
     public ResponseEntity<Map<String, Object>> updateNotificationPreferences(
@@ -168,14 +167,13 @@ public class CustomerController {
     }
    
 
-=======
+
 	@PostMapping("/{customerId}/addresses")
 	public ResponseEntity<AddressResponseDto> addAddress(@Valid  @PathVariable Long customerId,
 	                                                     @RequestBody AddressRequestDto request) {
 		AddressResponseDto response = customerService.addAddress(customerId, request);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
->>>>>>> a6df009a536f2aa489210718f0b1e8a4ba5d7118
-}
 
+}
 

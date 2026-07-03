@@ -207,8 +207,7 @@ public class CustomerService {
 	    customerRepository.save(customer);
 	}
 
-<<<<<<< HEAD
-	
+
 	
 	public void updateNotificationPreferences(Long customerId,
             CustomerPreference request) {
@@ -231,7 +230,6 @@ public class CustomerService {
 // Save
           customerRepository.save(customer);
            }
-=======
 
 	public CustomerContactResponseDto addContact(String customerId, @Valid CustomerContactRequestDto requestDto) {
 		return null;
@@ -284,7 +282,7 @@ public class CustomerService {
 
 		return response;
 	}
->>>>>>> a6df009a536f2aa489210718f0b1e8a4ba5d7118
+
 }
 
 
