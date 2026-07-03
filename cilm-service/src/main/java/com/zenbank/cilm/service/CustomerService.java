@@ -201,21 +201,20 @@ public class CustomerService {
 
 		return customer.getCustomerPreference();
 
+	public void updateCustomer(Long customerId, CustomerRequestDto requestDto) {
+		Customer customer = customerRepository.findById(customerId)
+	            .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+	    customer.setOccupation(requestDto.getOccupation());
+	    customer.setAnnalIncome(requestDto.getAnnualIncome());
+	    customer.setMaritalStatus(requestDto.getMaritalStatus());
+
+	    customerRepository.save(customer);
 	}
 
-	public void deleteNominee(Long customerId, Long nomineeId) {
-	
-		Customer customer=customerRepository.findById(customerId)
-				.orElseThrow(() -> new RuntimeException("Customer not found"));
-		
-		CustomerNominee nominee=customerNomineeRepository.findByNomineeIdAndCustomerId(nomineeId, customer)
-				.orElseThrow(() -> new RuntimeException("Niminee not found"));
-	
-		customerNomineeRepository.delete(nominee);
-		
-	}
-	
-	
 
+	
+	
+}
 
 }
