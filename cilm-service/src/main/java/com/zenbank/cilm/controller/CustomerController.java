@@ -1,8 +1,18 @@
 package com.zenbank.cilm.controller;
 
+
 import com.zenbank.cilm.dto.CustomerGetRequestDto;
+import com.zenbank.cilm.dto.CustomerPreferenceResponseDto;
+
 import com.zenbank.cilm.dto.CustomerRequestDto;
 import com.zenbank.cilm.dto.CustomerResponseDto;
+
+import com.zenbank.cilm.entity.CustomerNominee;
+import com.zenbank.cilm.repository.CustomerNomineeRepository;
+
+import com.zenbank.cilm.dto.CustomerStatusUpdateRequest;
+import com.zenbank.cilm.entity.CustomerPreference;
+
 import com.zenbank.cilm.service.CustomerService;
 import com.zenbank.cilm.utility.ApiResponseUtil;
 import jakarta.validation.Valid;
@@ -14,11 +24,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +38,7 @@ import java.util.Map;
 @RequestMapping("/api/customers")
 public class CustomerController {
 
+	
     private final CustomerService customerService;
 
     public CustomerController(CustomerService customerService) {
@@ -33,10 +46,11 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> createCustomer(@Valid @RequestBody CustomerGetRequestDto requestDto) {
+    public ResponseEntity<Map<String, Object>> createCustomer(@Valid @RequestBody CustomerRequestDto requestDto) {
         CustomerResponseDto responseDto = customerService.createCustomer(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseUtil.success(responseDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseUtil.created(responseDto));
     }
+    
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllCustomers() {
@@ -51,7 +65,19 @@ public class CustomerController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(ApiResponseUtil.error("Customer not found")));
     }
+
+
+    @PutMapping("/{customerId}/status")
+    public ResponseEntity<String> updateCustomerStatus(
+            @PathVariable Long customerId,
+            @RequestBody CustomerStatusUpdateRequest request) {
+
+        customerService.updateCustomerStatus(customerId, request.getStatus());
+        return ResponseEntity.ok("Customer status updated successfully");
+    }
+  
     
+
     @GetMapping("/search")
     public ResponseEntity<Map<String, Object>> searchCustomer(
     		@RequestParam(required = false) Long customerId,
@@ -70,6 +96,7 @@ public class CustomerController {
     			status, page,
     			size)));
     }
+
     
     @GetMapping("/{customerId}/addresses")
     public ResponseEntity<Map<String, Object>> getCustomerAddresses(
@@ -99,6 +126,87 @@ public class CustomerController {
         }
 
         return ResponseEntity.ok(response);
+    }
+    
+
+
+
+ 
+    @PutMapping("/{customerId}/nominess/{nomineeId}")
+    public ResponseEntity<Map<String, Object>> updateNominee(
+    		@PathVariable Long customerId,
+    		@PathVariable Long nomineeId,
+    		@RequestBody CustomerRequestDto dto) {
+    	
+    	try{
+    		customerService.updateNominee(customerId, nomineeId, dto);
+  
+    	
+    	Map<String, Object> response = new LinkedHashMap<>();
+    	response.put("status", "SUCCESS");
+    	response.put("massege", "Nominee updated Successfully.");
+    	
+    	return ResponseEntity.ok(response);
+    	}catch(RuntimeException e) {
+    		
+    		Map<String, Object> response= new LinkedHashMap<>();
+    		response.put("status", "FAILED");
+    		response.put("errorCode", "NOM_002");
+    		response.put("message", e.getMessage());
+    		
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    		
+    	}
+    }
+
+
+    @GetMapping("/{customerId}/preferences")
+    public ResponseEntity<Map<String, Object>> getCustomerPreference(
+            @PathVariable Long customerId) {
+
+        CustomerPreferenceResponseDto response =
+                customerService.getCustomerPreference(customerId);
+
+        return ResponseEntity.ok(ApiResponseUtil.success(response));
+    }
+    
+    @PostMapping("/{customerId}/preferences")
+    public ResponseEntity<Map<String, Object>> createPreference(
+            @PathVariable Long customerId,
+            @RequestBody CustomerPreference preference){
+
+        CustomerPreference saved =
+                customerService.createPreference(customerId, preference);
+
+        return ResponseEntity.ok(ApiResponseUtil.success(saved));
+    }
+    
+    @DeleteMapping("/{customerId}/nominee/{nomineeId}")
+    public ResponseEntity<Map<String, Object>> deleteNominee(
+    		@PathVariable Long customerId,
+    		@PathVariable Long nomineeId) {
+    	
+    	
+    	
+    	try {
+    		customerService.deleteNominee(customerId, nomineeId);
+    		
+    		Map<String, Object> response=new LinkedHashMap<>();
+    		response.put("status", "SUCCESS");
+    		response.put("message", "Nominee deleted Successfully");
+    		
+    		return ResponseEntity.ok(response);
+    			
+    	}catch(RuntimeException e) {
+    		
+    		Map<String, Object> response=new LinkedHashMap<>();
+    		response.put("status", "FAILED");
+    		response.put("message", e.getMessage());
+    		
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    	}
 
     }
 }
+
+
