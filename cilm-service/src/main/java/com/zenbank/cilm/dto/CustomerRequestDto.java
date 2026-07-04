@@ -62,9 +62,8 @@ public class CustomerRequestDto {
     @Email(message = "Email should be valid")
     private String email;
 
-	    @NotBlank(message = "Phone number is required")
-	    private String phoneNumber;
-
+    @NotBlank(message = "Phone number is required")
+    private String phoneNumber;
 
     @NotBlank(message = "Account number is required")
     private String accountNumber;

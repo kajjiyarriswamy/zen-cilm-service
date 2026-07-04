@@ -7,11 +7,20 @@ public class CustomerContactResponseDto {
     private String contactId;
     private String customerId;
 
+    public CustomerContactResponseDto() {
+    }
+
     public CustomerContactResponseDto(String status, String message, String contactId, String customerId) {
         this.status = status;
         this.message = message;
         this.contactId = contactId;
         this.customerId = customerId;
+    }
+
+    public CustomerContactResponseDto(String status, String message) {
+        this.status = status;
+        this.message = message;
+
     }
 
     public String getStatus() { return status; }

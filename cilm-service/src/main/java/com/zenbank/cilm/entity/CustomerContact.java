@@ -24,7 +24,7 @@ public class CustomerContact {
 	private Long contactId;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "customer_id", nullable = false)
+	@JoinColumn(name = "customer_id",referencedColumnName = "customer_id", nullable = false)
 	private Customer customer;
 
 	@Column(name = "mobile_number", nullable = false, length = 15)

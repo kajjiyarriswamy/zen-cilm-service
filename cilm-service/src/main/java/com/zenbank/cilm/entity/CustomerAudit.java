@@ -24,7 +24,7 @@ public class CustomerAudit {
     private Long auditId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id", nullable = false)
     private Customer customer;
 
     @Column(name = "action", nullable = false, length = 20)

@@ -13,13 +13,11 @@ import com.zenbank.cilm.entity.CustomerNominee;
 import com.zenbank.cilm.dto.*;
 import com.zenbank.cilm.entity.*;
 import com.zenbank.cilm.repository.CustomerNomineeRepository;
+import com.zenbank.cilm.repository.*;
 
 import com.zenbank.cilm.Enum.CustomerStatus;
 
-import com.zenbank.cilm.repository.CustomerRepository;
-
-import com.zenbank.cilm.repository.CustomerContactRepository;
-
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,11 +45,16 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerNomineeRepository customerNomineeRepository;
 	private final AddressRepository customerAddressRepository;
+	private final CustomerContactRepository customerContactRepository;
+	private final CustomerAuditRepository customerAuditRepository;
 
-    public CustomerService(CustomerRepository customerRepository, CustomerNomineeRepository customerNomineeRepository,AddressRepository customerAddressRepository) {
+    public CustomerService(CustomerRepository customerRepository, CustomerNomineeRepository customerNomineeRepository,
+						   AddressRepository customerAddressRepository,  CustomerContactRepository customerContactRepository, CustomerAuditRepository customerAuditRepository) {
         this.customerRepository = customerRepository;
         this.customerNomineeRepository = customerNomineeRepository;
 		this.customerAddressRepository = customerAddressRepository;
+		this.customerContactRepository = customerContactRepository;
+		this.customerAuditRepository = customerAuditRepository;
     }
 
     public CustomerResponseDto createCustomer(CustomerRequestDto dto) {
@@ -165,10 +168,9 @@ public class CustomerService {
 
 		List<CustomerAddress> addressList = customerAddressRepository.findByCustomer_Id(customerId);
 
-		List<AddressResponseDto> addresses = addressList.stream().map(address -> {
+		List<GetCustomerAddressResponsDto> addresses = addressList.stream().map(address -> {
 
-			AddressResponseDto dto = new AddressResponseDto();
-
+			GetCustomerAddressResponsDto dto = new GetCustomerAddressResponsDto();
 			dto.setAddressId(address.getAddressId());
 			dto.setAddressType(address.getAddressType().name());
 			dto.setDoorNumber(address.getDoorDumber());
@@ -178,6 +180,7 @@ public class CustomerService {
 			dto.setCountry(address.getCountry());
 			dto.setPostalCode(address.getPostalCode());
 			dto.setPrimary(address.isPrimary());
+
 
 			return dto;
 		}).toList();
@@ -304,12 +307,37 @@ public class CustomerService {
 
 
 	public CustomerContactResponseDto addContact(String customerId, @Valid CustomerContactRequestDto requestDto) {
-		return null;
+		Customer customer = customerRepository.findByCustomerId(customerId)
+				.orElseThrow(() ->
+						new RuntimeException("Customer not found"));
+
+		CustomerContact customerContact = new CustomerContact();
+		customerContact.setCustomer(customer);
+		customerContact.setMobileNumber(requestDto.getMobileNumber());
+		customerContact.setMobileNumber(requestDto.getMobileNumber());
+		customerContact.setAlternateMobile(requestDto.getAlternateMobile());
+		customerContact.setLandline(requestDto.getLandline());
+		customerContact.setPreferredContactMode(requestDto.getPreferredContactMode());
+
+		if (customer.getEmail() == null || customer.getEmail().isBlank()) {
+			customerContact.setEmail(requestDto.getEmail());
+		} else {
+			customerContact.setEmail(customer.getEmail());
+		}
+
+		customerContactRepository.save(customerContact);
+
+		return new CustomerContactResponseDto(
+				"SUCCESS",
+				"Contact added successfully.",
+				"CNT10001",
+				customer.getCustomerId()
+		);
 	}
 
-	public AddressResponseDto addAddress(Long customerId, AddressRequestDto requestDto)
-	{
-		Customer customer =  customerRepository.findByCustomerId(String.valueOf(customerId))
+
+	public AddressResponseDto addAddress(String customerId, AddressRequestDto requestDto) {
+		Customer customer =  customerRepository.findByCustomerId(customerId)
 				.orElseThrow(() ->
 						new RuntimeException("customer not found"));
 
@@ -352,10 +380,77 @@ public class CustomerService {
 		response.setStatus("SUCCESS");
 		response.setMessage("Customer address added successfully.");
 		response.setAddressId(customerAddress.getAddressId());
-		response.setCustomerId(customer.getId());
+		response.setCustomerId(customer.getCustomerId());
 
 		return response;
 	}
 
+	public CustomerContactResponseDto updateMobileNumber(
+			String customerId, CustomerContactRequestDto contactRequestDto) {
+		// Find customer
+		Customer customer = customerRepository.findByCustomerId(customerId)
+				.orElseThrow(() ->
+						new RuntimeException("Customer not found"));
+
+		// Find customer contact
+		CustomerContact customerContact = customerContactRepository
+				.findByCustomer(customer)
+				.orElseThrow(() ->
+						new RuntimeException("Contact not found"));
+
+		String mobile = contactRequestDto.getMobileNumber();
+		if(mobile == null || mobile.isBlank()) {
+			throw new RuntimeException("Mobile number cannot be null");
+		}
+
+		if(!mobile.matches("\\d{10}")){
+			throw new RuntimeException("Invalid Mobile Number");
+		}
+
+		if (mobile.equals(customerContact.getMobileNumber())) {
+			throw new RuntimeException("New mobile number must be different from the existing mobile number.");
+		}
+
+		if (customerContactRepository.existsByMobileNumber(mobile)) {
+			throw new RuntimeException("Mobile number already exists");
+		}
+
+		// Verification
+		boolean verified = true;
+		if(!verified){
+			throw new RuntimeException("Customer verification failed");
+		}
+
+		//Store the old mobile number before updating it.
+		String oldMobileNumber = customerContact.getMobileNumber();
+
+		// Update mobile number
+		customerContact.setMobileNumber(mobile);
+		customerContactRepository.save(customerContact);
+
+
+		CustomerAudit customerAudit = new CustomerAudit();
+		customerAudit.setCustomer(customer);
+		customerAudit.setAction("MOBILE_UPDATED");
+		customerAudit.setPerformedBy("BANK_EMPLOYEE");
+		customerAudit.setOldValue(oldMobileNumber);
+		customerAudit.setNewValue(mobile);
+
+		customerAuditRepository.save(customerAudit);
+
+//		notificationService.publishMobileUpdate(customer);
+
+		CustomerContactResponseDto response = new CustomerContactResponseDto();
+		response.setStatus("SUCCESS");
+		response.setMessage("Mobile number updated successfully.");
+		response.setCustomerId(customer.getCustomerId());
+		response.setContactId(String.valueOf(customerContact.getContactId()));
+
+		return response;
+
+
+
+
+	}
 }
 
