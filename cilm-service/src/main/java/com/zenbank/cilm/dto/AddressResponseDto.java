@@ -13,12 +13,12 @@ public class AddressResponseDto {
 
     private Long addressId;
 
-    private Long customerId;
+    private String customerId;
 
     public AddressResponseDto() {
     }
 
-    public AddressResponseDto(String status, String message, Long addressId, Long customerId) {
+    public AddressResponseDto(String status, String message, Long addressId, String customerId) {
         this.status = status;
         this.message = message;
         this.addressId = addressId;
@@ -49,11 +49,11 @@ public class AddressResponseDto {
         this.addressId = addressId;
     }
 
-    public Long getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(Long customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 }
