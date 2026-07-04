@@ -26,7 +26,7 @@ public class CustomerContactController {
     public ResponseEntity<?> addContact(@PathVariable String customerId,
                                         @Valid @RequestBody CustomerContactRequestDto requestDto) {
         try {
-            CustomerContactResponseDto response = customerService.addContact(customerId, requestDto);
+            CustomerContactResponseDto response =null; //customerService.addContact(customerId, requestDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
