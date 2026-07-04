@@ -1,9 +1,17 @@
 package com.zenbank.cilm.service;
 
-
+import com.zenbank.cilm.dto.AddressResponseDto;
+import com.zenbank.cilm.dto.CustomerGetRequestDto;
+import com.zenbank.cilm.dto.CustomerRequestDto;
+import com.zenbank.cilm.dto.CustomerResponseDto;
+import com.zenbank.cilm.entity.Customer;
+import com.zenbank.cilm.entity.CustomerAddress;
+import com.zenbank.cilm.entity.CustomerAudit;
+import com.zenbank.cilm.repository.AddressRepository;
+import com.zenbank.cilm.repository.CustomerAuditRepository;
+import com.zenbank.cilm.entity.CustomerNominee;
 import com.zenbank.cilm.dto.*;
 import com.zenbank.cilm.entity.*;
-import com.zenbank.cilm.repository.AddressRepository;
 import com.zenbank.cilm.repository.CustomerNomineeRepository;
 
 import com.zenbank.cilm.Enum.CustomerStatus;
@@ -13,10 +21,6 @@ import com.zenbank.cilm.repository.CustomerRepository;
 import com.zenbank.cilm.repository.CustomerContactRepository;
 
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -101,6 +105,7 @@ public class CustomerService {
         return CustomerResponseDto.fromEntity(savedCustomer);
     }
 
+
 	public List<CustomerResponseDto> getAllCustomers() {
 		return customerRepository.findAll().stream().map(CustomerResponseDto::fromEntity).toList();
 	}
@@ -108,6 +113,7 @@ public class CustomerService {
 	public Optional<CustomerResponseDto> getCustomerById(Long id) {
 		return customerRepository.findById(id).map(CustomerResponseDto::fromEntity);
 	}
+
 
 	public void updateCustomerStatus(Long customerId, CustomerStatus status) {
 		Customer customer = customerRepository.findById(customerId)
@@ -143,6 +149,94 @@ public class CustomerService {
 		response.put("totalElement", customerPage.getTotalElements());
 
 		return response;
+	}
+
+	public Map<String, Object> getCustomerAddresses(Long customerId) {
+
+		Optional<Customer> customer = customerRepository.findById(customerId);
+
+		Map<String, Object> response = new LinkedHashMap<>();
+
+		if (customer.isEmpty()) {
+			response.put("status", "FAILED");
+			response.put("message", "Customer not found.");
+			return response;
+		}
+
+		List<CustomerAddress> addressList = customerAddressRepository.findByCustomer_Id(customerId);
+
+		List<AddressResponseDto> addresses = addressList.stream().map(address -> {
+
+			AddressResponseDto dto = new AddressResponseDto();
+
+			dto.setAddressId(address.getAddressId());
+			dto.setAddressType(address.getAddressType().name());
+			dto.setDoorNumber(address.getDoorDumber());
+			dto.setStreet(address.getStreet());
+			dto.setCity(address.getCity());
+			dto.setState(address.getState());
+			dto.setCountry(address.getCountry());
+			dto.setPostalCode(address.getPostalCode());
+			dto.setPrimary(address.isPrimary());
+
+			return dto;
+		}).toList();
+
+		response.put("status", "SUCCESS");
+		response.put("addresses", addresses);
+
+		return response;
+	}
+
+	public Map<String, Object> deleteCustomerAddress(Long customerId, Long addressId) {
+
+		Map<String, Object> response = new LinkedHashMap<>();
+
+		Optional<Customer> customer = customerRepository.findById(customerId);
+
+		if (customer.isEmpty()) {
+
+			response.put("status", "FAILED");
+			response.put("message", "Customer not found.");
+			return response;
+		}
+
+		Optional<CustomerAddress> address = customerAddressRepository.findById(addressId);
+
+		if (address.isEmpty()) {
+
+			response.put("status", "FAILED");
+			response.put("message", "Address not found.");
+			return response;
+		}
+
+		CustomerAddress customerAddress = address.get();
+
+		if (customerAddress.isPrimary()) {
+
+			response.put("status", "FAILED");
+			response.put("errorCode", "ADDR_003");
+			response.put("message", "Primary address cannot be deleted.");
+
+			return response;
+		}
+
+		customerAddressRepository.delete(customerAddress);
+
+		CustomerAudit audit = new CustomerAudit();
+
+		audit.setCustomer(customer.get());
+		audit.setAction("DELETE");
+		audit.setPerformedBy("SYSTEM");
+		audit.setOldValue("Address Deleted");
+		audit.setNewValue(null);
+
+
+		response.put("status", "SUCCESS");
+		response.put("message", "Customer address deleted successfully.");
+
+		return response;
+
 	}
 
 
@@ -208,11 +302,13 @@ public class CustomerService {
 	}
 
 
+
 	public CustomerContactResponseDto addContact(String customerId, @Valid CustomerContactRequestDto requestDto) {
 		return null;
 	}
 
-	public AddressResponseDto addAddress(Long customerId, AddressRequestDto requestDto) {
+	public AddressResponseDto addAddress(Long customerId, AddressRequestDto requestDto)
+	{
 		Customer customer =  customerRepository.findByCustomerId(String.valueOf(customerId))
 				.orElseThrow(() ->
 						new RuntimeException("customer not found"));
@@ -234,7 +330,8 @@ public class CustomerService {
 				throw new RuntimeException("Primary Address already exists");
 			}
 		}
-
+	
+	
 
 		CustomerAddress customerAddress = new CustomerAddress();
 		customerAddress.setCustomer(customer);
@@ -259,5 +356,6 @@ public class CustomerService {
 
 		return response;
 	}
+
 }
 
