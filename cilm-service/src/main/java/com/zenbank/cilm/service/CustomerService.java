@@ -4,12 +4,8 @@ import com.zenbank.cilm.dto.AddressResponseDto;
 import com.zenbank.cilm.dto.CustomerGetRequestDto;
 import com.zenbank.cilm.dto.CustomerRequestDto;
 import com.zenbank.cilm.dto.CustomerResponseDto;
-import com.zenbank.cilm.entity.Customer;
-import com.zenbank.cilm.entity.CustomerAddress;
-import com.zenbank.cilm.entity.CustomerAudit;
 import com.zenbank.cilm.repository.AddressRepository;
 import com.zenbank.cilm.repository.CustomerAuditRepository;
-import com.zenbank.cilm.entity.CustomerNominee;
 import com.zenbank.cilm.dto.*;
 import com.zenbank.cilm.entity.*;
 import com.zenbank.cilm.repository.CustomerNomineeRepository;
@@ -296,10 +292,10 @@ public class CustomerService {
               return customer.getCustomerPreference();
 	}
 	
-	public void updateNotificationPreferences(Long customerId,
+	public CustomerPreference updateNotificationPreferences(Long customerId,
             CustomerPreference request) {
 
-// Check customer exists
+ // Check customer exists
          Customer customer = customerRepository.findById(customerId)
          .orElseThrow(() -> new RuntimeException("Customer not found"));
 
@@ -316,11 +312,12 @@ public class CustomerService {
 
 // Save
           customerRepository.save(customer);
-           }
+           
 
 
 		return customer.getCustomerPreference();
 	}
+
 
 	public void updateCustomer(Long customerId, CustomerRequestDto requestDto) {
 		Customer customer = customerRepository.findById(customerId)

@@ -1,8 +1,12 @@
 
 package com.zenbank.cilm.entity;
 
+import com.zenbank.cilm.Enum.PreferredContactMode;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,8 +43,9 @@ public class CustomerContact {
 	@Column(name = "landline", length = 20)
 	private String landline;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "preferred_contact_mode", length = 20)
-	private String preferredContactMode;
+	private PreferredContactMode preferredContactMode;
 
 	// Default Constructor
 	public CustomerContact() {
@@ -48,7 +53,8 @@ public class CustomerContact {
 	}
 
 	public CustomerContact(Long contactId, Customer customer, String mobileNumber, String alternateMobile, String email,
-			String landline, String preferredContactMode) {
+			String landline, PreferredContactMode preferredContactMode) {
+		super();
 		this.contactId = contactId;
 		this.customer = customer;
 		this.mobileNumber = mobileNumber;
@@ -57,8 +63,6 @@ public class CustomerContact {
 		this.landline = landline;
 		this.preferredContactMode = preferredContactMode;
 	}
-
-	// get and set mehtods
 
 	public Long getContactId() {
 		return contactId;
@@ -108,11 +112,15 @@ public class CustomerContact {
 		this.landline = landline;
 	}
 
-	public String getPreferredContactMode() {
+	public PreferredContactMode getPreferredContactMode() {
 		return preferredContactMode;
 	}
 
-	public void setPreferredContactMode(String preferredContactMode) {
+	public void setPreferredContactMode(PreferredContactMode preferredContactMode) {
 		this.preferredContactMode = preferredContactMode;
 	}
+	
+	
+
+	
 }
