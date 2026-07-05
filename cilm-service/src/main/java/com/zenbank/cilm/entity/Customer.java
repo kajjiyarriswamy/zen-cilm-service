@@ -218,7 +218,7 @@ public class Customer {
 
 
 
-	public LocalDate getDateOfBirth() {
+	public LocalDate getDateOfBirth(){
 		return dateOfBirth;
 	}
 
