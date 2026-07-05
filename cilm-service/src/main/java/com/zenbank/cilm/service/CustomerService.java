@@ -47,12 +47,20 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerNomineeRepository customerNomineeRepository;
 	private final AddressRepository customerAddressRepository;
+	private final CustomerAuditRepository customerAuditRepository;
+	private final CustomerContactRepository customerContactRepository;
 
-    public CustomerService(CustomerRepository customerRepository, CustomerNomineeRepository customerNomineeRepository,AddressRepository customerAddressRepository) {
-        this.customerRepository = customerRepository;
-        this.customerNomineeRepository = customerNomineeRepository;
+	public CustomerService(CustomerRepository customerRepository,
+	                       CustomerNomineeRepository customerNomineeRepository,
+	                       AddressRepository customerAddressRepository,
+	                       CustomerContactRepository customerContactRepository,
+	                       CustomerAuditRepository customerAuditRepository) {
+		this.customerRepository = customerRepository;
+		this.customerNomineeRepository = customerNomineeRepository;
 		this.customerAddressRepository = customerAddressRepository;
-    }
+		this.customerContactRepository = customerContactRepository;
+		this.customerAuditRepository = customerAuditRepository;
+	}
 
     public CustomerResponseDto createCustomer(CustomerRequestDto dto) {
         Optional<Customer> existing = customerRepository.findByEmail(dto.getEmail());
@@ -307,6 +315,8 @@ public class CustomerService {
 		return null;
 	}
 
+
+
 	public AddressResponseDto addAddress(Long customerId, AddressRequestDto requestDto)
 	{
 		Customer customer =  customerRepository.findByCustomerId(String.valueOf(customerId))
@@ -355,7 +365,51 @@ public class CustomerService {
 		response.setCustomerId(customer.getId());
 
 		return response;
+
+
+
 	}
+
+	public Map<String, Object> searchAudit(String customerId, String action,
+	                                       String performedBy, String fromDate,
+	                                       String toDate, int page, int size) {
+
+		customerRepository.findByCustomerId(customerId)
+				.orElseThrow(() -> new IllegalArgumentException("Customer does not exist."));
+
+		LocalDateTime from = fromDate != null ? LocalDate.parse(fromDate).atStartOfDay() : null;
+		LocalDateTime to = toDate != null ? LocalDate.parse(toDate).atTime(23, 59, 59) : null;
+
+		if (from != null && to != null && from.isAfter(to)) {
+			throw new IllegalArgumentException("fromDate cannot be after toDate.");
+		}
+
+		Page<CustomerAudit> results = customerAuditRepository.searchAudit(
+				customerId, action, performedBy, from, to, PageRequest.of(page, size));
+
+		if (results.isEmpty()) {
+			throw new IllegalArgumentException("No records found.");
+		}
+
+		List<Map<String, Object>> auditHistory = results.getContent().stream().map(a -> {
+			Map<String, Object> map = new LinkedHashMap<>();
+			map.put("auditId", "AUD" + String.format("%06d", a.getAuditId()));
+			map.put("action", a.getAction());
+			map.put("performedBy", a.getPerformedBy());
+			map.put("createdDate", a.getCreatedDate());
+			return map;
+		}).collect(java.util.stream.Collectors.toList());
+
+		Map<String, Object> response = new LinkedHashMap<>();
+		response.put("status", "SUCCESS");
+		response.put("page", page);
+		response.put("size", size);
+		response.put("totalRecords", results.getTotalElements());
+		response.put("auditHistory", auditHistory);
+		return response;
+	}
+
+
 
 }
 

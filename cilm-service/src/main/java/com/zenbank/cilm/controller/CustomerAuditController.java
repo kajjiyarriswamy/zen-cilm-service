@@ -21,8 +21,7 @@ public class CustomerAuditController {
         this.customerService = customerService;
     }
 
-    @GetMapping("/{customerId}/audit/search")
-    public ResponseEntity<?> searchAudit(
+    @GetMapping(value = "/{customerId}/audit/search", produces = "application/json")    public ResponseEntity<?> searchAudit(
             @PathVariable String customerId,
             @RequestParam(required = false) String action,
             @RequestParam(required = false) String performedBy,
