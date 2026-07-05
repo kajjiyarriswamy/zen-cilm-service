@@ -411,6 +411,27 @@ public class CustomerService {
 		return response;
 	}
 
+	public Map<String, Object> getAuditDetails(String customerId, String auditId) {
+
+		customerRepository.findByCustomerId(customerId)
+				.orElseThrow(() -> new IllegalArgumentException("Customer does not exist."));
+
+		Long auditIdNumeric = Long.parseLong(auditId.replace("AUD", ""));
+
+		CustomerAudit audit = customerAuditRepository.findByAuditIdAndCustomer_CustomerId(auditIdNumeric, customerId)
+				.orElseThrow(() -> new IllegalArgumentException("Audit record not found."));
+
+		Map<String, Object> response = new LinkedHashMap<>();
+		response.put("status", "SUCCESS");
+		response.put("auditId", "AUD" + String.format("%06d", audit.getAuditId()));
+		response.put("action", audit.getAction());
+		response.put("performedBy", audit.getPerformedBy());
+		response.put("createdDate", audit.getCreatedDate());
+		response.put("oldValue", audit.getOldValue());
+		response.put("newValue", audit.getNewValue());
+		return response;
+	}
+
 
 
 }
