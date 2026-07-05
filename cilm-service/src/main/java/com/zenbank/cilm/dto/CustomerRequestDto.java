@@ -1,5 +1,10 @@
 package com.zenbank.cilm.dto;
 
+import java.time.LocalDate;
+
+import com.zenbank.cilm.Enum.CustomerStatus;
+import com.zenbank.cilm.entity.Customer;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -61,10 +66,54 @@ public class CustomerRequestDto {
 	    private String phoneNumber;
 
 
+    @NotBlank(message = "Account number is required")
+    private String accountNumber;
+    
+    private String nomineeName;
+    private String relationship;
+    private Long customerId;
+
+    private CustomerStatus customerStatus;
+    private String riskCategory;
+
+    private String cif_number;
+
+    public String getCif_number() {
+        return cif_number;
+    }
+
+    public void setCif_number(String cif_number) {
+        this.cif_number = cif_number;
+    }
+
+    public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
+
+	public String getNomineeName() {
+		return nomineeName;
+	}
+
+	public void setNomineeName(String nomineeName) {
+		this.nomineeName = nomineeName;
+	}
+
+	public String getRelationship() {
+		return relationship;
+	}
+
+	public void setRelationship(String relationship) {
+		this.relationship = relationship;
+	}
 
 
     public  String getMiddleName() {
         return middleName;
+
     }
 
     public void setMiddleName( String middleName) {
@@ -195,7 +244,29 @@ public class CustomerRequestDto {
 	        this.phoneNumber = phoneNumber;
 	    }
 
+		public String getAccountNumber() {
+			return accountNumber;
+		}
 
+		public void setAccountNumber(String accountNumber) {
+			this.accountNumber = accountNumber;
+		}
+
+    public CustomerStatus getCustomerStatus() {
+        return customerStatus;
+    }
+
+    public void setCustomerStatus(CustomerStatus customerStatus) {
+        this.customerStatus = customerStatus;
+    }
+
+    public String getRiskCategory() {
+        return riskCategory;
+    }
+
+    public void setRiskCategory(String riskCategory) {
+        this.riskCategory = riskCategory;
+    }
 
 }
 
