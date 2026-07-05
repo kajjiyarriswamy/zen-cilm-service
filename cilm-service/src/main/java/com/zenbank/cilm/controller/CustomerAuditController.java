@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController
@@ -36,6 +37,23 @@ public class CustomerAuditController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("status", "FAILED", "message", e.getMessage()));
+        }
+    }
+
+
+    @GetMapping("/{customerId}/audit/{auditId}")
+    public ResponseEntity<Map<String, Object>> getAuditDetails(
+            @PathVariable String customerId,
+            @PathVariable String auditId) {
+        try {
+            Map<String, Object> response = customerService.getAuditDetails(customerId, auditId);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            Map<String, Object> error = new LinkedHashMap<>();
+            error.put("status", "FAILED");
+            error.put("errorCode", "AUD_002");
+            error.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
     }
 }

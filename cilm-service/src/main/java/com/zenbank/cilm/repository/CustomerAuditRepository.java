@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Repository
 public interface CustomerAuditRepository extends JpaRepository<CustomerAudit, Long> {
@@ -25,4 +26,7 @@ public interface CustomerAuditRepository extends JpaRepository<CustomerAudit, Lo
                                     @Param("fromDate") LocalDateTime fromDate,
                                     @Param("toDate") LocalDateTime toDate,
                                     Pageable pageable);
+
+    Optional<CustomerAudit> findByAuditIdAndCustomer_CustomerId(Long auditId, String customerId);
 }
+
