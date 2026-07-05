@@ -20,9 +20,9 @@ public class CustomerNominee {
     @Column(name = "nominee_id")
     private Long nomineeId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customerId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "customer_id", referencedColumnName = "customer_id", nullable = false)
+	private Customer customerId;
 
     @Column(name = "nominee_name", nullable = false)
     private String nomineeName;

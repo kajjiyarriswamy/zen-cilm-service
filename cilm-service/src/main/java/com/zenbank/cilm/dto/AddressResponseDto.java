@@ -8,7 +8,7 @@ public class AddressResponseDto {
 
     private Long addressId;
 
-    private Long customerId;
+    private String customerId;
 
     private String addressType;
 
@@ -33,7 +33,7 @@ public class AddressResponseDto {
     
 
 
-    public AddressResponseDto(String status, String message, Long addressId, Long customerId, String addressType,
+    public AddressResponseDto(String status, String message, Long addressId, String customerId, String addressType,
 			String doorNumber, String street, String city, String state, String country, String postalCode,
 			Boolean primary) {
 		super();
@@ -80,11 +80,11 @@ public class AddressResponseDto {
     }
 
 
-    public Long getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(Long customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 

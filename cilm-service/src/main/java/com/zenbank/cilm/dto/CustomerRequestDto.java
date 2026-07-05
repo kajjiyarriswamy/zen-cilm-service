@@ -3,8 +3,6 @@ package com.zenbank.cilm.dto;
 import java.time.LocalDate;
 
 import com.zenbank.cilm.Enum.CustomerStatus;
-import com.zenbank.cilm.entity.Customer;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -71,7 +69,7 @@ public class CustomerRequestDto {
     
     private String nomineeName;
     private String relationship;
-    private Long customerId;
+    private String customerId;
 
     private CustomerStatus customerStatus;
     private String riskCategory;
@@ -86,11 +84,11 @@ public class CustomerRequestDto {
         this.cif_number = cif_number;
     }
 
-    public Long getCustomerId() {
+    public String getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(Long customerId) {
+	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
 	}
 

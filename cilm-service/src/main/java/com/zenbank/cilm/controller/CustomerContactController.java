@@ -6,11 +6,7 @@ import com.zenbank.cilm.service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/customers")
@@ -26,12 +22,19 @@ public class CustomerContactController {
     public ResponseEntity<?> addContact(@PathVariable String customerId,
                                         @Valid @RequestBody CustomerContactRequestDto requestDto) {
         try {
-            CustomerContactResponseDto response =null; //customerService.addContact(customerId, requestDto);
+            CustomerContactResponseDto response =
+                    customerService.addContact(customerId, requestDto);
+
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     new CustomerContactResponseDto("FAILED", e.getMessage(), null, null)
             );
         }
+    }
+    @PutMapping("/{customerId}/contacts/mobile")
+    public ResponseEntity<CustomerContactResponseDto> updateCustomerContactPhoneNumber(
+            @PathVariable String customerId, @RequestBody CustomerContactRequestDto contactRequestDto) {
+        return ResponseEntity.ok(customerService.updateMobileNumber(customerId, contactRequestDto));
     }
 }
