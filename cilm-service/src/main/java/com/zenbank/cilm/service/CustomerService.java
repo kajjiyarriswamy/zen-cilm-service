@@ -1,9 +1,17 @@
 package com.zenbank.cilm.service;
 
-
+import com.zenbank.cilm.dto.AddressResponseDto;
+import com.zenbank.cilm.dto.CustomerGetRequestDto;
+import com.zenbank.cilm.dto.CustomerRequestDto;
+import com.zenbank.cilm.dto.CustomerResponseDto;
+import com.zenbank.cilm.entity.Customer;
+import com.zenbank.cilm.entity.CustomerAddress;
+import com.zenbank.cilm.entity.CustomerAudit;
+import com.zenbank.cilm.repository.AddressRepository;
+import com.zenbank.cilm.repository.CustomerAuditRepository;
+import com.zenbank.cilm.entity.CustomerNominee;
 import com.zenbank.cilm.dto.*;
 import com.zenbank.cilm.entity.*;
-import com.zenbank.cilm.repository.AddressRepository;
 import com.zenbank.cilm.repository.CustomerNomineeRepository;
 
 import com.zenbank.cilm.Enum.CustomerStatus;
@@ -14,10 +22,6 @@ import com.zenbank.cilm.repository.CustomerContactRepository;
 import com.zenbank.cilm.repository.CustomerKycRepository;
 
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -44,15 +48,25 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerNomineeRepository customerNomineeRepository;
 	private final AddressRepository customerAddressRepository;
+
 	private final CustomerKycRepository customerKycRepository;
+	private final CustomerAuditRepository customerAuditRepository;
+	private final CustomerContactRepository customerContactRepository;
 	
 
-    public CustomerService(CustomerRepository customerRepository, CustomerNomineeRepository customerNomineeRepository,AddressRepository customerAddressRepository,CustomerKycRepository customerKycRepository) {
+    public CustomerService(CustomerRepository customerRepository, CustomerNomineeRepository customerNomineeRepository,AddressRepository customerAddressRepository,CustomerKycRepository customerKycRepository,CustomerContactRepository customerContactRepository,
+            CustomerAuditRepository customerAuditRepository) {
         this.customerRepository = customerRepository;
         this.customerNomineeRepository = customerNomineeRepository;
 		this.customerAddressRepository = customerAddressRepository;
 		this. customerKycRepository=customerKycRepository;
+		this.customerContactRepository = customerContactRepository;
+		this.customerAuditRepository = customerAuditRepository;
     }
+
+	
+
+	
 
     public CustomerResponseDto createCustomer(CustomerRequestDto dto) {
         Optional<Customer> existing = customerRepository.findByEmail(dto.getEmail());
@@ -105,6 +119,7 @@ public class CustomerService {
         return CustomerResponseDto.fromEntity(savedCustomer);
     }
 
+
 	public List<CustomerResponseDto> getAllCustomers() {
 		return customerRepository.findAll().stream().map(CustomerResponseDto::fromEntity).toList();
 	}
@@ -112,6 +127,7 @@ public class CustomerService {
 	public Optional<CustomerResponseDto> getCustomerById(Long id) {
 		return customerRepository.findById(id).map(CustomerResponseDto::fromEntity);
 	}
+
 
 	public void updateCustomerStatus(Long customerId, CustomerStatus status) {
 		Customer customer = customerRepository.findById(customerId)
@@ -147,6 +163,94 @@ public class CustomerService {
 		response.put("totalElement", customerPage.getTotalElements());
 
 		return response;
+	}
+
+	public Map<String, Object> getCustomerAddresses(Long customerId) {
+
+		Optional<Customer> customer = customerRepository.findById(customerId);
+
+		Map<String, Object> response = new LinkedHashMap<>();
+
+		if (customer.isEmpty()) {
+			response.put("status", "FAILED");
+			response.put("message", "Customer not found.");
+			return response;
+		}
+
+		List<CustomerAddress> addressList = customerAddressRepository.findByCustomer_Id(customerId);
+
+		List<AddressResponseDto> addresses = addressList.stream().map(address -> {
+
+			AddressResponseDto dto = new AddressResponseDto();
+
+			dto.setAddressId(address.getAddressId());
+			dto.setAddressType(address.getAddressType().name());
+			dto.setDoorNumber(address.getDoorDumber());
+			dto.setStreet(address.getStreet());
+			dto.setCity(address.getCity());
+			dto.setState(address.getState());
+			dto.setCountry(address.getCountry());
+			dto.setPostalCode(address.getPostalCode());
+			dto.setPrimary(address.isPrimary());
+
+			return dto;
+		}).toList();
+
+		response.put("status", "SUCCESS");
+		response.put("addresses", addresses);
+
+		return response;
+	}
+
+	public Map<String, Object> deleteCustomerAddress(Long customerId, Long addressId) {
+
+		Map<String, Object> response = new LinkedHashMap<>();
+
+		Optional<Customer> customer = customerRepository.findById(customerId);
+
+		if (customer.isEmpty()) {
+
+			response.put("status", "FAILED");
+			response.put("message", "Customer not found.");
+			return response;
+		}
+
+		Optional<CustomerAddress> address = customerAddressRepository.findById(addressId);
+
+		if (address.isEmpty()) {
+
+			response.put("status", "FAILED");
+			response.put("message", "Address not found.");
+			return response;
+		}
+
+		CustomerAddress customerAddress = address.get();
+
+		if (customerAddress.isPrimary()) {
+
+			response.put("status", "FAILED");
+			response.put("errorCode", "ADDR_003");
+			response.put("message", "Primary address cannot be deleted.");
+
+			return response;
+		}
+
+		customerAddressRepository.delete(customerAddress);
+
+		CustomerAudit audit = new CustomerAudit();
+
+		audit.setCustomer(customer.get());
+		audit.setAction("DELETE");
+		audit.setPerformedBy("SYSTEM");
+		audit.setOldValue("Address Deleted");
+		audit.setNewValue(null);
+
+
+		response.put("status", "SUCCESS");
+		response.put("message", "Customer address deleted successfully.");
+
+		return response;
+
 	}
 
 
@@ -195,6 +299,7 @@ public class CustomerService {
 
 		customer.setCustomerPreference(preference);
 
+
 		customerRepository.save(customer);
 
 		return customer.getCustomerPreference();
@@ -235,11 +340,28 @@ public class CustomerService {
           customerRepository.save(customer);
            }
 
+	//public CustomerContactResponseDto addContact(String customerId, @Valid CustomerContactRequestDto requestDto) {
+	//	return null;
+	//}
+
+
+	//public AddressResponseDto addAddress(Long customerId, AddressRequestDto requestDto) {
+
+		//return customer.getCustomerPreference();
+	//}
+
+
+
+
+
 	public CustomerContactResponseDto addContact(String customerId, @Valid CustomerContactRequestDto requestDto) {
 		return null;
 	}
 
+
+
 	public AddressResponseDto addAddress(Long customerId, AddressRequestDto requestDto) {
+	
 		Customer customer =  customerRepository.findByCustomerId(String.valueOf(customerId))
 				.orElseThrow(() ->
 						new RuntimeException("customer not found"));
@@ -263,6 +385,9 @@ public class CustomerService {
 		}
 
 
+
+	
+
 		CustomerAddress customerAddress = new CustomerAddress();
 		customerAddress.setCustomer(customer);
 		customerAddress.setAddressType(requestDto.getAddressType());
@@ -285,7 +410,11 @@ public class CustomerService {
 		response.setCustomerId(customer.getId());
 
 		return response;
+
+
+
 	}
+
 	
 	public CustomerKycResponseDto getCustomerKyc(Long customerId) {
 
@@ -304,6 +433,69 @@ public class CustomerService {
 	            customerKyc.getVerifiedDate()
 	    );
 	}
+
+
+
+	public Map<String, Object> searchAudit(String customerId, String action,
+	                                       String performedBy, String fromDate,
+	                                       String toDate, int page, int size) {
+
+		customerRepository.findByCustomerId(customerId)
+				.orElseThrow(() -> new IllegalArgumentException("Customer does not exist."));
+
+		LocalDateTime from = fromDate != null ? LocalDate.parse(fromDate).atStartOfDay() : null;
+		LocalDateTime to = toDate != null ? LocalDate.parse(toDate).atTime(23, 59, 59) : null;
+
+		if (from != null && to != null && from.isAfter(to)) {
+			throw new IllegalArgumentException("fromDate cannot be after toDate.");
+		}
+
+		Page<CustomerAudit> results = customerAuditRepository.searchAudit(
+				customerId, action, performedBy, from, to, PageRequest.of(page, size));
+
+		if (results.isEmpty()) {
+			throw new IllegalArgumentException("No records found.");
+		}
+
+		List<Map<String, Object>> auditHistory = results.getContent().stream().map(a -> {
+			Map<String, Object> map = new LinkedHashMap<>();
+			map.put("auditId", "AUD" + String.format("%06d", a.getAuditId()));
+			map.put("action", a.getAction());
+			map.put("performedBy", a.getPerformedBy());
+			map.put("createdDate", a.getCreatedDate());
+			return map;
+		}).collect(java.util.stream.Collectors.toList());
+
+		Map<String, Object> response = new LinkedHashMap<>();
+		response.put("status", "SUCCESS");
+		response.put("page", page);
+		response.put("size", size);
+		response.put("totalRecords", results.getTotalElements());
+		response.put("auditHistory", auditHistory);
+		return response;
+	}
+
+	public Map<String, Object> getAuditDetails(String customerId, String auditId) {
+
+		customerRepository.findByCustomerId(customerId)
+				.orElseThrow(() -> new IllegalArgumentException("Customer does not exist."));
+
+		Long auditIdNumeric = Long.parseLong(auditId.replace("AUD", ""));
+
+		CustomerAudit audit = customerAuditRepository.findByAuditIdAndCustomer_CustomerId(auditIdNumeric, customerId)
+				.orElseThrow(() -> new IllegalArgumentException("Audit record not found."));
+
+		Map<String, Object> response = new LinkedHashMap<>();
+		response.put("status", "SUCCESS");
+		response.put("auditId", "AUD" + String.format("%06d", audit.getAuditId()));
+		response.put("action", audit.getAction());
+		response.put("performedBy", audit.getPerformedBy());
+		response.put("createdDate", audit.getCreatedDate());
+		response.put("oldValue", audit.getOldValue());
+		response.put("newValue", audit.getNewValue());
+		return response;
+	}
+
 
 }
 
