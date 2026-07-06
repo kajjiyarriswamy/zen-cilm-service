@@ -210,7 +210,6 @@ public class CustomerController {
             @PathVariable Long customerId,
             @RequestBody CustomerRequestDto requestDto) {
 
-
         customerService.updateCustomer(customerId, requestDto);
 
         return ResponseEntity.ok(
@@ -231,10 +230,11 @@ public class CustomerController {
     
     }
 
-    
+
+
 
 	@PostMapping("/{customerId}/addresses")
-	public ResponseEntity<AddressResponseDto> addAddress(@Valid  @PathVariable Long customerId,
+	public ResponseEntity<AddressResponseDto> addAddress(@Valid  @PathVariable String customerId,
 	                                                     @RequestBody AddressRequestDto request) {
 		AddressResponseDto response = customerService.addAddress(customerId, request);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);

@@ -34,6 +34,7 @@ import java.time.Period;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -45,8 +46,8 @@ import java.util.Random;
 public class CustomerService {
 
 
-    private final CustomerRepository customerRepository;
-    private final CustomerNomineeRepository customerNomineeRepository;
+	private final CustomerRepository customerRepository;
+	private final CustomerNomineeRepository customerNomineeRepository;
 	private final AddressRepository customerAddressRepository;
 
 	private final CustomerKycRepository customerKycRepository;
@@ -68,36 +69,37 @@ public class CustomerService {
 
 	
 
-    public CustomerResponseDto createCustomer(CustomerRequestDto dto) {
-        Optional<Customer> existing = customerRepository.findByEmail(dto.getEmail());
-        if (existing.isPresent()) {
-            throw new IllegalArgumentException("Customer with this email already exists");
-        }
+	@Transactional
+	public CustomerResponseDto createCustomer(CustomerRequestDto dto) {
+		Optional<Customer> existing = customerRepository.findByEmail(dto.getEmail());
+		if (existing.isPresent()) {
+			throw new IllegalArgumentException("Customer with this email already exists");
+		}
 
-       Customer cu = new Customer();
-        		cu.setCif_number(dto.getCif_number());
-        		cu.setFirstName(dto.getFirstName());
-        		cu.setMiddleName(dto.getMiddleName());
-        		cu.setLastName(dto.getLastName());
-        		cu.setDateOfBirth(dto.getDateOfBirth());
-        		cu.setGender(dto.getGender());
-        		cu.setMaritalStatus(dto.getMaritalStatus());
-        		cu.setOccupation(dto.getOccupation());
-        		cu.setAnnalIncome(dto.getAnnualIncome());
-        		cu.setCustomerType(dto.getCustomerType());
-        		cu.setCustomerCategory(dto.getCustomerCategory());
-        		cu.setPanNumber(dto.getPanNumber());
-        		cu.setAadhaarNumber(dto.getAadhaarNumber());
-        		cu.setNationality(dto.getNationality());
-        		cu.setCustomerStatus(dto.getCustomerStatus());
-        		cu.setRiskCategory(dto.getRiskCategory());
-        		cu.setCreatedDate(LocalDate.now());
-        		cu.setUpdatedDate(LocalDate.now());
-        		cu.setEmail(dto.getEmail());
-        		cu.setPhoneNumber(dto.getPhoneNumber());
-        		cu.setAccountNumber(dto.getAccountNumber());
-        		cu.setAge(dto.getAge());
-				cu.setCustomerId(String.valueOf(dto.getCustomerId()));
+		Customer cu = new Customer();
+		cu.setCif_number(dto.getCif_number());
+		cu.setFirstName(dto.getFirstName());
+		cu.setMiddleName(dto.getMiddleName());
+		cu.setLastName(dto.getLastName());
+		cu.setDateOfBirth(dto.getDateOfBirth());
+		cu.setGender(dto.getGender());
+		cu.setMaritalStatus(dto.getMaritalStatus());
+		cu.setOccupation(dto.getOccupation());
+		cu.setAnnalIncome(dto.getAnnualIncome());
+		cu.setCustomerType(dto.getCustomerType());
+		cu.setCustomerCategory(dto.getCustomerCategory());
+		cu.setPanNumber(dto.getPanNumber());
+		cu.setAadhaarNumber(dto.getAadhaarNumber());
+		cu.setNationality(dto.getNationality());
+		cu.setCustomerStatus(dto.getCustomerStatus());
+		cu.setRiskCategory(dto.getRiskCategory());
+		cu.setCreatedDate(LocalDate.now());
+		cu.setUpdatedDate(LocalDate.now());
+		cu.setEmail(dto.getEmail());
+		cu.setPhoneNumber(dto.getPhoneNumber());
+		cu.setAccountNumber(dto.getAccountNumber());
+		cu.setAge(dto.getAge());
+		cu.setCustomerId(generateCustomerId());
 
 //        Customer customer=customerRepository.findById(dto.getCustomerId())
 //        		.orElseThrow(() -> new RuntimeException("Customer Not Found"));
@@ -116,8 +118,26 @@ public class CustomerService {
 
 
 //        CustomerNominee savedCustomer = customerNomineeRepository.save(cn);
-        return CustomerResponseDto.fromEntity(savedCustomer);
-    }
+		return CustomerResponseDto.fromEntity(savedCustomer);
+	}
+
+	private String generateCustomerId() {
+		return customerRepository.findTopByOrderByCustomerIdDesc()
+				.map(Customer::getCustomerId)
+				.map(this::incrementCustomerId)
+				.orElse("CUS100001");
+	}
+
+	private String incrementCustomerId(String currentCustomerId) {
+		final String prefix = "CUS";
+		if (currentCustomerId == null || !currentCustomerId.startsWith(prefix)) {
+			return "CUS100001";
+		}
+
+		String numericPart = currentCustomerId.substring(prefix.length());
+		int nextNumber = Integer.parseInt(numericPart) + 1;
+		return prefix + String.format("%06d", nextNumber);
+	}
 
 
 	public List<CustomerResponseDto> getAllCustomers() {
@@ -145,7 +165,7 @@ public class CustomerService {
 	}
 
 	public Map<String, Object> searchCustomer(Long customerId, String cif, String phoneNumber, String pan,
-			String aadhaar, String status, int page, int size) {
+	                                          String aadhaar, String status, int page, int size) {
 
 		Pageable pageable = PageRequest.of(page, size);
 
@@ -192,6 +212,7 @@ public class CustomerService {
 			dto.setCountry(address.getCountry());
 			dto.setPostalCode(address.getPostalCode());
 			dto.setPrimary(address.isPrimary());
+			dto.setCustomerId(address.getCustomer().getCustomerId());
 
 			return dto;
 		}).toList();
@@ -254,22 +275,22 @@ public class CustomerService {
 	}
 
 
-	public void updateNominee(Long customerId, 
-			Long nomineeId, 
-			CustomerRequestDto dto) {
-		
+	public void updateNominee(Long customerId,
+	                          Long nomineeId,
+	                          CustomerRequestDto dto) {
+
 		Customer customer=customerRepository.findById(customerId)
 				.orElseThrow(() -> new RuntimeException("Customer Not Found"));
-		
+
 		CustomerNominee nominee=customerNomineeRepository.findByNomineeIdAndCustomerId(nomineeId, customer)
 				.orElseThrow(() -> new RuntimeException("Nominee Not Found"));
-		
+
 //		nominee.setMobile(dto.getMobile());
 //		nominee.setSharePercentage(dto.getSharePercentage());
-		
+
 		customerNomineeRepository.save(nominee);
-		
-		
+
+
 	}
 
 
@@ -300,6 +321,7 @@ public class CustomerService {
 		customer.setCustomerPreference(preference);
 
 
+
 		customerRepository.save(customer);
 
 		return customer.getCustomerPreference();
@@ -316,104 +338,68 @@ public class CustomerService {
 	    customerRepository.save(customer);
 	}
 
-
 	
 	public void updateNotificationPreferences(Long customerId,
-            CustomerPreference request) {
+	                                          CustomerPreference request) {
 
 // Check customer exists
-         Customer customer = customerRepository.findById(customerId)
-         .orElseThrow(() -> new RuntimeException("Customer not found"));
+		Customer customer = customerRepository.findById(customerId)
+				.orElseThrow(() -> new RuntimeException("Customer not found"));
 
 // Check preference exists
-          CustomerPreference preference = customer.getCustomerPreference();
+		CustomerPreference preference = customer.getCustomerPreference();
 
-          if (preference == null) {
-          throw new RuntimeException("Customer preferences not found.");
-            }
+		if (preference == null) {
+			throw new RuntimeException("Customer preferences not found.");
+		}
 
 // Update only notification fields
-           preference.setEmailEnabled(request.getEmailEnabled());
-          preference.setSmsEnabled(request.getSmsEnabled());
+		preference.setEmailEnabled(request.getEmailEnabled());
+		preference.setSmsEnabled(request.getSmsEnabled());
 
 // Save
-          customerRepository.save(customer);
-           }
-
-	//public CustomerContactResponseDto addContact(String customerId, @Valid CustomerContactRequestDto requestDto) {
-	//	return null;
-	//}
-
-
-	//public AddressResponseDto addAddress(Long customerId, AddressRequestDto requestDto) {
-
-		//return customer.getCustomerPreference();
-	//}
-
-
-
-
+		customerRepository.save(customer);
+	}
+	
 
 	public CustomerContactResponseDto addContact(String customerId, @Valid CustomerContactRequestDto requestDto) {
+
 		return null;
 	}
 
-
-
-	public AddressResponseDto addAddress(Long customerId, AddressRequestDto requestDto) {
+	/**public AddressResponseDto addAddress(Long customerId, AddressRequestDto requestDto) {
 	
 		Customer customer =  customerRepository.findByCustomerId(String.valueOf(customerId))
+
+		Customer customer = customerRepository.findByCustomerId(customerId)
+
 				.orElseThrow(() ->
-						new RuntimeException("customer not found"));
+						new RuntimeException("Customer not found"));
 
-		if (requestDto.getCountry() == null || requestDto.getCountry().isBlank()) {
-			throw new RuntimeException("Country cannot be null");
+		CustomerContact customerContact = new CustomerContact();
+		customerContact.setCustomer(customer);
+		customerContact.setMobileNumber(requestDto.getMobileNumber());
+		customerContact.setMobileNumber(requestDto.getMobileNumber());
+		customerContact.setAlternateMobile(requestDto.getAlternateMobile());
+		customerContact.setLandline(requestDto.getLandline());
+		customerContact.setPreferredContactMode(requestDto.getPreferredContactMode());
+
+		if (customer.getEmail() == null || customer.getEmail().isBlank()) {
+			customerContact.setEmail(requestDto.getEmail());
+		} else {
+			customerContact.setEmail(customer.getEmail());
 		}
 
-		if (!requestDto.getPostalCode().matches("\\d{6}")) {
-			throw new RuntimeException("Invalid Postal Code");
-		}
+		customerContactRepository.save(customerContact);
 
-		if (Boolean.TRUE.equals(requestDto.getPrimary())) {
+		return new CustomerContactResponseDto(
+				"SUCCESS",
+				"Contact added successfully.",
+				"CNT10001",
+				customer.getCustomerId()
+		);
+	}*/
 
-			boolean exists = customerAddressRepository
-					.existsByCustomerAndIsPrimaryTrue(customer);
-
-			if (exists) {
-				throw new RuntimeException("Primary Address already exists");
-			}
-		}
-
-
-
-	
-
-		CustomerAddress customerAddress = new CustomerAddress();
-		customerAddress.setCustomer(customer);
-		customerAddress.setAddressType(requestDto.getAddressType());
-		customerAddress.setDoorNumber(requestDto.getDoorNumber());
-		customerAddress.setStreet(requestDto.getStreet());
-		customerAddress.setArea(requestDto.getArea());
-		customerAddress.setCity(requestDto.getCity());
-		customerAddress.setDistrict(requestDto.getDistrict());
-		customerAddress.setState(requestDto.getState());
-		customerAddress.setCountry(requestDto.getCountry());
-		customerAddress.setPostalCode(requestDto.getPostalCode());
-		customerAddress.setPrimary(requestDto.getPrimary());
-
-		customerAddressRepository.save(customerAddress);
-
-		AddressResponseDto response = new AddressResponseDto();
-		response.setStatus("SUCCESS");
-		response.setMessage("Customer address added successfully.");
-		response.setAddressId(customerAddress.getAddressId());
-		response.setCustomerId(customer.getId());
-
-		return response;
-
-
-
-	}
 
 	
 	public CustomerKycResponseDto getCustomerKyc(Long customerId) {
@@ -435,68 +421,187 @@ public class CustomerService {
 	}
 
 
-
-	public Map<String, Object> searchAudit(String customerId, String action,
+	/**public Map<String, Object> searchAudit(String customerId, String action,
 	                                       String performedBy, String fromDate,
-	                                       String toDate, int page, int size) {
+	                                       String toDate, int page, int size) {*/
 
-		customerRepository.findByCustomerId(customerId)
-				.orElseThrow(() -> new IllegalArgumentException("Customer does not exist."));
 
-		LocalDateTime from = fromDate != null ? LocalDate.parse(fromDate).atStartOfDay() : null;
-		LocalDateTime to = toDate != null ? LocalDate.parse(toDate).atTime(23, 59, 59) : null;
+public AddressResponseDto addAddress(String customerId, AddressRequestDto requestDto)
+{
+	Customer customer =  customerRepository.findByCustomerId(customerId)
+			.orElseThrow(() ->
+					new RuntimeException("customer not found"));
 
-		if (from != null && to != null && from.isAfter(to)) {
-			throw new IllegalArgumentException("fromDate cannot be after toDate.");
-		}
-
-		Page<CustomerAudit> results = customerAuditRepository.searchAudit(
-				customerId, action, performedBy, from, to, PageRequest.of(page, size));
-
-		if (results.isEmpty()) {
-			throw new IllegalArgumentException("No records found.");
-		}
-
-		List<Map<String, Object>> auditHistory = results.getContent().stream().map(a -> {
-			Map<String, Object> map = new LinkedHashMap<>();
-			map.put("auditId", "AUD" + String.format("%06d", a.getAuditId()));
-			map.put("action", a.getAction());
-			map.put("performedBy", a.getPerformedBy());
-			map.put("createdDate", a.getCreatedDate());
-			return map;
-		}).collect(java.util.stream.Collectors.toList());
-
-		Map<String, Object> response = new LinkedHashMap<>();
-		response.put("status", "SUCCESS");
-		response.put("page", page);
-		response.put("size", size);
-		response.put("totalRecords", results.getTotalElements());
-		response.put("auditHistory", auditHistory);
-		return response;
+	if (requestDto.getCountry() == null || requestDto.getCountry().isBlank()) {
+		throw new RuntimeException("Country cannot be null");
 	}
 
-	public Map<String, Object> getAuditDetails(String customerId, String auditId) {
+	if (!requestDto.getPostalCode().matches("\\d{6}")) {
+		throw new RuntimeException("Invalid Postal Code");
+	}
 
-		customerRepository.findByCustomerId(customerId)
-				.orElseThrow(() -> new IllegalArgumentException("Customer does not exist."));
+	if (Boolean.TRUE.equals(requestDto.getPrimary())) {
 
-		Long auditIdNumeric = Long.parseLong(auditId.replace("AUD", ""));
+		boolean exists = customerAddressRepository
+				.existsByCustomerAndIsPrimaryTrue(customer);
 
-		CustomerAudit audit = customerAuditRepository.findByAuditIdAndCustomer_CustomerId(auditIdNumeric, customerId)
-				.orElseThrow(() -> new IllegalArgumentException("Audit record not found."));
+		if (exists) {
+			throw new RuntimeException("Primary Address already exists");
+		}
+	}
 
-		Map<String, Object> response = new LinkedHashMap<>();
-		response.put("status", "SUCCESS");
-		response.put("auditId", "AUD" + String.format("%06d", audit.getAuditId()));
-		response.put("action", audit.getAction());
-		response.put("performedBy", audit.getPerformedBy());
-		response.put("createdDate", audit.getCreatedDate());
-		response.put("oldValue", audit.getOldValue());
-		response.put("newValue", audit.getNewValue());
+
+	CustomerAddress customerAddress = new CustomerAddress();
+	customerAddress.setCustomer(customer);
+	customerAddress.setAddressType(requestDto.getAddressType());
+	customerAddress.setDoorNumber(requestDto.getDoorNumber());
+	customerAddress.setStreet(requestDto.getStreet());
+	customerAddress.setArea(requestDto.getArea());
+	customerAddress.setCity(requestDto.getCity());
+	customerAddress.setDistrict(requestDto.getDistrict());
+	customerAddress.setState(requestDto.getState());
+	customerAddress.setCountry(requestDto.getCountry());
+	customerAddress.setPostalCode(requestDto.getPostalCode());
+	customerAddress.setPrimary(requestDto.getPrimary());
+
+	customerAddressRepository.save(customerAddress);
+
+	AddressResponseDto response = new AddressResponseDto();
+	response.setStatus("SUCCESS");
+	response.setMessage("Customer address added successfully.");
+	response.setAddressId(customerAddress.getAddressId());
+	response.setCustomerId(customer.getCustomerId());
+
+	return response;
+}
+
+
+public Map<String, Object> searchAudit(String customerId, String action,
+                                       String performedBy, String fromDate,
+                                       String toDate, int page, int size) {
+
+	customerRepository.findByCustomerId(customerId)
+			.orElseThrow(() -> new IllegalArgumentException("Customer does not exist."));
+
+	LocalDateTime from = fromDate != null ? LocalDate.parse(fromDate).atStartOfDay() : null;
+	LocalDateTime to = toDate != null ? LocalDate.parse(toDate).atTime(23, 59, 59) : null;
+
+	if (from != null && to != null && from.isAfter(to)) {
+		throw new IllegalArgumentException("fromDate cannot be after toDate.");
+	}
+
+	Page<CustomerAudit> results = customerAuditRepository.searchAudit(
+			customerId, action, performedBy, from, to, PageRequest.of(page, size));
+
+	if (results.isEmpty()) {
+		throw new IllegalArgumentException("No records found.");
+	}
+
+	List<Map<String, Object>> auditHistory = results.getContent().stream().map(a -> {
+		Map<String, Object> map = new LinkedHashMap<>();
+		map.put("auditId", "AUD" + String.format("%06d", a.getAuditId()));
+		map.put("action", a.getAction());
+		map.put("performedBy", a.getPerformedBy());
+		map.put("createdDate", a.getCreatedDate());
+		return map;
+	}).collect(java.util.stream.Collectors.toList());
+
+	Map<String, Object> response = new LinkedHashMap<>();
+	response.put("status", "SUCCESS");
+	response.put("page", page);
+	response.put("size", size);
+	response.put("totalRecords", results.getTotalElements());
+	response.put("auditHistory", auditHistory);
+	return response;
+}
+
+public Map<String, Object> getAuditDetails(String customerId, String auditId) {
+
+	customerRepository.findByCustomerId(customerId)
+			.orElseThrow(() -> new IllegalArgumentException("Customer does not exist."));
+
+	Long auditIdNumeric = Long.parseLong(auditId.replace("AUD", ""));
+
+	CustomerAudit audit = customerAuditRepository.findByAuditIdAndCustomer_CustomerId(auditIdNumeric, customerId)
+			.orElseThrow(() -> new IllegalArgumentException("Audit record not found."));
+
+	Map<String, Object> response = new LinkedHashMap<>();
+	response.put("status", "SUCCESS");
+	response.put("auditId", "AUD" + String.format("%06d", audit.getAuditId()));
+	response.put("action", audit.getAction());
+	response.put("performedBy", audit.getPerformedBy());
+	response.put("createdDate", audit.getCreatedDate());
+	response.put("oldValue", audit.getOldValue());
+	response.put("newValue", audit.getNewValue());
+	return response;
+}
+
+	public CustomerContactResponseDto updateMobileNumber(
+			String customerId, CustomerContactRequestDto contactRequestDto) {
+		// Find customer
+		Customer customer = customerRepository.findByCustomerId(customerId)
+				.orElseThrow(() ->
+						new RuntimeException("Customer not found"));
+
+		// Find customer contact
+		CustomerContact customerContact = customerContactRepository
+				.findByCustomer(customer)
+				.orElseThrow(() ->
+						new RuntimeException("Contact not found"));
+
+		String mobile = contactRequestDto.getMobileNumber();
+		if(mobile == null || mobile.isBlank()) {
+			throw new RuntimeException("Mobile number cannot be null");
+		}
+
+		if(!mobile.matches("\\d{10}")){
+			throw new RuntimeException("Invalid Mobile Number");
+		}
+
+		if (mobile.equals(customerContact.getMobileNumber())) {
+			throw new RuntimeException("New mobile number must be different from the existing mobile number.");
+		}
+
+		if (customerContactRepository.existsByMobileNumber(mobile)) {
+			throw new RuntimeException("Mobile number already exists");
+		}
+
+		// Verification
+		boolean verified = true;
+		if(!verified){
+			throw new RuntimeException("Customer verification failed");
+		}
+
+		//Store the old mobile number before updating it.
+		String oldMobileNumber = customerContact.getMobileNumber();
+
+		// Update mobile number
+		customerContact.setMobileNumber(mobile);
+		customerContactRepository.save(customerContact);
+
+
+		CustomerAudit customerAudit = new CustomerAudit();
+		customerAudit.setCustomer(customer);
+		customerAudit.setAction("MOBILE_UPDATED");
+		customerAudit.setPerformedBy("BANK_EMPLOYEE");
+		customerAudit.setOldValue(oldMobileNumber);
+		customerAudit.setNewValue(mobile);
+
+		customerAuditRepository.save(customerAudit);
+
+//		notificationService.publishMobileUpdate(customer);
+
+		CustomerContactResponseDto response = new CustomerContactResponseDto();
+		response.setStatus("SUCCESS");
+		response.setMessage("Mobile number updated successfully.");
+		response.setCustomerId(customer.getCustomerId());
+		response.setContactId(String.valueOf(customerContact.getContactId()));
+
 		return response;
+
+
 	}
 
 
 }
-
 
