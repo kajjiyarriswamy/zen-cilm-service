@@ -18,6 +18,6 @@ public interface CustomerContactRepository extends JpaRepository<CustomerContact
 
     Optional<CustomerContact> findByCustomer(Customer customer);
     
-    List<CustomerContact> findByCustomerCustomerId(String customerId);    
+    List<CustomerContact> findByCustomerCustomerId(String customerId);
     
 }
