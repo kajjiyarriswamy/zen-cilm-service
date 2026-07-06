@@ -15,7 +15,7 @@ public class CustomerAddress {
 	private Long addressId ;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
+	@JoinColumn(name = "customer_id", referencedColumnName = "customer_id", nullable = false)
 	@JsonBackReference
 	private Customer customer;
 

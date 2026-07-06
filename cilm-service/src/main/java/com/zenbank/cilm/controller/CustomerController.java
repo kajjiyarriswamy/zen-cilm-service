@@ -210,6 +210,13 @@ public class CustomerController {
             @PathVariable Long customerId,
             @RequestBody CustomerRequestDto requestDto) {
 
+        customerService.updateCustomer(customerId, requestDto);
+
+        return ResponseEntity.ok(
+                ApiResponseUtil.success("Customer Updated Successfully")
+        );
+    }
+
     @PutMapping("/{customerId}/preferences/notifications")
     public ResponseEntity<Map<String, Object>> updateNotificationPreferences(
             @PathVariable Long customerId,
@@ -220,15 +227,9 @@ public class CustomerController {
         return ResponseEntity.ok(
                 ApiResponseUtil.success("Notification preferences updated successfully"));
     }
-   
 
-        return ResponseEntity.ok(
-                ApiResponseUtil.success("Customer Updated Successfully")
-        );
-
-    }
 	@PostMapping("/{customerId}/addresses")
-	public ResponseEntity<AddressResponseDto> addAddress(@Valid  @PathVariable Long customerId,
+	public ResponseEntity<AddressResponseDto> addAddress(@Valid  @PathVariable String customerId,
 	                                                     @RequestBody AddressRequestDto request) {
 		AddressResponseDto response = customerService.addAddress(customerId, request);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
