@@ -18,7 +18,7 @@ public class CustomerResponseDto {
     private String accountNumber;
 
     private Long nomineeId;
-    private Long customerId;
+    private String customerId;
     private String nomineeName;
     private String relationship;
     private String verificationStatus;
@@ -59,7 +59,7 @@ public class CustomerResponseDto {
     		String nomineeName, 
     		String mobile, 
     		String relationship,
-			Long customer, 
+			String customer, 
 			Double sharePercentage, LocalDate dob) {
 		
     	this.nomineeId=nomineeId;
@@ -72,7 +72,7 @@ public class CustomerResponseDto {
 	}
 
 	public static CustomerResponseDto fromEntity(Customer customer) {
-        return new CustomerResponseDto(
+        CustomerResponseDto response = new CustomerResponseDto(
                 customer.getId(),
                 customer.getFirstName(),
                 customer.getLastName(),
@@ -82,6 +82,8 @@ public class CustomerResponseDto {
                 customer.getCif_number(),
                 customer.getCreatedDate()
         );
+        response.setCustomerId(customer.getCustomerId());
+        return response;
     }
 
 
@@ -132,11 +134,11 @@ public class CustomerResponseDto {
 
 	
 
-	public Long getCustomerId() {
+	public String getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(Long customerId) {
+	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
 	}
 
@@ -195,7 +197,7 @@ public class CustomerResponseDto {
 				savedCustomer.getNomineeName(),
 				savedCustomer.getMobile(),
 				savedCustomer.getRelationship(),
-				savedCustomer.getCustomerId().getId(),
+				savedCustomer.getCustomerId().getCustomerId(),
 				savedCustomer.getSharePercentage(),
 				savedCustomer.getDob()
 				);

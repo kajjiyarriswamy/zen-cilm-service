@@ -23,7 +23,7 @@ public class CustomerDocument {
 	private Long documentId;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "customer_id", nullable = false)
+	@JoinColumn(name = "customer_id", referencedColumnName = "customer_id", nullable = false)
 	private Customer customer;
 
 	@Column(name = "document_number", nullable = false, length = 110)

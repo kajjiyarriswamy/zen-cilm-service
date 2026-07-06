@@ -23,7 +23,7 @@ public class CustomerKyc {
     private Long kycId;
 
     @OneToOne
-    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id", nullable = false)
     private Customer customer;
 	
     @Column(name = "pan_verified", nullable = false)
