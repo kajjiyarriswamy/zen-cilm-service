@@ -2,72 +2,66 @@
 package com.zenbank.cilm.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.zenbank.cilm.utility.AddressType;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "customer_address")
 public class CustomerAddress {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "address_id")
-    private Long addressId ;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "address_id")
+	private Long addressId ;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "customer_id", nullable = false)
-    @JsonBackReference
-    private Customer customer;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "customer_id", referencedColumnName = "customer_id", nullable = false)
+	@JsonBackReference
+	private Customer customer;
 
-    @Column(name = "address_type", nullable = false)
-    private String addressType;
-    
-    @Column(name = "door_number", nullable = false)
-    private String doorDumber;
-    
-    @Column(name = "street", nullable = false)
-    private String street;
-    
-    @Column(name = "area", nullable = false)
-    private String area;
-    
-    @Column(name = "city", nullable = false)
-    private String city;
-    
-    @Column(name = "district", nullable = false)
-    private String district;
-    
-    @Column(name = "state", nullable = false)
-    private String state;
-    
-    @Column(name = "country", nullable = false)
-    private String country;
-    
-    @Column(name = "postal_code", nullable = false)
-    private String postalCode;
-    
-    @Column(name = "is_primary", nullable = false)
-    private Boolean isPrimary ;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "address_type", nullable = false)
+	private AddressType addressType;
+
+	@Column(name = "door_number", nullable = false)
+	private String doorNumber;
+
+	@Column(name = "street", nullable = false)
+	private String street;
+
+	@Column(name = "area", nullable = false)
+	private String area;
+
+	@Column(name = "city", nullable = false)
+	private String city;
+
+	@Column(name = "district", nullable = false)
+	private String district;
+
+	@Column(name = "state", nullable = false)
+	private String state;
+
+	@Column(name = "country", nullable = false)
+	private String country;
+
+	@Column(name = "postal_code", nullable = false)
+	private String postalCode;
+
+	@Column(name = "is_primary", nullable = false)
+	private Boolean isPrimary ;
 
 	public CustomerAddress() {
 		super();
 	}
 
-	public CustomerAddress(Long addressId, Customer customer, String addressType, String doorDumber, String street,
-			String area, String city, String district, String state, String country, String postalCode,
-			Boolean isPrimary) {
+	public CustomerAddress(Long addressId, Customer customer, AddressType addressType, String doorNumber, String street,
+	                       String area, String city, String district, String state, String country, String postalCode,
+	                       Boolean isPrimary) {
 		super();
 		this.addressId = addressId;
 		this.customer = customer;
 		this.addressType = addressType;
-		this.doorDumber = doorDumber;
+		this.doorNumber = doorNumber;
 		this.street = street;
 		this.area = area;
 		this.city = city;
@@ -95,20 +89,20 @@ public class CustomerAddress {
 		this.customer = customer;
 	}
 
-	public String getAddressType() {
+	public AddressType getAddressType() {
 		return addressType;
 	}
 
-	public void setAddressType(String addressType) {
+	public void setAddressType(AddressType addressType) {
 		this.addressType = addressType;
 	}
 
 	public String getDoorDumber() {
-		return doorDumber;
+		return doorNumber;
 	}
 
-	public void setDoorDumber(String doorDumber) {
-		this.doorDumber = doorDumber;
+	public void setDoorNumber(String doorNumber) {
+		this.doorNumber = doorNumber;
 	}
 
 	public String getStreet() {

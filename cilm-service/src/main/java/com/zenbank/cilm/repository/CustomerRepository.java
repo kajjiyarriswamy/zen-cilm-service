@@ -23,10 +23,9 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     boolean existsByPhoneNumber(String phoneNumber);
 
-    
-    Optional<Customer> findById(Long id);
+    Optional<Customer> findByCustomerId(String customerId);
 
-	Optional<Customer> findByCustomerId(String customerId);
+    Optional<Customer> findTopByOrderByCustomerIdDesc();
 
 
     @Query(""" 
@@ -48,5 +47,4 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 			@Param("status")String status, 
 			Pageable pageable);
 
-	
 }

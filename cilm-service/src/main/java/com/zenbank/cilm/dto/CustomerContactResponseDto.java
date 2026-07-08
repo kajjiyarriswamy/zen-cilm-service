@@ -1,11 +1,17 @@
 package com.zenbank.cilm.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CustomerContactResponseDto {
 
     private String status;
     private String message;
     private String contactId;
     private String customerId;
+
+    public CustomerContactResponseDto() {
+    }
 
     public CustomerContactResponseDto(String status, String message, String contactId, String customerId) {
         this.status = status;
