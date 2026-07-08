@@ -47,7 +47,7 @@ public class Customer {
 	private String occupation;
 
 	@Column(nullable = false, name = "annal_income")
-	private String annalIncome;
+	private String annualIncome;
 
 	@Column(nullable = false, name = "customer_type")
 	private String customerType;
@@ -137,7 +137,7 @@ public class Customer {
         this.gender = gender;
         this.maritalStatus = maritalStatus;
         this.occupation = occupation;
-        this.annalIncome = annalIncome;
+        this.annualIncome = annalIncome;
         this.customerType = customerType;
         this.customerCategory = customerCategory;
         this.panNumber = panNumber;
@@ -266,14 +266,14 @@ public class Customer {
 
 
 
-	public String getAnnalIncome() {
-		return annalIncome;
+	public String getAnnualIncome() {
+		return annualIncome;
 	}
 
 
 
 	public void setAnnalIncome(String annalIncome) {
-		this.annalIncome = annalIncome;
+		this.annualIncome = annalIncome;
 	}
 
 
