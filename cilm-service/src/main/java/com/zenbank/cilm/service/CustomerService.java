@@ -36,6 +36,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -599,6 +600,44 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 
 		return response;
 
+	}
+	
+//	get customer contact Details
+	
+	public Map<String, Object> getContactsByCustomerId(String customerId) {
+		Map<String, Object> response = new LinkedHashMap<>();
+
+
+		Optional<Customer> customer = customerRepository.findByCustomerId(customerId);
+
+		if (customer.isEmpty()){
+			response.put("status", "FAILED");
+			response.put("message", "Customer not found.");
+			return response;
+		}
+
+		List<CustomerContact> contacts =
+				customerContactRepository.findByCustomerCustomerId(customerId);
+
+		List<CustomerContact> ResponseDtoList = new ArrayList<>();
+		for (CustomerContact contact : contacts) {
+
+			CustomerContact responseDto = new CustomerContact();
+
+			responseDto.setContactId(contact.getContactId());
+			responseDto.setMobileNumber(contact.getMobileNumber());
+			responseDto.setAlternateMobile(contact.getAlternateMobile());
+			responseDto.setEmail(contact.getEmail());
+			responseDto.setLandline(contact.getLandline());
+			responseDto.setPreferredContactMode(contact.getPreferredContactMode());
+
+			ResponseDtoList.add(responseDto);
+		}
+		response.put("status", "SUCCESS");
+		response.put("message", "Contacts fetched successfully.");
+		response.put("data", ResponseDtoList);
+
+		return response;
 
 	}
 
