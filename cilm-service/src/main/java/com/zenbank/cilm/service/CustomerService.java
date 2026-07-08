@@ -580,49 +580,25 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 		customerContact.setMobileNumber(mobile);
 		customerContactRepository.save(customerContact);
 
-
-		CustomerAudit customerAudit = new CustomerAudit();
-		customerAudit.setCustomer(customer);
-		customerAudit.setAction("MOBILE_UPDATED");
-		customerAudit.setPerformedBy("BANK_EMPLOYEE");
-		customerAudit.setOldValue(oldMobileNumber);
-		customerAudit.setNewValue(mobile);
-
-		customerAuditRepository.save(customerAudit);
-
-//		notificationService.publishMobileUpdate(customer);
-
-		CustomerContactResponseDto response = new CustomerContactResponseDto();
-		response.setStatus("SUCCESS");
-		response.setMessage("Mobile number updated successfully.");
-		response.setCustomerId(customer.getCustomerId());
-		response.setContactId(String.valueOf(customerContact.getContactId()));
-
-		return response;
-
-	}
-	
-//	get customer contact Details
-	
-	public Map<String, Object> getContactsByCustomerId(String customerId) {
-		Map<String, Object> response = new LinkedHashMap<>();
-
-
-		Optional<Customer> customer = customerRepository.findByCustomerId(customerId);
-
-		if (customer.isEmpty()){
-			response.put("status", "FAILED");
-			response.put("message", "Customer not found.");
-			return response;
+	public void verifyNominee(Long customerId, Long nomineeId, CustomerRequestDto dto) {
+		
+		Customer customer=customerRepository.findById(customerId)
+				.orElseThrow(() -> new RuntimeException("Customer not found"));
+		
+		CustomerNominee nominee=customerNomineeRepository.findByNomineeIdAndCustomerId(nomineeId, customer)
+				.orElseThrow(() -> new RuntimeException("Nominee not found"));
+		
+		if ("VERIFIED".equalsIgnoreCase(nominee.getVerificationStatus())) {
+			
+			throw new RuntimeException("Nominee already verified");
 		}
-
-		List<CustomerContact> contacts =
-				customerContactRepository.findByCustomerCustomerId(customerId);
-
-		List<CustomerContact> ResponseDtoList = new ArrayList<>();
-		for (CustomerContact contact : contacts) {
-
-			CustomerContact responseDto = new CustomerContact();
+		
+		nominee.setVerificationStatus("VERIFIED");
+		
+		customerNomineeRepository.save(nominee);
+		
+	}
+}
 
 			responseDto.setContactId(contact.getContactId());
 			responseDto.setMobileNumber(contact.getMobileNumber());
