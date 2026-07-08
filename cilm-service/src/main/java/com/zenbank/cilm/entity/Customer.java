@@ -103,6 +103,9 @@ public class Customer {
 	@OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)//, fetch = FetchType.LAZY)
 	    @JsonManagedReference
 	    private CustomerPreference customerPreference;
+	
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+	private List<CustomerContact> contacts;
 	    
 	    public Customer() {
 	    }
