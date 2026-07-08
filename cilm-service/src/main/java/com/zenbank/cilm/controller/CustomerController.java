@@ -217,6 +217,7 @@ public class CustomerController {
         );
     }
 
+
     @PutMapping("/{customerId}/preferences/notifications")
     public ResponseEntity<Map<String, Object>> updateNotificationPreferences(
             @PathVariable Long customerId,
@@ -226,7 +227,11 @@ public class CustomerController {
 
         return ResponseEntity.ok(
                 ApiResponseUtil.success("Notification preferences updated successfully"));
+    
     }
+
+
+
 
 	@PostMapping("/{customerId}/addresses")
 	public ResponseEntity<AddressResponseDto> addAddress(@Valid  @PathVariable String customerId,
