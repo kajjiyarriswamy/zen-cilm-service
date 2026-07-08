@@ -19,6 +19,7 @@ import com.zenbank.cilm.Enum.CustomerStatus;
 import com.zenbank.cilm.repository.CustomerRepository;
 
 import com.zenbank.cilm.repository.CustomerContactRepository;
+import com.zenbank.cilm.repository.CustomerKycRepository;
 
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -49,20 +50,25 @@ public class CustomerService {
 	private final CustomerRepository customerRepository;
 	private final CustomerNomineeRepository customerNomineeRepository;
 	private final AddressRepository customerAddressRepository;
+
+	private final CustomerKycRepository customerKycRepository;
 	private final CustomerAuditRepository customerAuditRepository;
 	private final CustomerContactRepository customerContactRepository;
+	
 
-	public CustomerService(CustomerRepository customerRepository,
-	                       CustomerNomineeRepository customerNomineeRepository,
-	                       AddressRepository customerAddressRepository,
-	                       CustomerContactRepository customerContactRepository,
-	                       CustomerAuditRepository customerAuditRepository) {
-		this.customerRepository = customerRepository;
-		this.customerNomineeRepository = customerNomineeRepository;
+    public CustomerService(CustomerRepository customerRepository, CustomerNomineeRepository customerNomineeRepository,AddressRepository customerAddressRepository,CustomerKycRepository customerKycRepository,CustomerContactRepository customerContactRepository,
+            CustomerAuditRepository customerAuditRepository) {
+        this.customerRepository = customerRepository;
+        this.customerNomineeRepository = customerNomineeRepository;
 		this.customerAddressRepository = customerAddressRepository;
+		this. customerKycRepository=customerKycRepository;
 		this.customerContactRepository = customerContactRepository;
 		this.customerAuditRepository = customerAuditRepository;
-	}
+    }
+
+	
+
+	
 
 	@Transactional
 	public CustomerResponseDto createCustomer(CustomerRequestDto dto) {
@@ -315,9 +321,25 @@ public class CustomerService {
 
 		customer.setCustomerPreference(preference);
 
+
+
+		customerRepository.save(customer);
+
 		return customer.getCustomerPreference();
 	}
 
+	public void updateCustomer(Long customerId, CustomerRequestDto requestDto) {
+		Customer customer = customerRepository.findById(customerId)
+	            .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+	    customer.setOccupation(requestDto.getOccupation());
+	    customer.setAnnalIncome(requestDto.getAnnualIncome());
+	    customer.setMaritalStatus(requestDto.getMaritalStatus());
+
+	    customerRepository.save(customer);
+	}
+
+	
 	public void updateNotificationPreferences(Long customerId,
 	                                          CustomerPreference request) {
 
@@ -339,23 +361,19 @@ public class CustomerService {
 // Save
 		customerRepository.save(customer);
 	}
-
-
-public void updateCustomer(Long customerId, CustomerRequestDto requestDto) {
-	Customer customer = customerRepository.findById(customerId)
-			.orElseThrow(() -> new RuntimeException("Customer not found"));
-
-	customer.setOccupation(requestDto.getOccupation());
-	customer.setAnnalIncome(requestDto.getAnnualIncome());
-	customer.setMaritalStatus(requestDto.getMaritalStatus());
-
-	customerRepository.save(customer);
-}
-
-
+	
 
 	public CustomerContactResponseDto addContact(String customerId, @Valid CustomerContactRequestDto requestDto) {
+
+		return null;
+	}
+
+	/**public AddressResponseDto addAddress(Long customerId, AddressRequestDto requestDto) {
+	
+		Customer customer =  customerRepository.findByCustomerId(String.valueOf(customerId))
+
 		Customer customer = customerRepository.findByCustomerId(customerId)
+
 				.orElseThrow(() ->
 						new RuntimeException("Customer not found"));
 
@@ -381,9 +399,32 @@ public void updateCustomer(Long customerId, CustomerRequestDto requestDto) {
 				"CNT10001",
 				customer.getCustomerId()
 		);
+	}*/
+
+
+	
+	public CustomerKycResponseDto getCustomerKyc(Long customerId) {
+
+	    Customer customer = customerRepository.findById(customerId)
+	            .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+	    CustomerKyc customerKyc = customerKycRepository.findByCustomer(customer)
+	            .orElseThrow(() -> new RuntimeException("KYC record not found."));
+
+	    return new CustomerKycResponseDto(
+	            customer.getCustomerId(),
+	            customerKyc.getPanVerified(),
+	            customerKyc.getAadhaarVerified(),
+	            customerKyc.getKycStatus(),
+	            customerKyc.getVerifiedBy(),
+	            customerKyc.getVerifiedDate()
+	    );
 	}
 
 
+	/**public Map<String, Object> searchAudit(String customerId, String action,
+	                                       String performedBy, String fromDate,
+	                                       String toDate, int page, int size) {*/
 
 
 public AddressResponseDto addAddress(String customerId, AddressRequestDto requestDto)
@@ -411,9 +452,6 @@ public AddressResponseDto addAddress(String customerId, AddressRequestDto reques
 	}
 
 
-
-
-
 	CustomerAddress customerAddress = new CustomerAddress();
 	customerAddress.setCustomer(customer);
 	customerAddress.setAddressType(requestDto.getAddressType());
@@ -436,10 +474,8 @@ public AddressResponseDto addAddress(String customerId, AddressRequestDto reques
 	response.setCustomerId(customer.getCustomerId());
 
 	return response;
-
-
-
 }
+
 
 public Map<String, Object> searchAudit(String customerId, String action,
                                        String performedBy, String fromDate,
@@ -571,6 +607,7 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 	public Map<String, Object> getContactsByCustomerId(String customerId) {
 		Map<String, Object> response = new LinkedHashMap<>();
 
+
 		Optional<Customer> customer = customerRepository.findByCustomerId(customerId);
 
 		if (customer.isEmpty()){
@@ -601,7 +638,9 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 		response.put("data", ResponseDtoList);
 
 		return response;
+
 	}
 
 
 }
+
