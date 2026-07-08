@@ -35,6 +35,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -563,6 +564,20 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 	}
 }
 
+			responseDto.setContactId(contact.getContactId());
+			responseDto.setMobileNumber(contact.getMobileNumber());
+			responseDto.setAlternateMobile(contact.getAlternateMobile());
+			responseDto.setEmail(contact.getEmail());
+			responseDto.setLandline(contact.getLandline());
+			responseDto.setPreferredContactMode(contact.getPreferredContactMode());
+
+			ResponseDtoList.add(responseDto);
+		}
+		response.put("status", "SUCCESS");
+		response.put("message", "Contacts fetched successfully.");
+		response.put("data", ResponseDtoList);
+
+		return response;
 	}
 
 
