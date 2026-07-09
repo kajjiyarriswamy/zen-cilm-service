@@ -5,6 +5,7 @@ import com.zenbank.cilm.dto.CustomerContactResponseDto;
 import com.zenbank.cilm.service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,5 +37,11 @@ public class CustomerContactController {
     public ResponseEntity<CustomerContactResponseDto> updateCustomerContactPhoneNumber(
             @PathVariable String customerId, @RequestBody CustomerContactRequestDto contactRequestDto) {
         return ResponseEntity.ok(customerService.updateMobileNumber(customerId, contactRequestDto));
+    }
+
+    @PutMapping("/{customerId}/contacts/email")
+    public ResponseEntity<CustomerContactResponseDto> updateCustomerContactEmail(
+            @PathVariable String customerId, @Valid @RequestBody CustomerContactRequestDto customerContactRequestDto){
+        return ResponseEntity.ok(customerService.updateEmail(customerId, customerContactRequestDto));
     }
 }

@@ -1,9 +1,11 @@
 package com.zenbank.cilm.dto;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
+@JsonView
 public class CustomerContactRequestDto {
 
     @NotBlank(message = "Mobile number is required")

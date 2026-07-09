@@ -384,7 +384,7 @@ public void updateCustomer(Long customerId, CustomerRequestDto requestDto) {
 
 
 
-
+// Add Addresses by using customerID
 public AddressResponseDto addAddress(String customerId, AddressRequestDto requestDto)
 {
 	Customer customer =  customerRepository.findByCustomerId(customerId)
@@ -409,10 +409,6 @@ public AddressResponseDto addAddress(String customerId, AddressRequestDto reques
 		}
 	}
 
-
-
-
-
 	CustomerAddress customerAddress = new CustomerAddress();
 	customerAddress.setCustomer(customer);
 	customerAddress.setAddressType(requestDto.getAddressType());
@@ -435,9 +431,6 @@ public AddressResponseDto addAddress(String customerId, AddressRequestDto reques
 	response.setCustomerId(customer.getCustomerId());
 
 	return response;
-
-
-
 }
 
 public Map<String, Object> searchAudit(String customerId, String action,
@@ -500,6 +493,7 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 	return response;
 }
 
+// Update Mobile number by using customerId
 	public CustomerContactResponseDto updateMobileNumber(
 			String customerId, CustomerContactRequestDto contactRequestDto) {
 		// Find customer
@@ -536,10 +530,10 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 			throw new RuntimeException("Customer verification failed");
 		}
 
-		//Store the old mobile number before updating it.
+//		Store the old mobile number before updating it.
 		String oldMobileNumber = customerContact.getMobileNumber();
 
-		// Update mobile number
+//		 Update mobile number
 		customerContact.setMobileNumber(mobile);
 		customerContactRepository.save(customerContact);
 
@@ -563,8 +557,50 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 
 		return response;
 
+	}
 
+	public CustomerContactResponseDto updateEmail(String customerId, CustomerContactRequestDto requestDto) {
+		Customer customer = customerRepository.findByCustomerId(customerId)
+				.orElseThrow(()->
+						new RuntimeException("Customer not found"));
 
+		CustomerContact customerContact = customerContactRepository.findByCustomer(customer)
+				.orElseThrow(()->
+						new RuntimeException("contact not found"));
+
+		String email = requestDto.getEmail();
+		if (email == null || email.isBlank()) {
+			throw new RuntimeException("Email cannot be null");
+		}
+
+		if(email.equals(customerContact.getEmail())) {
+			throw new RuntimeException("New email must be different from the existing email");
+		}
+
+		if(customerContactRepository.existsByEmail(email)) {
+			throw new RuntimeException("Email already exists");
+		}
+
+//		Store the old email number before updating it.
+		String oldEmail = customerContact.getEmail();
+
+//		update email
+		customerContact.setEmail(email);
+		customerContactRepository.save(customerContact);
+
+		CustomerAudit customerAudit = new CustomerAudit();
+		customerAudit.setCustomer(customer);
+		customerAudit.setAction("EMAIL_UPDATED");
+		customerAudit.setPerformedBy("BANK_EMPLOYEE");
+		customerAudit.setOldValue(oldEmail);
+		customerAudit.setNewValue(email);
+		customerAuditRepository.save(customerAudit);
+
+		CustomerContactResponseDto contactResponseDto = new CustomerContactResponseDto();
+		contactResponseDto.setStatus("SUCCESS");
+		contactResponseDto.setMessage("Email updated successfully.");
+
+		return contactResponseDto;
 
 	}
 
