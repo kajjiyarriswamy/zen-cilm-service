@@ -624,7 +624,6 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 
 
 	public Map<String, Object> getContactsByCustomerId(String customerId) {
-
 		Map<String, Object> response = new LinkedHashMap<>();
 
 		Optional<Customer> customer = customerRepository.findByCustomerId(customerId);
@@ -696,16 +695,22 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 	}
 
 
-	public void deleteNominee(Long customerId, Long nomineeId) {
+	public void addCustomerKyc(Long customerId, CustomerKycRequestDto requestDto) {
+		Customer customer = customerRepository.findById(customerId)
+	            .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+	    CustomerKyc customerKyc = new CustomerKyc();
+	    
+
+	    customerKyc.setCustomer(customer);
+	    customerKyc.setPanVerified(requestDto.getPanVerified());
+	    customerKyc.setAadhaarVerified(requestDto.getAadhaarVerified());
+	    customerKyc.setKycStatus(requestDto.getKycStatus());
+	    customerKyc.setVerifiedBy(requestDto.getVerifiedBy());
+	    //customerKyc.setVerifiedDate(requestDto.getVerifiedDate());
+
+	    customerKycRepository.save(customerKyc);
 		
-		
-		Customer customer=customerRepository.findById(customerId)
-				.orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-		
-		CustomerNominee nominee=customerNomineeRepository.findByNomineeIdAndCustomer(nomineeId, customer)
-				.orElseThrow(() -> new ResourceNotFoundException("Niminee not found"));
-	
-		customerNomineeRepository.delete(nominee);
 	}
 	
 	
