@@ -322,6 +322,7 @@ public class CustomerService {
 		if (preference == null) {
 			throw new RuntimeException("Customer preferences not found.");
 		}
+		// used to generate a custom preference ID in a standard format."
 		String preferenceId = "PREF" + String.format("%06d", preference.getPreferenceId());
 
 		return new CustomerPreferenceResponseDto(preferenceId, preference.getLanguage(),
@@ -377,6 +378,7 @@ public class CustomerService {
 
 // Save
 		customerRepository.save(customer);
+		
 	}
 	
 
@@ -596,12 +598,12 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 		// Update mobile number
 		customerContact.setMobileNumber(mobile);
 		customerContactRepository.save(customerContact);
-		
 		CustomerContactResponseDto response = null;
 		return response;
-
 	}
-	public void verifyNominee(Long customerId, Long nomineeId, CustomerNomineeRequestDto dto) {
+
+	
+	public void verifyNominee(Long customerId, Long nomineeId, CustomerRequestDto dto) {
 		
 		Customer customer=customerRepository.findById(customerId)
 				.orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
@@ -617,15 +619,11 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 		nominee.setVerificationStatus("VERIFIED");
 		
 		customerNomineeRepository.save(nominee);
-		
 	}
 
 
 
-
-
 	public Map<String, Object> getContactsByCustomerId(String customerId) {
-
 		Map<String, Object> response = new LinkedHashMap<>();
 
 
@@ -687,7 +685,6 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 		response.put("data", ResponseDtoList);
 
 
-
 		return response;
 
 	}
@@ -696,20 +693,25 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 
 
 
-	public void deleteNominee(Long customerId, Long nomineeId) {
+	public void addCustomerKyc(Long customerId, CustomerKycRequestDto requestDto) {
+		Customer customer = customerRepository.findById(customerId)
+	            .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+	    CustomerKyc customerKyc = new CustomerKyc();
+	    
+
+	    customerKyc.setCustomer(customer);
+	    customerKyc.setPanVerified(requestDto.getPanVerified());
+	    customerKyc.setAadhaarVerified(requestDto.getAadhaarVerified());
+	    customerKyc.setKycStatus(requestDto.getKycStatus());
+	    customerKyc.setVerifiedBy(requestDto.getVerifiedBy());
+	    //customerKyc.setVerifiedDate(requestDto.getVerifiedDate());
+
+	    customerKycRepository.save(customerKyc);
 		
-		
-		Customer customer=customerRepository.findById(customerId)
-				.orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-		
-		CustomerNominee nominee=customerNomineeRepository.findByNomineeIdAndCustomer(nomineeId, customer)
-				.orElseThrow(() -> new ResourceNotFoundException("Niminee not found"));
-	
-		customerNomineeRepository.delete(nominee);
 	}
-	
-	
-	
+
+
 }
 
 

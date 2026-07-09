@@ -106,6 +106,9 @@ public class Customer {
 	
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private List<CustomerContact> contacts;
+	
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+	private List<CustomerKyc> customerKycs;
 	    
 	    public Customer() {
 	    }
@@ -446,6 +449,43 @@ public class Customer {
 	public void setCustomerPreference(CustomerPreference customerPreference) {
 		this.customerPreference = customerPreference;
 	}
+
+
+
+	public List<CustomerAddress> getAddresses() {
+		return addresses;
+	}
+
+
+
+	public void setAddresses(List<CustomerAddress> addresses) {
+		this.addresses = addresses;
+	}
+
+
+
+	public List<CustomerContact> getContacts() {
+		return contacts;
+	}
+
+
+
+	public void setContacts(List<CustomerContact> contacts) {
+		this.contacts = contacts;
+	}
+
+
+
+	public List<CustomerKyc> getCustomerKycs() {
+		return customerKycs;
+	}
+
+
+
+	public void setCustomerKycs(List<CustomerKyc> customerKycs) {
+		this.customerKycs = customerKycs;
+	}
+	
 
 }
 	
