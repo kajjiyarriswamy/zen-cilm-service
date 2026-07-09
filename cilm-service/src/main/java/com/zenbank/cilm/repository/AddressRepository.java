@@ -19,5 +19,6 @@ public interface AddressRepository extends JpaRepository<CustomerAddress, Long> 
     boolean existsByCustomer_Id(Long customerId);
 
     boolean existsByCustomerAndIsPrimaryTrue(Customer customer);
-
+    Optional<CustomerAddress> findByAddressIdAndCustomer(Long addressId, Customer customer);
+    
 }

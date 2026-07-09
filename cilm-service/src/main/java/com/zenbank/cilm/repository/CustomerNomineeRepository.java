@@ -14,7 +14,7 @@ public interface CustomerNomineeRepository extends JpaRepository<CustomerNominee
 	
 	Optional<CustomerNominee> findByNomineeIdAndCustomer(Long nomineeId, Customer customer);
 
-    List<CustomerNominee> findByCustomerId(Customer customer);
+	List<CustomerNominee> findByCustomer(Customer customer);
 	
 	
 

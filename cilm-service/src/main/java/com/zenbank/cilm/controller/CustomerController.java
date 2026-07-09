@@ -92,6 +92,16 @@ public class CustomerController {
     			status, page,
     			size)));
     }
+    @PutMapping("/{customerId}/preferences")
+    public ResponseEntity<Map<String, Object>> updatePreferences(
+            @PathVariable Long customerId,
+            @RequestBody CustomerPreference preference) {
+
+        customerService.updatePreferences(customerId, preference);
+
+        return ResponseEntity.ok(
+                ApiResponseUtil.success("Customer preferences updated successfully."));
+    }
 
     
     @GetMapping("/{customerId}/addresses")
@@ -106,6 +116,17 @@ public class CustomerController {
         }
 
         return ResponseEntity.ok(response);
+    }
+    @PutMapping("/{customerId}/addresses/{addressId}")
+    public ResponseEntity<Map<String, Object>> updateAddress(
+            @PathVariable String customerId,
+            @PathVariable Long addressId,
+            @Valid @RequestBody AddressRequestDto requestDto) {
+
+        customerService.updateAddress(customerId, addressId, requestDto);
+
+        return ResponseEntity.ok(
+                ApiResponseUtil.success("Address updated successfully."));
     }
     @DeleteMapping("/{customerId}/addresses/{addressId}")
     public ResponseEntity<Map<String,Object>> deleteCustomerAddress(

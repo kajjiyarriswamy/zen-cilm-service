@@ -55,38 +55,12 @@ public class CustomerNomineeServiceImpl implements CustomerNomineeService {
             throw new RuntimeException("Customer KYC must be VERIFIED.");
         }
 
-        // Validate Nominee Name
-        if (requestDto.getNomineeName() == null ||
-                requestDto.getNomineeName().trim().isEmpty()) {
-
-            throw new RuntimeException("Nominee name is mandatory.");
-        }
-
-        // Validate Mobile
-        if (requestDto.getMobile() == null ||
-                !requestDto.getMobile().matches("\\d{10}")) {
-
-            throw new RuntimeException(
-                    "Mobile number must contain 10 digits.");
-        }
-
-        // Validate DOB
-        if (requestDto.getDob().isAfter(LocalDate.now())) {
-
-            throw new RuntimeException(
-                    "Date of Birth cannot be a future date.");
-        }
-
-        // Validate Share Percentage
-        if (requestDto.getSharePercentage() <= 0) {
-
-            throw new RuntimeException(
-                    "Share percentage must be greater than 0.");
-        }
+        
+       
 
         // Existing Nominee Share
         List<CustomerNominee> nomineeList =
-                customerNomineeRepository.findByCustomerId(customer);
+                customerNomineeRepository.findByCustomer(customer);
 
         double totalShare = nomineeList.stream()
                 .mapToDouble(CustomerNominee::getSharePercentage)
@@ -128,18 +102,20 @@ public class CustomerNomineeServiceImpl implements CustomerNomineeService {
 
         customerAuditRepository.save(audit);
 
-        // Prepare Response
-        CustomerNomineeResponseDto response =
-                new CustomerNomineeResponseDto();
+     // Prepare Response
+        CustomerNomineeResponseDto response = new CustomerNomineeResponseDto();
 
         response.setNomineeId(
-                "NOM" + String.format("%06d",
-                        savedNominee.getNomineeId()));
+                "NOM" + String.format("%06d", savedNominee.getNomineeId()));
 
-        response.setVerificationStatus(
-                savedNominee.getVerificationStatus());
+        response.setVerificationStatus(savedNominee.getVerificationStatus());
+        response.setNomineeName(savedNominee.getNomineeName());
+        response.setRelationship(savedNominee.getRelationship());
+        response.setMobile(savedNominee.getMobile());
+        response.setDob(savedNominee.getDob());
+        response.setSharePercentage(savedNominee.getSharePercentage());
 
         return response;
-    }
+        }
 
 }
