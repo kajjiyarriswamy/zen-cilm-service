@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,7 +22,7 @@ public class CustomerContactController {
 
     @PostMapping("/{customerId}/contacts")
     public ResponseEntity<?> addContact(@PathVariable String customerId,
-                                        @Valid @RequestBody CustomerContactRequestDto requestDto) {
+                                        @Validated(CustomerContactRequestDto.Create.class) @RequestBody CustomerContactRequestDto requestDto) {
         try {
             CustomerContactResponseDto response =
                     customerService.addContact(customerId, requestDto);

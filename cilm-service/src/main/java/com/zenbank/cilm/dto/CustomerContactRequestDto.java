@@ -8,7 +8,9 @@ import jakarta.validation.constraints.Pattern;
 @JsonView
 public class CustomerContactRequestDto {
 
-    @NotBlank(message = "Mobile number is required")
+    public interface Create {}
+
+    @NotBlank(message = "Mobile number is required", groups = Create.class)
     @Pattern(regexp = "^[0-9]{10}$", message = "Mobile number must be 10 digits")
     private String mobileNumber;
 
@@ -20,7 +22,7 @@ public class CustomerContactRequestDto {
 
     private String landline;
 
-    @NotBlank(message = "Preferred contact mode is required")
+    @NotBlank(message = "Preferred contact mode is required", groups = Create.class)
     private String preferredContactMode;
 
     public String getMobileNumber() { return mobileNumber; }
