@@ -604,7 +604,6 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 	}
 	
 	public void verifyNominee(Long customerId, Long nomineeId, CustomerNomineeRequestDto dto) {
-
 		
 		Customer customer=customerRepository.findById(customerId)
 				.orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
@@ -623,15 +622,12 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 	}
 
 
-	public Map<String, Object> getContactsByCustomerId(String customerId) {
 
+	public Map<String, Object> getContactsByCustomerId(String customerId) {
 
 		Map<String, Object> response = new LinkedHashMap<>();
 
-
-
 		Optional<Customer> customer = customerRepository.findByCustomerId(customerId);
-
 
 
 		if (customer.isEmpty()){
@@ -644,23 +640,15 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 
 		}
 
-
-
 		List<CustomerContact> contacts =
 
 				customerContactRepository.findByCustomerCustomerId(customerId);
-
-
 
 		List<CustomerContact> ResponseDtoList = new ArrayList<>();
 
 		for (CustomerContact contact : contacts) {
 
-
-
 			CustomerContact responseDto = new CustomerContact();
-
-
 
 			responseDto.setContactId(contact.getContactId());
 
@@ -673,8 +661,6 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 			responseDto.setLandline(contact.getLandline());
 
 			responseDto.setPreferredContactMode(contact.getPreferredContactMode());
-
-
 
 			ResponseDtoList.add(responseDto);
 
@@ -689,6 +675,7 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 		return response;
 
 	}
+
 
 	public void addCustomerKyc(Long customerId, CustomerKycRequestDto requestDto) {
 		Customer customer = customerRepository.findById(customerId)
