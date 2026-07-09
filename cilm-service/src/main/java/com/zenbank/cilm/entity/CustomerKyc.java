@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -22,9 +23,9 @@ public class CustomerKyc {
 	@Column(name = "kyc_id")
     private Long kycId;
 
-    @OneToOne
-    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id", nullable = false)
-    private Customer customer;
+	@ManyToOne
+	@JoinColumn(name = "customer_id")
+	private Customer customer;
 	
     @Column(name = "pan_verified", nullable = false)
     private Boolean panVerified;
@@ -127,6 +128,8 @@ public class CustomerKyc {
 	}
 	
 	
+	
+	
 
 	public CustomerKyc(Long kycId, Customer customer, Boolean panVerified, Boolean aadhaarVerified, String kycStatus,
 			String verifiedBy, LocalDateTime verifiedDate) {
@@ -145,5 +148,9 @@ public class CustomerKyc {
 	public CustomerKyc() {
 		super();
 	}
+
+
+
+
 		
 }

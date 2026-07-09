@@ -1,9 +1,5 @@
 package com.zenbank.cilm.service;
 
-import com.zenbank.cilm.dto.AddressResponseDto;
-import com.zenbank.cilm.dto.CustomerGetRequestDto;
-import com.zenbank.cilm.dto.CustomerRequestDto;
-import com.zenbank.cilm.dto.CustomerResponseDto;
 import com.zenbank.cilm.entity.Customer;
 import com.zenbank.cilm.entity.CustomerAddress;
 import com.zenbank.cilm.entity.CustomerAudit;
@@ -305,6 +301,7 @@ public class CustomerService {
 		if (preference == null) {
 			throw new RuntimeException("Customer preferences not found.");
 		}
+		// used to generate a custom preference ID in a standard format."
 		String preferenceId = "PREF" + String.format("%06d", preference.getPreferenceId());
 
 		return new CustomerPreferenceResponseDto(preferenceId, preference.getLanguage(),
@@ -360,6 +357,7 @@ public class CustomerService {
 
 // Save
 		customerRepository.save(customer);
+		
 	}
 	
 
@@ -579,7 +577,11 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 		// Update mobile number
 		customerContact.setMobileNumber(mobile);
 		customerContactRepository.save(customerContact);
+		CustomerContactResponseDto response = null;
+		return response;
+	}
 
+	
 	public void verifyNominee(Long customerId, Long nomineeId, CustomerRequestDto dto) {
 		
 		Customer customer=customerRepository.findById(customerId)
@@ -596,25 +598,96 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 		nominee.setVerificationStatus("VERIFIED");
 		
 		customerNomineeRepository.save(nominee);
-		
 	}
-}
+
+
+
+	public Map<String, Object> getContactsByCustomerId(String customerId) {
+		Map<String, Object> response = new LinkedHashMap<>();
+
+
+
+		Optional<Customer> customer = customerRepository.findByCustomerId(customerId);
+
+
+
+		if (customer.isEmpty()){
+
+			response.put("status", "FAILED");
+
+			response.put("message", "Customer not found.");
+
+			return response;
+
+		}
+
+
+
+		List<CustomerContact> contacts =
+
+				customerContactRepository.findByCustomerCustomerId(customerId);
+
+
+
+		List<CustomerContact> ResponseDtoList = new ArrayList<>();
+
+		for (CustomerContact contact : contacts) {
+
+
+
+			CustomerContact responseDto = new CustomerContact();
+
+
 
 			responseDto.setContactId(contact.getContactId());
+
 			responseDto.setMobileNumber(contact.getMobileNumber());
+
 			responseDto.setAlternateMobile(contact.getAlternateMobile());
+
 			responseDto.setEmail(contact.getEmail());
+
 			responseDto.setLandline(contact.getLandline());
+
 			responseDto.setPreferredContactMode(contact.getPreferredContactMode());
 
+
+
 			ResponseDtoList.add(responseDto);
+
 		}
+
 		response.put("status", "SUCCESS");
+
 		response.put("message", "Contacts fetched successfully.");
+
 		response.put("data", ResponseDtoList);
+
 
 		return response;
 
+	}
+
+
+
+
+
+	public void addCustomerKyc(Long customerId, CustomerKycRequestDto requestDto) {
+		Customer customer = customerRepository.findById(customerId)
+	            .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+	    CustomerKyc customerKyc = new CustomerKyc();
+	    
+
+	    customerKyc.setCustomer(customer);
+	    customerKyc.setPanVerified(requestDto.getPanVerified());
+	    customerKyc.setAadhaarVerified(requestDto.getAadhaarVerified());
+	    customerKyc.setKycStatus(requestDto.getKycStatus());
+	    customerKyc.setVerifiedBy(requestDto.getVerifiedBy());
+	    //customerKyc.setVerifiedDate(requestDto.getVerifiedDate());
+
+	    customerKycRepository.save(customerKyc);
+		
 	}
 
 

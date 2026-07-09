@@ -268,6 +268,28 @@ public class CustomerController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 		}
 	}
+		@GetMapping("/{customerId}/kyc")
+		public ResponseEntity<Map<String, Object>> getCustomerKyc(
+		        @PathVariable Long customerId) {
+
+		    CustomerKycResponseDto response =
+		            customerService.getCustomerKyc(customerId);
+
+		    return ResponseEntity.ok(ApiResponseUtil.success(response));
+	}
+		
+		@PostMapping("/{customerId}/kyc")
+		public ResponseEntity<Map<String, Object>> addCustomerKyc(
+		        @PathVariable Long customerId,
+		        @RequestBody CustomerKycRequestDto requestDto) {
+
+		    customerService.addCustomerKyc(customerId, requestDto);
+
+		    return ResponseEntity.ok(
+		            ApiResponseUtil.success("Customer KYC added successfully")
+		    );
+		}
+	
 }
 
 
