@@ -11,7 +11,8 @@ import com.zenbank.cilm.entity.CustomerNominee;
 
 @Repository
 public interface CustomerNomineeRepository extends JpaRepository<CustomerNominee, Long> {
-	Optional<CustomerNominee> findByNomineeIdAndCustomerId(Long nomineeId, Customer customer);
+	
+	Optional<CustomerNominee> findByNomineeIdAndCustomer(Long nomineeId, Customer customer);
 
     List<CustomerNominee> findByCustomerId(Customer customer);
 	

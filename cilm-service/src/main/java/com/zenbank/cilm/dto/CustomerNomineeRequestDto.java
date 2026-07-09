@@ -25,6 +25,8 @@ public class CustomerNomineeRequestDto {
     @NotNull(message = "Share percentage is mandatory")
     @Positive(message = "Share percentage must be greater than 0")
     private Double sharePercentage;
+    
+    private String verificationStatus;
 
     public CustomerNomineeRequestDto() {
     }
@@ -68,4 +70,13 @@ public class CustomerNomineeRequestDto {
     public void setSharePercentage(Double sharePercentage) {
         this.sharePercentage = sharePercentage;
     }
+
+	public String getVerificationStatus() {
+		return verificationStatus;
+	}
+
+	public void setVerificationStatus(String verificationStatus) {
+		this.verificationStatus = verificationStatus;
+	}
+    
 }
