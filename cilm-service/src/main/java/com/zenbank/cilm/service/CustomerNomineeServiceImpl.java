@@ -100,7 +100,7 @@ public class CustomerNomineeServiceImpl implements CustomerNomineeService {
 
         CustomerNominee nominee = new CustomerNominee();
 
-        nominee.setCustomerId(customer);
+        nominee.setCustomer(customer);
         nominee.setNomineeName(requestDto.getNomineeName());
         nominee.setRelationship(requestDto.getRelationship());
         nominee.setDob(requestDto.getDob());
