@@ -31,4 +31,11 @@ public final class ApiResponseUtil {
         response.put("message", message);
         return response;
     }
+    public static Map<String, Object> created(String message, Object data) {
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("status", "SUCCESS");
+        response.put("message", message);
+        response.put("data", data);
+        return response;
+    }
 }

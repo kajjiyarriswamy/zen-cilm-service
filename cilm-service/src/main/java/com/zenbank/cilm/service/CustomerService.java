@@ -6,6 +6,8 @@ import com.zenbank.cilm.entity.CustomerAudit;
 import com.zenbank.cilm.repository.AddressRepository;
 import com.zenbank.cilm.repository.CustomerAuditRepository;
 import com.zenbank.cilm.entity.CustomerNominee;
+import com.zenbank.cilm.exception.NomineeAlreadyVerifiedException;
+import com.zenbank.cilm.exception.ResourceNotFoundException;
 import com.zenbank.cilm.dto.*;
 import com.zenbank.cilm.entity.*;
 import com.zenbank.cilm.repository.CustomerNomineeRepository;
@@ -272,23 +274,42 @@ public class CustomerService {
 	}
 
 
-	public void updateNominee(Long customerId,
-	                          Long nomineeId,
-	                          CustomerRequestDto dto) {
+	public CustomerNominee updateNominee(Long customerId,
+            Long nomineeId,
+            CustomerNomineeRequestDto dto) {
 
-		Customer customer=customerRepository.findById(customerId)
-				.orElseThrow(() -> new RuntimeException("Customer Not Found"));
+		Customer customer = customerRepository.findById(customerId)
+		        .orElseThrow(() -> new ResourceNotFoundException("Customer Not Found"));
 
-		CustomerNominee nominee=customerNomineeRepository.findByNomineeIdAndCustomerId(nomineeId, customer)
-				.orElseThrow(() -> new RuntimeException("Nominee Not Found"));
+		CustomerNominee nominee = customerNomineeRepository
+		        .findByNomineeIdAndCustomer(nomineeId, customer)
+		        .orElseThrow(() -> new ResourceNotFoundException("Nominee Not Found"));
 
-//		nominee.setMobile(dto.getMobile());
-//		nominee.setSharePercentage(dto.getSharePercentage());
+		if (dto.getNomineeName() != null) {
+		    nominee.setNomineeName(dto.getNomineeName());
+		}
 
-		customerNomineeRepository.save(nominee);
+		if (dto.getRelationship() != null) {
+		    nominee.setRelationship(dto.getRelationship());
+		}
 
+		if (dto.getMobile() != null) {
+		    nominee.setMobile(dto.getMobile());
+		}
 
-	}
+		if (dto.getDob() != null) {
+		    nominee.setDob(dto.getDob());
+		}
+
+		if (dto.getSharePercentage() != null) {
+		    nominee.setSharePercentage(dto.getSharePercentage());
+		}
+		if (dto.getVerificationStatus() !=null) {
+			nominee.setVerificationStatus(dto.getVerificationStatus());
+		}
+
+          return customerNomineeRepository.save(nominee);
+        }
 
 
 	public CustomerPreferenceResponseDto getCustomerPreference(Long customerId) {
@@ -585,14 +606,14 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 	public void verifyNominee(Long customerId, Long nomineeId, CustomerRequestDto dto) {
 		
 		Customer customer=customerRepository.findById(customerId)
-				.orElseThrow(() -> new RuntimeException("Customer not found"));
+				.orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
 		
-		CustomerNominee nominee=customerNomineeRepository.findByNomineeIdAndCustomerId(nomineeId, customer)
-				.orElseThrow(() -> new RuntimeException("Nominee not found"));
+		CustomerNominee nominee=customerNomineeRepository.findByNomineeIdAndCustomer(nomineeId, customer)
+				.orElseThrow(() -> new ResourceNotFoundException("Nominee not found"));
 		
 		if ("VERIFIED".equalsIgnoreCase(nominee.getVerificationStatus())) {
 			
-			throw new RuntimeException("Nominee already verified");
+			throw new NomineeAlreadyVerifiedException("Nominee already verified");
 		}
 		
 		nominee.setVerificationStatus("VERIFIED");
@@ -692,4 +713,6 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 
 
 }
+
+
 
