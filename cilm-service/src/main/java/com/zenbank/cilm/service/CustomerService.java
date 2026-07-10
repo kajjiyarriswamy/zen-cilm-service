@@ -221,7 +221,84 @@ public class CustomerService {
 
 		return response;
 	}
+	public void updateAddress(String customerId,
+            Long addressId,
+            AddressRequestDto requestDto) {
 
+// Validate Customer
+Customer customer = customerRepository.findByCustomerId(customerId)
+.orElseThrow(() ->
+      new RuntimeException("Customer not found"));
+
+// Validate Address
+CustomerAddress address = customerAddressRepository
+.findByAddressIdAndCustomer(addressId, customer)
+.orElseThrow(() ->
+      new RuntimeException("Address not found"));
+
+// Validate Postal Code
+if (!requestDto.getPostalCode().matches("\\d{6}")) {
+throw new RuntimeException("Invalid Postal Code");
+}
+
+// Validate Primary Address
+if (Boolean.TRUE.equals(requestDto.getPrimary())) {
+
+boolean exists = customerAddressRepository
+  .existsByCustomerAndIsPrimaryTrue(customer);
+
+if (exists && !address.isPrimary()) {
+throw new RuntimeException("Only one primary address is allowed.");
+}
+}
+
+// Store Old Address for Audit
+String oldValue =
+address.getDoorDumber() + ", " +
+address.getStreet() + ", " +
+address.getArea() + ", " +
+address.getCity() + ", " +
+address.getDistrict() + ", " +
+address.getState() + ", " +
+address.getCountry() + ", " +
+address.getPostalCode();
+
+// Update Address
+address.setAddressType(requestDto.getAddressType());
+address.setDoorNumber(requestDto.getDoorNumber());
+address.setStreet(requestDto.getStreet());
+address.setArea(requestDto.getArea());
+address.setCity(requestDto.getCity());
+address.setDistrict(requestDto.getDistrict());
+address.setState(requestDto.getState());
+address.setCountry(requestDto.getCountry());
+address.setPostalCode(requestDto.getPostalCode());
+address.setPrimary(requestDto.getPrimary());
+
+// Save Updated Address
+customerAddressRepository.save(address);
+
+// New Address for Audit
+String newValue =
+requestDto.getDoorNumber() + ", " +
+requestDto.getStreet() + ", " +
+requestDto.getArea() + ", " +
+requestDto.getCity() + ", " +
+requestDto.getDistrict() + ", " +
+requestDto.getState() + ", " +
+requestDto.getCountry() + ", " +
+requestDto.getPostalCode();
+
+// Create Audit Entry
+CustomerAudit audit = new CustomerAudit();
+audit.setCustomer(customer);
+audit.setAction("UPDATE_ADDRESS");
+audit.setPerformedBy("SYSTEM");
+audit.setOldValue(oldValue);
+audit.setNewValue(newValue);
+
+customerAuditRepository.save(audit);
+}
 	public Map<String, Object> deleteCustomerAddress(Long customerId, Long addressId) {
 
 		Map<String, Object> response = new LinkedHashMap<>();
@@ -419,7 +496,69 @@ public class CustomerService {
 				customer.getCustomerId()
 		);
 	}*/
+	public void updatePreferences(Long customerId,
+            CustomerPreference request) {
 
+// Validate Customer
+Customer customer = customerRepository.findById(customerId)
+.orElseThrow(() ->
+  new RuntimeException("Customer not found"));
+
+// Validate Preferences
+CustomerPreference preference = customer.getCustomerPreference();
+
+if (preference == null) {
+throw new RuntimeException("Customer preferences not found");
+}
+
+// Validate Language
+if (!request.getLanguage().equalsIgnoreCase("ENGLISH")
+&& !request.getLanguage().equalsIgnoreCase("HINDI")
+&& !request.getLanguage().equalsIgnoreCase("TELUGU")) {
+
+throw new RuntimeException("Unsupported language");
+}
+
+// Validate Communication Mode
+if (!request.getCommunicationMode().equalsIgnoreCase("EMAIL")
+&& !request.getCommunicationMode().equalsIgnoreCase("SMS")
+&& !request.getCommunicationMode().equalsIgnoreCase("BOTH")) {
+
+throw new RuntimeException("Invalid communication mode");
+}
+
+// Store old values for audit
+String oldValue =
+"Language=" + preference.getLanguage()
++ ", CommunicationMode=" + preference.getCommunicationMode()
++ ", Email=" + preference.getEmailEnabled()
++ ", SMS=" + preference.getSmsEnabled()
++ ", Marketing=" + preference.getMarketingEnabled();
+
+// Update values
+preference.setLanguage(request.getLanguage());
+preference.setCommunicationMode(request.getCommunicationMode());
+preference.setEmailEnabled(request.getEmailEnabled());
+preference.setSmsEnabled(request.getSmsEnabled());
+preference.setMarketingEnabled(request.getMarketingEnabled());
+
+customerRepository.save(customer);
+
+// Audit
+CustomerAudit audit = new CustomerAudit();
+audit.setCustomer(customer);
+audit.setAction("UPDATE_PREFERENCES");
+audit.setPerformedBy("SYSTEM");
+audit.setOldValue(oldValue);
+audit.setNewValue(
+"Language=" + preference.getLanguage()
++ ", CommunicationMode=" + preference.getCommunicationMode()
++ ", Email=" + preference.getEmailEnabled()
++ ", SMS=" + preference.getSmsEnabled()
++ ", Marketing=" + preference.getMarketingEnabled());
+
+customerAuditRepository.save(audit);
+}
 
 	
 	public CustomerKycResponseDto getCustomerKyc(Long customerId) {
