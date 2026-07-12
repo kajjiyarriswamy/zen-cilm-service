@@ -21,8 +21,8 @@ public class CustomerNominee {
     private Long nomineeId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "customer_id", referencedColumnName = "customer_id", nullable = false)
-	private Customer customerId;
+	@JoinColumn(name = "customer_id", nullable = false)
+	private Customer customer;
 
     @Column(name = "nominee_name", nullable = false)
     private String nomineeName;
@@ -46,12 +46,12 @@ public class CustomerNominee {
     }
 
 	public CustomerNominee(Long nomineeId, 
-			Customer customerId, String nomineeName, 
+			Customer customer, String nomineeName, 
 			String relationship,
 			String verificationStatus, LocalDate dob, String mobile, Double sharePercentage) {
 		super();
 		this.nomineeId = nomineeId;
-		this.customerId = customerId;
+		this.customer = customer;
 		this.nomineeName = nomineeName;
 		this.relationship = relationship;
 		this.verificationStatus = verificationStatus;
@@ -70,12 +70,14 @@ public class CustomerNominee {
 
 	
 
-	public Customer getCustomerId() {
-		return customerId;
+	
+
+	public Customer getCustomer() {
+		return customer;
 	}
 
-	public void setCustomerId(Customer customerId) {
-		this.customerId = customerId;
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 
 	public String getNomineeName() {
