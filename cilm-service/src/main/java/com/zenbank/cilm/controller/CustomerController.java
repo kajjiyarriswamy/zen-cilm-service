@@ -271,6 +271,16 @@ public class CustomerController {
 		            ApiResponseUtil.success("Customer KYC added successfully")
 		    );
 		}
+		@PostMapping("/{customerId}/kyc/resubmit")
+		public ResponseEntity<CustomerKycResubmitResponseDto> resubmitCustomerKyc(
+		        @PathVariable Long customerId,
+		        @RequestBody CustomerKycResubmitRequestDto request) {
+
+		    CustomerKycResubmitResponseDto response =
+		            customerService.resubmitKyc(customerId, request);
+
+		    return ResponseEntity.ok(response);
+		}
 }
 	
 
