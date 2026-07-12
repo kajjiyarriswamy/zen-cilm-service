@@ -197,7 +197,7 @@ public class CustomerResponseDto {
 				savedCustomer.getNomineeName(),
 				savedCustomer.getMobile(),
 				savedCustomer.getRelationship(),
-				savedCustomer.getCustomerId().getCustomerId(),
+				savedCustomer.getCustomer().getCustomerId(),
 				savedCustomer.getSharePercentage(),
 				savedCustomer.getDob()
 				);
