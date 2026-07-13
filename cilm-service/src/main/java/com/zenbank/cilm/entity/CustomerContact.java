@@ -1,7 +1,11 @@
 
 package com.zenbank.cilm.entity;
 
+<<<<<<< HEAD
 import com.zenbank.cilm.Enum.PreferredContactMode;
+=======
+import com.fasterxml.jackson.annotation.JsonBackReference;
+>>>>>>> origin/main
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,10 +30,12 @@ public class CustomerContact {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "contact_id")
 	private Long contactId;
-
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "customer_id", referencedColumnName = "customer_id", nullable = false)
+	@JsonBackReference
 	private Customer customer;
+
 
 	@Column(name = "mobile_number", nullable = false, length = 15)
 	private String mobileNumber;

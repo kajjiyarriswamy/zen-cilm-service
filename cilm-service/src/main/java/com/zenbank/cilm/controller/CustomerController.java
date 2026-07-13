@@ -10,8 +10,21 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+<<<<<<< HEAD
 
 import org.springframework.web.bind.annotation.*;
+=======
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+>>>>>>> origin/main
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,7 +54,38 @@ public class CustomerController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseUtil.created(response));
 	}
 
+<<<<<<< HEAD
 	// GET ALL CUSTOMERS
+=======
+    @GetMapping("/search")
+    public ResponseEntity<Map<String, Object>> searchCustomer(
+    		@RequestParam(required = false) Long customerId,
+    		@RequestParam(required = false) String cif,
+    		@RequestParam(required = false) String phoneNumber,
+    		@RequestParam(required = false) String pan,
+    		@RequestParam(required = false) String aadhaar,
+    		@RequestParam(required = false) String status,
+    		@RequestParam(defaultValue = "0") int page,
+    		@RequestParam(defaultValue = "10") int size
+    		) {
+    	
+    	return ResponseEntity.ok(ApiResponseUtil.success(customerService.searchCustomer(customerId,
+    			cif, phoneNumber,
+    			pan, aadhaar, 
+    			status, page,
+    			size)));
+    }
+    @PutMapping("/{customerId}/preferences")
+    public ResponseEntity<Map<String, Object>> updatePreferences(
+            @PathVariable Long customerId,
+            @RequestBody CustomerPreference preference) {
+
+        customerService.updatePreferences(customerId, preference);
+
+        return ResponseEntity.ok(
+                ApiResponseUtil.success("Customer preferences updated successfully."));
+    }
+>>>>>>> origin/main
 
 	@GetMapping
 	public ResponseEntity<Map<String, Object>> getAllCustomers() {
@@ -51,7 +95,27 @@ public class CustomerController {
 		return ResponseEntity.ok(ApiResponseUtil.success(customers));
 	}
 
+<<<<<<< HEAD
 	// GET CUSTOMER BY ID
+=======
+        return ResponseEntity.ok(response);
+    }
+    @PutMapping("/{customerId}/addresses/{addressId}")
+    public ResponseEntity<Map<String, Object>> updateAddress(
+            @PathVariable String customerId,
+            @PathVariable Long addressId,
+            @Valid @RequestBody AddressRequestDto requestDto) {
+
+        customerService.updateAddress(customerId, addressId, requestDto);
+
+        return ResponseEntity.ok(
+                ApiResponseUtil.success("Address updated successfully."));
+    }
+    @DeleteMapping("/{customerId}/addresses/{addressId}")
+    public ResponseEntity<Map<String,Object>> deleteCustomerAddress(
+            @PathVariable Long customerId,
+            @PathVariable Long addressId){
+>>>>>>> origin/main
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Map<String, Object>> getCustomerById(@PathVariable Long id) {
@@ -72,8 +136,26 @@ public class CustomerController {
 
 		customerService.updateCustomerStatus(customerId, request.getStatus());
 
+<<<<<<< HEAD
 		return ResponseEntity.ok("Customer status updated successfully");
 	}
+=======
+ 
+    @PutMapping("/{customerId}/nominess/{nomineeId}")
+    public ResponseEntity<Map<String, Object>> updateNominee(
+    		@PathVariable Long customerId,
+    		@PathVariable Long nomineeId,
+    		@RequestBody CustomerNomineeRequestDto dto) {
+    	
+    	customerService.updateNominee(customerId, nomineeId, dto);
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("status", "SUCCESS");
+        response.put("message", "Nominee updated successfully.");
+
+        return ResponseEntity.ok(response);
+    }
+>>>>>>> origin/main
 
 	// SEARCH CUSTOMER
 
@@ -86,7 +168,32 @@ public class CustomerController {
 
 			@RequestParam(required = false) String phoneNumber,
 
+<<<<<<< HEAD
 			@RequestParam(required = false) String pan,
+=======
+        return ResponseEntity.ok(ApiResponseUtil.success(saved));
+    }
+    
+   @DeleteMapping("/{customerId}/nominee/{nomineeId}")
+    public ResponseEntity<Map<String, Object>> deleteNominee(
+    		@PathVariable Long customerId,
+    		@PathVariable Long nomineeId) { 
+    	
+	    customerService.deleteNominee(customerId, nomineeId);
+
+	    Map<String, Object> response = new LinkedHashMap<>();
+	    response.put("status", "SUCCESS");
+	    response.put("message", "Nominee deleted successfully");
+
+	    return ResponseEntity.ok(response);
+    	
+    } 
+
+    @PutMapping("/{customerId}")
+    public ResponseEntity<Map<String, Object>> updateCustomer(
+            @PathVariable Long customerId,
+            @RequestBody CustomerRequestDto requestDto){
+>>>>>>> origin/main
 
 			@RequestParam(required = false) String aadhaar,
 
@@ -96,6 +203,7 @@ public class CustomerController {
 
 			@RequestParam(defaultValue = "10") int size) {
 
+<<<<<<< HEAD
 		return ResponseEntity.ok(
 
 				ApiResponseUtil.success(
@@ -106,6 +214,15 @@ public class CustomerController {
 	}
 
 	// ADD CUSTOMER ADDRESS
+=======
+        return ResponseEntity.ok(
+                ApiResponseUtil.success("Notification preferences updated successfully"));
+    
+    }
+>>>>>>> origin/main
+
+
+
 
 	@PostMapping("/{customerId}/addresses")
 	public ResponseEntity<AddressResponseDto> addAddress(
@@ -118,6 +235,7 @@ public class CustomerController {
 
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
+<<<<<<< HEAD
 
 	// GET ADDRESSES
 
@@ -238,6 +356,58 @@ public class CustomerController {
             @PathVariable Long customerId,
 
             @RequestBody CustomerPreference preference){
+=======
+	@PutMapping("/{customerId}/nominees/{nomineeId}/verify")
+	public ResponseEntity<Map<String, Object>> checkverify(
+			@PathVariable Long customerId,
+			@PathVariable Long nomineeId,
+			@RequestBody CustomerNomineeRequestDto dto
+			) {
+		
+		   customerService.verifyNominee(customerId, nomineeId, dto);
+
+		    Map<String, Object> response = new LinkedHashMap<>();
+		    response.put("status", "SUCCESS");
+		    response.put("message", "Nominee verified successfully");
+		    response.put("verificationStatus", "VERIFIED");
+
+		    return ResponseEntity.ok(response);
+	}
+		@GetMapping("/{customerId}/kyc")
+		public ResponseEntity<Map<String, Object>> getCustomerKyc(
+		        @PathVariable Long customerId) {
+
+		    CustomerKycResponseDto response =
+		            customerService.getCustomerKyc(customerId);
+
+		    return ResponseEntity.ok(ApiResponseUtil.success(response));
+	}
+		
+		@PostMapping("/{customerId}/kyc")
+		public ResponseEntity<Map<String, Object>> addCustomerKyc(
+		        @PathVariable Long customerId,
+		        @RequestBody CustomerKycRequestDto requestDto) {
+
+		    customerService.addCustomerKyc(customerId, requestDto);
+
+		    return ResponseEntity.ok(
+		            ApiResponseUtil.success("Customer KYC added successfully")
+		    );
+		}
+		@PostMapping("/{customerId}/kyc/resubmit")
+		public ResponseEntity<CustomerKycResubmitResponseDto> resubmitCustomerKyc(
+		        @PathVariable Long customerId,
+		        @RequestBody CustomerKycResubmitRequestDto request) {
+
+		    CustomerKycResubmitResponseDto response =
+		            customerService.resubmitKyc(customerId, request);
+
+		    return ResponseEntity.ok(response);
+		}
+}
+	
+
+>>>>>>> origin/main
 
 
 

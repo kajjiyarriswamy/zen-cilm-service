@@ -23,7 +23,7 @@ import jakarta.persistence.Table;
 	    private Long preferenceId;
 
 	    @OneToOne(fetch = FetchType.LAZY)
-	    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id", nullable = false)
+	    @JoinColumn(name = "customer_id", referencedColumnName = "id")
 	    @JsonBackReference
 	    private Customer customer;
 
