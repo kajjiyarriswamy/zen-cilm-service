@@ -10,10 +10,8 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-<<<<<<< HEAD
 
 import org.springframework.web.bind.annotation.*;
-=======
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
->>>>>>> origin/main
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -54,9 +51,8 @@ public class CustomerController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseUtil.created(response));
 	}
 
-<<<<<<< HEAD
+
 	// GET ALL CUSTOMERS
-=======
     @GetMapping("/search")
     public ResponseEntity<Map<String, Object>> searchCustomer(
     		@RequestParam(required = false) Long customerId,
@@ -85,7 +81,6 @@ public class CustomerController {
         return ResponseEntity.ok(
                 ApiResponseUtil.success("Customer preferences updated successfully."));
     }
->>>>>>> origin/main
 
 	@GetMapping
 	public ResponseEntity<Map<String, Object>> getAllCustomers() {
@@ -95,9 +90,9 @@ public class CustomerController {
 		return ResponseEntity.ok(ApiResponseUtil.success(customers));
 	}
 
-<<<<<<< HEAD
+
 	// GET CUSTOMER BY ID
-=======
+
         return ResponseEntity.ok(response);
     }
     @PutMapping("/{customerId}/addresses/{addressId}")
@@ -115,7 +110,6 @@ public class CustomerController {
     public ResponseEntity<Map<String,Object>> deleteCustomerAddress(
             @PathVariable Long customerId,
             @PathVariable Long addressId){
->>>>>>> origin/main
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Map<String, Object>> getCustomerById(@PathVariable Long id) {
@@ -136,10 +130,9 @@ public class CustomerController {
 
 		customerService.updateCustomerStatus(customerId, request.getStatus());
 
-<<<<<<< HEAD
 		return ResponseEntity.ok("Customer status updated successfully");
 	}
-=======
+
  
     @PutMapping("/{customerId}/nominess/{nomineeId}")
     public ResponseEntity<Map<String, Object>> updateNominee(
@@ -155,7 +148,7 @@ public class CustomerController {
 
         return ResponseEntity.ok(response);
     }
->>>>>>> origin/main
+
 
 	// SEARCH CUSTOMER
 
@@ -168,9 +161,9 @@ public class CustomerController {
 
 			@RequestParam(required = false) String phoneNumber,
 
-<<<<<<< HEAD
+
 			@RequestParam(required = false) String pan,
-=======
+
         return ResponseEntity.ok(ApiResponseUtil.success(saved));
     }
     
@@ -193,7 +186,7 @@ public class CustomerController {
     public ResponseEntity<Map<String, Object>> updateCustomer(
             @PathVariable Long customerId,
             @RequestBody CustomerRequestDto requestDto){
->>>>>>> origin/main
+
 
 			@RequestParam(required = false) String aadhaar,
 
@@ -203,7 +196,6 @@ public class CustomerController {
 
 			@RequestParam(defaultValue = "10") int size) {
 
-<<<<<<< HEAD
 		return ResponseEntity.ok(
 
 				ApiResponseUtil.success(
@@ -214,12 +206,12 @@ public class CustomerController {
 	}
 
 	// ADD CUSTOMER ADDRESS
-=======
+
         return ResponseEntity.ok(
                 ApiResponseUtil.success("Notification preferences updated successfully"));
     
     }
->>>>>>> origin/main
+
 
 
 
@@ -356,7 +348,7 @@ public class CustomerController {
             @PathVariable Long customerId,
 
             @RequestBody CustomerPreference preference){
-=======
+
 	@PutMapping("/{customerId}/nominees/{nomineeId}/verify")
 	public ResponseEntity<Map<String, Object>> checkverify(
 			@PathVariable Long customerId,
@@ -407,7 +399,7 @@ public class CustomerController {
 }
 	
 
->>>>>>> origin/main
+
 
 
 
