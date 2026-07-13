@@ -1,75 +1,37 @@
 package com.zenbank.cilm.dto;
 
-public class AddressResponseDto {
-
-    private String status;
-
-    private String message;
+public class AddressResponseDto extends CommonResponseDto {
 
     private Long addressId;
-
-    private Long customerId;
-
+    private String customerId;
     private String addressType;
-
     private String doorNumber;
-
     private String street;
-
     private String city;
-
     private String state;
-
     private String country;
-
     private String postalCode;
-
     private Boolean primary;
 
-
     public AddressResponseDto() {
-
-    }
-    
-
-
-    public AddressResponseDto(String status, String message, Long addressId, Long customerId, String addressType,
-			String doorNumber, String street, String city, String state, String country, String postalCode,
-			Boolean primary) {
-		super();
-		this.status = status;
-		this.message = message;
-		this.addressId = addressId;
-		this.customerId = customerId;
-		this.addressType = addressType;
-		this.doorNumber = doorNumber;
-		this.street = street;
-		this.city = city;
-		this.state = state;
-		this.country = country;
-		this.postalCode = postalCode;
-		this.primary = primary;
-	}
-
-
-
-	public String getStatus() {
-        return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public AddressResponseDto(Long addressId, String customerId, String addressType,
+                              String doorNumber, String street, String city,
+                              String state, String country, String postalCode,
+                              Boolean primary) {
+
+        this.addressId = addressId;
+        this.customerId = customerId;
+        this.addressType = addressType;
+        this.doorNumber = doorNumber;
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.postalCode = postalCode;
+        this.primary = primary;
     }
-
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
 
     public Long getAddressId() {
         return addressId;
@@ -79,15 +41,13 @@ public class AddressResponseDto {
         this.addressId = addressId;
     }
 
-
-    public Long getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(Long customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
-
 
     public String getAddressType() {
         return addressType;
@@ -97,7 +57,6 @@ public class AddressResponseDto {
         this.addressType = addressType;
     }
 
-
     public String getDoorNumber() {
         return doorNumber;
     }
@@ -105,7 +64,6 @@ public class AddressResponseDto {
     public void setDoorNumber(String doorNumber) {
         this.doorNumber = doorNumber;
     }
-
 
     public String getStreet() {
         return street;
@@ -115,7 +73,6 @@ public class AddressResponseDto {
         this.street = street;
     }
 
-
     public String getCity() {
         return city;
     }
@@ -123,7 +80,6 @@ public class AddressResponseDto {
     public void setCity(String city) {
         this.city = city;
     }
-
 
     public String getState() {
         return state;
@@ -133,7 +89,6 @@ public class AddressResponseDto {
         this.state = state;
     }
 
-
     public String getCountry() {
         return country;
     }
@@ -142,7 +97,6 @@ public class AddressResponseDto {
         this.country = country;
     }
 
-
     public String getPostalCode() {
         return postalCode;
     }
@@ -150,7 +104,6 @@ public class AddressResponseDto {
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
-
 
     public Boolean getPrimary() {
         return primary;

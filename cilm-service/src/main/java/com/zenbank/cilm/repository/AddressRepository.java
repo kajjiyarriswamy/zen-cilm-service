@@ -12,11 +12,12 @@ import com.zenbank.cilm.entity.CustomerAddress;
 @Repository
 public interface AddressRepository extends JpaRepository<CustomerAddress, Long> {
 
-    List<CustomerAddress> findByCustomer_Id(Long customerId);
+	List<CustomerAddress> findByCustomer_CustomerId(String customerId);
+
+	boolean existsByCustomer_CustomerId(String customerId);
 
     Optional<CustomerAddress> findByAddressId(Long addressId);
 
-    boolean existsByCustomer_Id(Long customerId);
 
     boolean existsByCustomerAndIsPrimaryTrue(Customer customer);
 

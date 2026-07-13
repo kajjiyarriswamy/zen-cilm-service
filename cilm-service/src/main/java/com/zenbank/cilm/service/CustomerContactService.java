@@ -27,92 +27,43 @@ public class CustomerContactService {
 
 
     public CommonResponseDto updatePreferredMode(
-            Long customerId,
+            String customerId,
             PreferredContactModeRequestDto request) {
 
-
-        CustomerContact contact =
-                contactRepository.findByCustomerId(customerId)
+        CustomerContact contact = contactRepository
+                .findByCustomer_CustomerId(customerId)
                 .orElseThrow(() ->
                         new RuntimeException("Customer not found"));
 
-
         PreferredContactMode mode;
 
-
         try {
-
             mode = PreferredContactMode.valueOf(
-                    request.getPreferredContactMode()
-            );
-
+                    request.getPreferredContactMode().toUpperCase());
         } catch (Exception e) {
-
             return new CommonResponseDto(
                     "FAILED",
                     "Invalid communication mode.",
-                    "CNT_005"
-            );
-
+                    "CNT_005");
         }
 
-
-        // old value for audit
-
-        String oldValue =
-                contact.getPreferredContactMode().toString();
-
-
-        // update contact mode
+        String oldValue = contact.getPreferredContactMode().toString();
 
         contact.setPreferredContactMode(mode);
-
         contactRepository.save(contact);
 
-
-
-        // Audit Entry
-
-        CustomerAudit audit =
-                new CustomerAudit();
-
-
-        audit.setCustomer(
-                contact.getCustomer()
-        );
-
-
-        audit.setAction(
-                "PREFERRED_CONTACT_MODE_UPDATED"
-        );
-
-
-        audit.setPerformedBy(
-                "BANK_EMPLOYEE"
-        );
-
-
-        audit.setOldValue(
-                oldValue
-        );
-
-
-        audit.setNewValue(
-                mode.toString()
-        );
-
+        CustomerAudit audit = new CustomerAudit();
+        audit.setCustomer(contact.getCustomer());
+        audit.setAction("PREFERRED_CONTACT_MODE_UPDATED");
+        audit.setPerformedBy("BANK_EMPLOYEE");
+        audit.setOldValue(oldValue);
+        audit.setNewValue(mode.toString());
 
         auditRepository.save(audit);
-
-
 
         return new CommonResponseDto(
                 "SUCCESS",
                 "Preferred contact mode updated successfully.",
-                null
-        );
-
-
+                null);
     }
-
-}
+    }

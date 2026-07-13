@@ -1,11 +1,12 @@
 package com.zenbank.cilm.repository;
 
-import com.zenbank.cilm.entity.CustomerContact;
-
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.zenbank.cilm.entity.Customer;
+import com.zenbank.cilm.entity.CustomerContact;
 
 @Repository
 public interface CustomerContactRepository extends JpaRepository<CustomerContact, Long> {
@@ -13,5 +14,9 @@ public interface CustomerContactRepository extends JpaRepository<CustomerContact
     boolean existsByMobileNumber(String mobileNumber);
 
     boolean existsByEmail(String email);
-    Optional<CustomerContact> findByCustomerId(Long customerId);
+
+    Optional<CustomerContact> findByCustomer_CustomerId(String customerId);
+
+    Optional<CustomerContact> findByCustomer(Customer customer);
+
 }

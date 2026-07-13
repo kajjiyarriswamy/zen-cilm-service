@@ -23,9 +23,9 @@ public class CustomerAudit {
     @Column(name = "audit_id")
     private Long auditId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "customer_id", referencedColumnName = "customer_id", nullable = false)
+	private Customer customer;
 
     @Column(name = "action", nullable = false, length = 100)
     private String action;
@@ -115,6 +115,7 @@ public class CustomerAudit {
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
-
-
 }
+
+
+
