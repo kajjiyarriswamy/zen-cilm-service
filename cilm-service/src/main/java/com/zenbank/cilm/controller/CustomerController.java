@@ -185,7 +185,6 @@ public class CustomerController {
 
         return ResponseEntity.ok(ApiResponseUtil.success(saved));
     }
-  
     
    @DeleteMapping("/{customerId}/nominee/{nomineeId}")
     public ResponseEntity<Map<String, Object>> deleteNominee(
@@ -202,11 +201,10 @@ public class CustomerController {
     	
     } 
 
-    
     @PutMapping("/{customerId}")
     public ResponseEntity<Map<String, Object>> updateCustomer(
             @PathVariable Long customerId,
-            @RequestBody CustomerRequestDto requestDto) {
+            @RequestBody CustomerRequestDto requestDto){
 
         customerService.updateCustomer(customerId, requestDto);
 
@@ -214,7 +212,6 @@ public class CustomerController {
                 ApiResponseUtil.success("Customer Updated Successfully")
         );
     }
-
 
     @PutMapping("/{customerId}/preferences/notifications")
     public ResponseEntity<Map<String, Object>> updateNotificationPreferences(
@@ -253,7 +250,6 @@ public class CustomerController {
 
 		    return ResponseEntity.ok(response);
 	}
-
 		@GetMapping("/{customerId}/kyc")
 		public ResponseEntity<Map<String, Object>> getCustomerKyc(
 		        @PathVariable Long customerId) {
@@ -275,7 +271,18 @@ public class CustomerController {
 		            ApiResponseUtil.success("Customer KYC added successfully")
 		    );
 		}
-	
+		@PostMapping("/{customerId}/kyc/resubmit")
+		public ResponseEntity<CustomerKycResubmitResponseDto> resubmitCustomerKyc(
+		        @PathVariable Long customerId,
+		        @RequestBody CustomerKycResubmitRequestDto request) {
+
+		    CustomerKycResubmitResponseDto response =
+		            customerService.resubmitKyc(customerId, request);
+
+		    return ResponseEntity.ok(response);
+		}
 }
+	
+
 
 

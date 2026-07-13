@@ -17,6 +17,7 @@ import com.zenbank.cilm.Enum.CustomerStatus;
 import com.zenbank.cilm.repository.CustomerRepository;
 
 import com.zenbank.cilm.repository.CustomerContactRepository;
+import com.zenbank.cilm.repository.CustomerDocumentRepository;
 import com.zenbank.cilm.repository.CustomerKycRepository;
 
 import jakarta.validation.Valid;
@@ -52,16 +53,18 @@ public class CustomerService {
 	private final CustomerKycRepository customerKycRepository;
 	private final CustomerAuditRepository customerAuditRepository;
 	private final CustomerContactRepository customerContactRepository;
+	private final CustomerDocumentRepository customerDocumentRepository;
 	
 
     public CustomerService(CustomerRepository customerRepository, CustomerNomineeRepository customerNomineeRepository,AddressRepository customerAddressRepository,CustomerKycRepository customerKycRepository,CustomerContactRepository customerContactRepository,
-            CustomerAuditRepository customerAuditRepository) {
+            CustomerAuditRepository customerAuditRepository, CustomerDocumentRepository customerDocumentRepository) {
         this.customerRepository = customerRepository;
         this.customerNomineeRepository = customerNomineeRepository;
 		this.customerAddressRepository = customerAddressRepository;
 		this. customerKycRepository=customerKycRepository;
 		this.customerContactRepository = customerContactRepository;
 		this.customerAuditRepository = customerAuditRepository;
+		this.customerDocumentRepository = customerDocumentRepository;
     }
 
 	
@@ -422,7 +425,7 @@ customerAuditRepository.save(audit);
 
 		return customer.getCustomerPreference();
 	}
-
+	
 	public void updateCustomer(Long customerId, CustomerRequestDto requestDto) {
 		Customer customer = customerRepository.findById(customerId)
 	            .orElseThrow(() -> new RuntimeException("Customer not found"));
@@ -814,7 +817,6 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 
 	}
 
-
 	public void addCustomerKyc(Long customerId, CustomerKycRequestDto requestDto) {
 		Customer customer = customerRepository.findById(customerId)
 	            .orElseThrow(() -> new RuntimeException("Customer not found"));
@@ -830,30 +832,70 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 	    //customerKyc.setVerifiedDate(requestDto.getVerifiedDate());
 
 	    customerKycRepository.save(customerKyc);
-		
 	}
 
 
-	public void addCustomerKyc(Long customerId, CustomerKycRequestDto requestDto) {
-		Customer customer = customerRepository.findById(customerId)
-	            .orElseThrow(() -> new RuntimeException("Customer not found"));
 
-	    CustomerKyc customerKyc = new CustomerKyc();
-	    
 
-	    customerKyc.setCustomer(customer);
-	    customerKyc.setPanVerified(requestDto.getPanVerified());
-	    customerKyc.setAadhaarVerified(requestDto.getAadhaarVerified());
-	    customerKyc.setKycStatus(requestDto.getKycStatus());
-	    customerKyc.setVerifiedBy(requestDto.getVerifiedBy());
-	    //customerKyc.setVerifiedDate(requestDto.getVerifiedDate());
 
-	    customerKycRepository.save(customerKyc);
+	public void deleteNominee(Long customerId, Long nomineeId) {
+		// TODO Auto-generated method stub
 		
+	}
+		
+
+
+//	public void addCustomerKyc(Long customerId, CustomerKycRequestDto requestDto) {
+//		Customer customer = customerRepository.findById(customerId)
+//	            .orElseThrow(() -> new RuntimeException("Customer not found"));
+//
+//	    CustomerKyc customerKyc = new CustomerKyc();
+//	    
+//
+//	    customerKyc.setCustomer(customer);
+//	    customerKyc.setPanVerified(requestDto.getPanVerified());
+//	    customerKyc.setAadhaarVerified(requestDto.getAadhaarVerified());
+//	    customerKyc.setKycStatus(requestDto.getKycStatus());
+//	    customerKyc.setVerifiedBy(requestDto.getVerifiedBy());
+//	    //customerKyc.setVerifiedDate(requestDto.getVerifiedDate());
+//
+//	    customerKycRepository.save(customerKyc);
+//		
+//	}
+	
+	public CustomerKycResubmitResponseDto resubmitKyc(
+	        Long customerId,
+	        CustomerKycResubmitRequestDto request) {
+
+	    Customer customer = customerRepository.findById(customerId)
+	            .orElseThrow(() ->
+	                    new RuntimeException("Customer not found."));
+
+	    CustomerKyc customerKyc = customerKycRepository
+	            .findByCustomer(customer)
+	            .orElseThrow(() ->
+	                    new RuntimeException("Customer KYC not found."));
+
+	    if (!customerKyc.getKycStatus().equalsIgnoreCase("REJECTED")) {
+	        throw new RuntimeException("Customer KYC is already verified.");
+	    }
+
+	    List<CustomerDocument> documents = customerDocumentRepository.findByCustomer(customer);
+
+	    if (documents.isEmpty()) {
+	        throw new RuntimeException("Updated documents not found.");
+	    }
+
+	    customerKyc.setKycStatus("PENDING");
+	    customerKycRepository.save(customerKyc);
+
+	    CustomerKycResubmitResponseDto response = new CustomerKycResubmitResponseDto();
+	    response.setStatus("SUCCESS");
+	    response.setMessage("KYC resubmitted successfully.");
+	    response.setKycStatus("PENDING");
+
+	    return response;
 	}
 	
 	
 }
-
-
-
