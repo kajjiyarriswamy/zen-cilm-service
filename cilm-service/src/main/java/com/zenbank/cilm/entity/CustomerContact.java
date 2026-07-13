@@ -1,11 +1,10 @@
 
 package com.zenbank.cilm.entity;
 
-<<<<<<< HEAD
 import com.zenbank.cilm.Enum.PreferredContactMode;
-=======
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
->>>>>>> origin/main
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
