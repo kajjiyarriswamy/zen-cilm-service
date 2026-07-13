@@ -27,7 +27,7 @@ public class CustomerAudit {
 	@JoinColumn(name = "customer_id", referencedColumnName = "customer_id", nullable = false)
 	private Customer customer;
 
-    @Column(name = "action", nullable = false, length = 20)
+    @Column(name = "action", nullable = false, length = 100)
     private String action;
 
     @Column(name = "performed_by", nullable = false, length = 100)
@@ -116,3 +116,6 @@ public class CustomerAudit {
         this.createdDate = createdDate;
     }
 }
+
+
+
