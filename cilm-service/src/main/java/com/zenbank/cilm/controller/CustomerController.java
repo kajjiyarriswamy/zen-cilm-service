@@ -7,7 +7,7 @@ import com.zenbank.cilm.entity.CustomerNominee;
 import com.zenbank.cilm.repository.CustomerNomineeRepository;
 
 import com.zenbank.cilm.entity.CustomerPreference;
-
+import com.zenbank.cilm.service.CustomerKycRejectService;
 import com.zenbank.cilm.service.CustomerService;
 import com.zenbank.cilm.utility.ApiResponseUtil;
 import jakarta.validation.Valid;
@@ -36,9 +36,11 @@ public class CustomerController {
 
 	
     private final CustomerService customerService;
+    private final CustomerKycRejectService customerKycRejectService;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, CustomerKycRejectService customerKycRejectService) {
         this.customerService = customerService;
+		this.customerKycRejectService = customerKycRejectService;
     }
 
     @PostMapping
@@ -280,6 +282,18 @@ public class CustomerController {
 		            customerService.resubmitKyc(customerId, request);
 
 		    return ResponseEntity.ok(response);
+		}
+		
+		@PutMapping("/{customerId}/kyc/reject")
+		public ResponseEntity<CustomerKycRejectResponseDto> rejectKyc(
+		        @PathVariable Long customerId,
+		        @RequestBody CustomerKycRequestDto requestDto){
+			
+			CustomerKycRejectResponseDto response =
+					customerKycRejectService.rejectKyc(customerId, requestDto);
+
+	        return ResponseEntity.ok(response);
+			
 		}
 }
 	
