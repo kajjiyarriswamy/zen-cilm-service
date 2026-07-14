@@ -1,12 +1,16 @@
 package com.zenbank.ams.account_management_service.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -17,7 +21,7 @@ public class Account {
 	@Id
 	@SequenceGenerator(name="bank",sequenceName ="accountid",initialValue =1000,allocationSize = 1 )
 	@GeneratedValue(generator = "bank",strategy = GenerationType.SEQUENCE)
-	private long accountId;
+	private Long accountId;
 	@Column(name = "customer_id", unique = true, nullable = false, updatable = false, length = 20)
 	private String customerId;
 	
@@ -54,7 +58,7 @@ public class Account {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Account(long accountId, String customerId, String accountNumber, String accountType, String branchCode,
+	public Account(Long accountId, String customerId, String accountNumber, String accountType, String branchCode,
 			String ifscCode, String currency, double openingBalance, double availableBalance, double ledgerBalance,
 			String accountStatus, LocalDateTime openedDate, String createdBy, LocalDateTime createdDate,
 			LocalDateTime updatedDate) {
@@ -75,10 +79,10 @@ public class Account {
 		this.createdDate = createdDate;
 		this.updatedDate = updatedDate;
 	}
-	public long getAccountId() {
+	public Long getAccountId() {
 		return accountId;
 	}
-	public void setAccountId(long accountId) {
+	public void setAccountId(Long accountId) {
 		this.accountId = accountId;
 	}
 	public String getCustomerId() {
@@ -167,6 +171,7 @@ public class Account {
 	}
 	
 	
-	
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<AccountStatementPreference> statementPreferences;
 
 }
