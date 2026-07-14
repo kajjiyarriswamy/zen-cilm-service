@@ -19,7 +19,7 @@ public class AccountStatementPreference {
 	
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="preference_id")
 	private Long preferenceId;
 	
