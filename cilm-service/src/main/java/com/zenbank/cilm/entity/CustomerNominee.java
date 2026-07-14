@@ -14,18 +14,23 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "customer_nominee")
-public class CustomerNominee {
+public class CustomerNominee 
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "nominee_id")
     private Long nomineeId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "customer_id", nullable = false)
-	private Customer customer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+        name = "customer_id",
+        referencedColumnName = "customer_id",
+        nullable = false
+    )
+    private Customer customer;
 
     @Column(name = "nominee_name", nullable = false)
-    private String nomineeName;
+    private String nomineeName; 
 
     @Column(name = "relationship", nullable = false)
     private String relationship;
@@ -45,39 +50,38 @@ public class CustomerNominee {
     public CustomerNominee() {
     }
 
-	public CustomerNominee(Long nomineeId, 
-			Customer customer, String nomineeName, 
-			String relationship,
-			String verificationStatus, LocalDate dob, String mobile, Double sharePercentage) {
-		super();
-		this.nomineeId = nomineeId;
-		this.customer = customer;
-		this.nomineeName = nomineeName;
-		this.relationship = relationship;
-		this.verificationStatus = verificationStatus;
-		this.dob = dob;
-		this.mobile = mobile;
-		this.sharePercentage = sharePercentage;
-	}
+    public CustomerNominee(Long nomineeId,
+            Customer customer,
+            String nomineeName,
+            String relationship,
+            String verificationStatus,
+            LocalDate dob,
+            String mobile,
+            Double sharePercentage) {
 
-	public Long getNomineeId() {
+        this.nomineeId = nomineeId;
+        this.customer = customer;
+        this.nomineeName = nomineeName;
+        this.relationship = relationship;
+        this.verificationStatus = verificationStatus;
+        this.dob = dob;
+        this.mobile = mobile;
+        this.sharePercentage = sharePercentage;
+    }	public Long getNomineeId() {
 		return nomineeId;
 	}
 
 	public void setNomineeId(Long nomineeId) {
 		this.nomineeId = nomineeId;
 	}
-
-	
-
-	
+	  
 
 	public Customer getCustomer() {
-		return customer;
+	    return customer;
 	}
 
 	public void setCustomer(Customer customer) {
-		this.customer = customer;
+	    this.customer = customer;
 	}
 
 	public String getNomineeName() {

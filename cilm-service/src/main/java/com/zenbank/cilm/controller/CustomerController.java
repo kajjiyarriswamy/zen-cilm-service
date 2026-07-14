@@ -92,6 +92,16 @@ public class CustomerController {
     			status, page,
     			size)));
     }
+    @PutMapping("/{customerId}/preferences")
+    public ResponseEntity<Map<String, Object>> updatePreferences(
+            @PathVariable Long customerId,
+            @RequestBody CustomerPreference preference) {
+
+        customerService.updatePreferences(customerId, preference);
+
+        return ResponseEntity.ok(
+                ApiResponseUtil.success("Customer preferences updated successfully."));
+    }
 
     
     @GetMapping("/{customerId}/addresses")
@@ -106,6 +116,17 @@ public class CustomerController {
         }
 
         return ResponseEntity.ok(response);
+    }
+    @PutMapping("/{customerId}/addresses/{addressId}")
+    public ResponseEntity<Map<String, Object>> updateAddress(
+            @PathVariable String customerId,
+            @PathVariable Long addressId,
+            @Valid @RequestBody AddressRequestDto requestDto) {
+
+        customerService.updateAddress(customerId, addressId, requestDto);
+
+        return ResponseEntity.ok(
+                ApiResponseUtil.success("Address updated successfully."));
     }
     @DeleteMapping("/{customerId}/addresses/{addressId}")
     public ResponseEntity<Map<String,Object>> deleteCustomerAddress(
@@ -164,7 +185,6 @@ public class CustomerController {
 
         return ResponseEntity.ok(ApiResponseUtil.success(saved));
     }
-  
     
    @DeleteMapping("/{customerId}/nominee/{nomineeId}")
     public ResponseEntity<Map<String, Object>> deleteNominee(
@@ -181,11 +201,10 @@ public class CustomerController {
     	
     } 
 
-    
     @PutMapping("/{customerId}")
     public ResponseEntity<Map<String, Object>> updateCustomer(
             @PathVariable Long customerId,
-            @RequestBody CustomerRequestDto requestDto) {
+            @RequestBody CustomerRequestDto requestDto){
 
         customerService.updateCustomer(customerId, requestDto);
 
@@ -193,7 +212,6 @@ public class CustomerController {
                 ApiResponseUtil.success("Customer Updated Successfully")
         );
     }
-
 
     @PutMapping("/{customerId}/preferences/notifications")
     public ResponseEntity<Map<String, Object>> updateNotificationPreferences(
@@ -232,7 +250,6 @@ public class CustomerController {
 
 		    return ResponseEntity.ok(response);
 	}
-
 		@GetMapping("/{customerId}/kyc")
 		public ResponseEntity<Map<String, Object>> getCustomerKyc(
 		        @PathVariable Long customerId) {
@@ -254,7 +271,18 @@ public class CustomerController {
 		            ApiResponseUtil.success("Customer KYC added successfully")
 		    );
 		}
-	
+		@PostMapping("/{customerId}/kyc/resubmit")
+		public ResponseEntity<CustomerKycResubmitResponseDto> resubmitCustomerKyc(
+		        @PathVariable Long customerId,
+		        @RequestBody CustomerKycResubmitRequestDto request) {
+
+		    CustomerKycResubmitResponseDto response =
+		            customerService.resubmitKyc(customerId, request);
+
+		    return ResponseEntity.ok(response);
+		}
 }
+	
+
 
 
