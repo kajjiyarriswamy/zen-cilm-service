@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,23 +30,27 @@ public class AccountPassbookRequestController {
 			@RequestBody CreatePassbookRequest request) {
 		PassbookRequestResponse response = service.createRequest(accountId, request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
-		
 	}
-	
-	
-	
+
 	@GetMapping("/{accountId}/passbook-requests/{passbookRequestId}")
 	public ResponseEntity<PassbookRequestDetailsResponse> getPassbookRequest(
-			
-			@PathVariable Long accountId,
-			@PathVariable Long passbookRequestId){
-		 
-		PassbookRequestDetailsResponse response =
-	            service.getPassbookRequest(accountId, passbookRequestId);
 
-	    return ResponseEntity.ok(response);
+			@PathVariable Long accountId, @PathVariable Long passbookRequestId) {
+
+		PassbookRequestDetailsResponse response = service.getPassbookRequest(accountId, passbookRequestId);
+
+		return ResponseEntity.ok(response);
 	}
-	
+
+	@PutMapping("/{accountId}/passbook-requests/{passbookRequestId}")
+	public ResponseEntity<PassbookRequestResponse> updatePassbookRequest(@PathVariable Long accountId,
+			@PathVariable Long passbookRequestId, @RequestBody CreatePassbookRequest request) {
+
+		PassbookRequestResponse response = service.updatePassbookRequest(accountId, passbookRequestId, request);
+
+		return ResponseEntity.ok(response);
+	}
+
 }
