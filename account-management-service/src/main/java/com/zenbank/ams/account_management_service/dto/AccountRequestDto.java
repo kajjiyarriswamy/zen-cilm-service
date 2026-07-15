@@ -18,7 +18,11 @@ public class AccountRequestDto {
 	
 	private String currency;
 	
+	
 	private Double openingBalance;
+	
+
+	private Double initialDeposit;
 	
 	private Double availableBalance;
 	
@@ -40,11 +44,9 @@ public class AccountRequestDto {
 
 
 
-
-
 	public AccountRequestDto(String customerId, String accountNumber, String accountType, String branchCode,
-			String ifscCode, String currency, Double openingBalance, Double availableBalance, Double ledgerBalance,
-			String accountStatus, String createdBy) {
+			String ifscCode, String currency, Double openingBalance, Double initialDeposit, Double availableBalance,
+			Double ledgerBalance, String accountStatus, String createdBy) {
 		super();
 		this.customerId = customerId;
 		this.accountNumber = accountNumber;
@@ -53,13 +55,12 @@ public class AccountRequestDto {
 		this.ifscCode = ifscCode;
 		this.currency = currency;
 		this.openingBalance = openingBalance;
+		this.initialDeposit = initialDeposit;
 		this.availableBalance = availableBalance;
 		this.ledgerBalance = ledgerBalance;
 		this.accountStatus = accountStatus;
 		this.createdBy = createdBy;
 	}
-
-
 
 
 
@@ -69,13 +70,9 @@ public class AccountRequestDto {
 
 
 
-
-
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
 	}
-
-
 
 
 
@@ -85,13 +82,9 @@ public class AccountRequestDto {
 
 
 
-
-
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
 	}
-
-
 
 
 
@@ -101,13 +94,9 @@ public class AccountRequestDto {
 
 
 
-
-
 	public void setAccountType(String accountType) {
 		this.accountType = accountType;
 	}
-
-
 
 
 
@@ -117,13 +106,9 @@ public class AccountRequestDto {
 
 
 
-
-
 	public void setBranchCode(String branchCode) {
 		this.branchCode = branchCode;
 	}
-
-
 
 
 
@@ -133,13 +118,9 @@ public class AccountRequestDto {
 
 
 
-
-
 	public void setIfscCode(String ifscCode) {
 		this.ifscCode = ifscCode;
 	}
-
-
 
 
 
@@ -149,13 +130,9 @@ public class AccountRequestDto {
 
 
 
-
-
 	public void setCurrency(String currency) {
 		this.currency = currency;
 	}
-
-
 
 
 
@@ -165,13 +142,21 @@ public class AccountRequestDto {
 
 
 
-
-
 	public void setOpeningBalance(Double openingBalance) {
 		this.openingBalance = openingBalance;
 	}
 
 
+
+	public Double getInitialDeposit() {
+		return initialDeposit;
+	}
+
+
+
+	public void setInitialDeposit(Double initialDeposit) {
+		this.initialDeposit = initialDeposit;
+	}
 
 
 
@@ -181,13 +166,9 @@ public class AccountRequestDto {
 
 
 
-
-
 	public void setAvailableBalance(Double availableBalance) {
 		this.availableBalance = availableBalance;
 	}
-
-
 
 
 
@@ -197,13 +178,9 @@ public class AccountRequestDto {
 
 
 
-
-
 	public void setLedgerBalance(Double ledgerBalance) {
 		this.ledgerBalance = ledgerBalance;
 	}
-
-
 
 
 
@@ -213,13 +190,9 @@ public class AccountRequestDto {
 
 
 
-
-
 	public void setAccountStatus(String accountStatus) {
 		this.accountStatus = accountStatus;
 	}
-
-
 
 
 
@@ -229,15 +202,21 @@ public class AccountRequestDto {
 
 
 
-
-
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
 
 
-     
 
+
+
+
+
+
+
+
+
+	
 
 	
 

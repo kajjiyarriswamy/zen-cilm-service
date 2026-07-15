@@ -15,12 +15,12 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(CustomerNotFound.class)
 	public ResponseEntity<ExceptionErrorResponse> customerResourceNotFound(CustomerNotFound e){
 		ExceptionErrorResponse error = new ExceptionErrorResponse("FAILED",
-				"NOM_001",
+				"CUS_001",
 				e.getMessage(),
 				LocalDateTime.now());
 		
 		
-		return new ResponseEntity(error,HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
 	}
 	
 

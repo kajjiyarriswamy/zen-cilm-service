@@ -14,7 +14,7 @@ public class ApiResponseUtility {
 	public static Map<String,Object> accountCreated(Object data){
 		Map<String, Object> response = new LinkedHashMap<>();
 		 response.put("status", "SUCCESS");
-	        response.put("message", "Customer created successfully.");
+	        response.put("message", "Account created successfully.");
 	        response.put("data", data);
 	        return response;
 	}

@@ -35,6 +35,8 @@ public class Account {
 	private String currency;
 	@Column(name = "opening_balance", nullable = false, updatable = false)
 	private Double openingBalance;
+	@Column(name = "initial_deposit", nullable = false, updatable = false)
+	private Double initialDeposit;
 	@Column(name = "available_balance", nullable = false, updatable = false)
 	private Double availableBalance;
 	@Column(name = "ledger_balance", nullable = false, updatable = false)
@@ -57,9 +59,11 @@ public class Account {
 	}
 
 
+	
+
 	public Account(Long accountId, String customerId, String accountNumber, String accountType, String branchCode,
-			String ifscCode, String currency, Double openingBalance, Double availableBalance, Double ledgerBalance,
-			String accountStatus, LocalDate openedDate, String createdBy, LocalDate createdDate,
+			String ifscCode, String currency, Double openingBalance, Double initialDeposit, Double availableBalance,
+			Double ledgerBalance, String accountStatus, LocalDate openedDate, String createdBy, LocalDate createdDate,
 			LocalDate updatedDate) {
 		super();
 		this.accountId = accountId;
@@ -70,6 +74,7 @@ public class Account {
 		this.ifscCode = ifscCode;
 		this.currency = currency;
 		this.openingBalance = openingBalance;
+		this.initialDeposit = initialDeposit;
 		this.availableBalance = availableBalance;
 		this.ledgerBalance = ledgerBalance;
 		this.accountStatus = accountStatus;
@@ -78,6 +83,8 @@ public class Account {
 		this.createdDate = createdDate;
 		this.updatedDate = updatedDate;
 	}
+
+
 
 
 	public Long getAccountId() {
@@ -85,9 +92,13 @@ public class Account {
 	}
 
 
+
+
 	public void setAccountId(Long accountId) {
 		this.accountId = accountId;
 	}
+
+
 
 
 	public String getCustomerId() {
@@ -95,9 +106,13 @@ public class Account {
 	}
 
 
+
+
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
 	}
+
+
 
 
 	public String getAccountNumber() {
@@ -105,9 +120,13 @@ public class Account {
 	}
 
 
+
+
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
 	}
+
+
 
 
 	public String getAccountType() {
@@ -115,9 +134,13 @@ public class Account {
 	}
 
 
+
+
 	public void setAccountType(String accountType) {
 		this.accountType = accountType;
 	}
+
+
 
 
 	public String getBranchCode() {
@@ -125,9 +148,13 @@ public class Account {
 	}
 
 
+
+
 	public void setBranchCode(String branchCode) {
 		this.branchCode = branchCode;
 	}
+
+
 
 
 	public String getIfscCode() {
@@ -135,9 +162,13 @@ public class Account {
 	}
 
 
+
+
 	public void setIfscCode(String ifscCode) {
 		this.ifscCode = ifscCode;
 	}
+
+
 
 
 	public String getCurrency() {
@@ -145,9 +176,13 @@ public class Account {
 	}
 
 
+
+
 	public void setCurrency(String currency) {
 		this.currency = currency;
 	}
+
+
 
 
 	public Double getOpeningBalance() {
@@ -155,9 +190,27 @@ public class Account {
 	}
 
 
+
+
 	public void setOpeningBalance(Double openingBalance) {
 		this.openingBalance = openingBalance;
 	}
+
+
+
+
+	public Double getInitialDeposit() {
+		return initialDeposit;
+	}
+
+
+
+
+	public void setInitialDeposit(Double initialDeposit) {
+		this.initialDeposit = initialDeposit;
+	}
+
+
 
 
 	public Double getAvailableBalance() {
@@ -165,9 +218,13 @@ public class Account {
 	}
 
 
+
+
 	public void setAvailableBalance(Double availableBalance) {
 		this.availableBalance = availableBalance;
 	}
+
+
 
 
 	public Double getLedgerBalance() {
@@ -175,9 +232,13 @@ public class Account {
 	}
 
 
+
+
 	public void setLedgerBalance(Double ledgerBalance) {
 		this.ledgerBalance = ledgerBalance;
 	}
+
+
 
 
 	public String getAccountStatus() {
@@ -185,9 +246,13 @@ public class Account {
 	}
 
 
+
+
 	public void setAccountStatus(String accountStatus) {
 		this.accountStatus = accountStatus;
 	}
+
+
 
 
 	public LocalDate getOpenedDate() {
@@ -195,9 +260,13 @@ public class Account {
 	}
 
 
+
+
 	public void setOpenedDate(LocalDate openedDate) {
 		this.openedDate = openedDate;
 	}
+
+
 
 
 	public String getCreatedBy() {
@@ -205,9 +274,13 @@ public class Account {
 	}
 
 
+
+
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
+
+
 
 
 	public LocalDate getCreatedDate() {
@@ -215,9 +288,13 @@ public class Account {
 	}
 
 
+
+
 	public void setCreatedDate(LocalDate createdDate) {
 		this.createdDate = createdDate;
 	}
+
+
 
 
 	public LocalDate getUpdatedDate() {
@@ -225,11 +302,16 @@ public class Account {
 	}
 
 
+
+
 	public void setUpdatedDate(LocalDate updatedDate) {
 		this.updatedDate = updatedDate;
 	}
 
 
+
+
+	
 	
 	
 }
