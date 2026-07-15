@@ -27,6 +27,19 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
+	@ExceptionHandler(ChequeBookRequestException.class)
+	public ResponseEntity<ErrorResponse> handleChequeBookRequestException(ChequeBookRequestException ex) {
+
+		ErrorResponse response = new ErrorResponse();
+
+		response.setStatus("FAILED");
+		response.setErrorCode(ex.getErrorCode());
+		response.setMessage(ex.getMessage());
+		response.setTimestamp(LocalDateTime.now());
+
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
 

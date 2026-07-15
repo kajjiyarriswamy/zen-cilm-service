@@ -3,20 +3,14 @@ package com.zenbank.ams.account_management_service.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "account_cheque_book")
 public class AccountChequeBookRequest {
 
 	@Id
-	@SequenceGenerator(name = "cheque_book_seq", sequenceName = "account_cheque_book_id", initialValue = 1000, allocationSize = 1)
+	@SequenceGenerator(name = "cheque_book_seq", sequenceName = "account_cheque_book_id", initialValue = 100001, allocationSize = 1)
 	@GeneratedValue(generator = "cheque_book_seq", strategy = GenerationType.SEQUENCE)
 	@Column(name = "cheque_book_id", nullable = false, updatable = false)
 	private long chequeBookId;
@@ -25,7 +19,7 @@ public class AccountChequeBookRequest {
 	private long accountId;
 
 	@Column(name = "customer_id", nullable = false, updatable = false)
-	private long customerId;
+	private String customerId;
 
 	@Column(name = "account_number", nullable = false, updatable = false, length = 20)
 	private String accountNumber;
@@ -76,7 +70,7 @@ public class AccountChequeBookRequest {
 		super();
 	}
 
-	public AccountChequeBookRequest(long chequeBookId, long accountId, long customerId, String accountNumber,
+	public AccountChequeBookRequest(long chequeBookId, long accountId, String customerId, String accountNumber,
 			String chequeBookType, int leavesCount, String requestMode, String deliveryMode, String deliveryAddress,
 			String requestStatus, String trackingNumber, LocalDate dispatchedDate, LocalDate deliveredDate,
 			String remarks, String createdBy, LocalDateTime createdDate, String updatedBy,
@@ -118,11 +112,11 @@ public class AccountChequeBookRequest {
 		this.accountId = accountId;
 	}
 
-	public long getCustomerId() {
+	public String getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(long customerId) {
+	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
 	}
 

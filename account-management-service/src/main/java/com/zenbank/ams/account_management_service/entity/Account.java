@@ -44,6 +44,8 @@ public class Account {
 	private double ledgerBalance;
 	@Column(name = "account_status", nullable = false, updatable = false,length = 20)
 	private String accountStatus;
+	@Column(name = "cheque_book_facility_enabled")
+	private Boolean chequeBookFacilityEnabled;
 	@Column(name = "opened_date", nullable = false)
 	private LocalDateTime openedDate;
 	@Column(name = "created_by", nullable = false, updatable = false,length = 20)
@@ -60,7 +62,7 @@ public class Account {
 	}
 	public Account(Long accountId, String customerId, String accountNumber, String accountType, String branchCode,
 			String ifscCode, String currency, double openingBalance, double availableBalance, double ledgerBalance,
-			String accountStatus, LocalDateTime openedDate, String createdBy, LocalDateTime createdDate,
+			String accountStatus, Boolean chequeBookFacilityEnabled, LocalDateTime openedDate, String createdBy, LocalDateTime createdDate,
 			LocalDateTime updatedDate) {
 		super();
 		this.accountId = accountId;
@@ -74,6 +76,7 @@ public class Account {
 		this.availableBalance = availableBalance;
 		this.ledgerBalance = ledgerBalance;
 		this.accountStatus = accountStatus;
+		this.chequeBookFacilityEnabled = chequeBookFacilityEnabled;
 		this.openedDate = openedDate;
 		this.createdBy = createdBy;
 		this.createdDate = createdDate;
@@ -144,6 +147,12 @@ public class Account {
 	}
 	public void setAccountStatus(String accountStatus) {
 		this.accountStatus = accountStatus;
+	}
+	public Boolean getChequeBookFacilityEnabled() {
+		return chequeBookFacilityEnabled;
+	}
+	public void setChequeBookFacilityEnabled(Boolean chequeBookFacilityEnabled) {
+		this.chequeBookFacilityEnabled = chequeBookFacilityEnabled;
 	}
 	public LocalDateTime getOpenedDate() {
 		return openedDate;
