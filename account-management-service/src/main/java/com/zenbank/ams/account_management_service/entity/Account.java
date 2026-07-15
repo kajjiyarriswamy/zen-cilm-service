@@ -19,8 +19,9 @@ import jakarta.persistence.Table;
 @Table(name = "account")
 public class Account {
 	@Id
-	@SequenceGenerator(name = "bank", sequenceName = "accountid", initialValue = 1000, allocationSize = 1)
-	@GeneratedValue(generator = "bank", strategy = GenerationType.SEQUENCE)
+	//@SequenceGenerator(name="bank",sequenceName ="accountid",initialValue =1000,allocationSize = 1 )
+	@GeneratedValue(generator = "bank",strategy = GenerationType.IDENTITY)
+
 	private Long accountId;
 	@Column(name = "customer_id", unique = true, nullable = false, updatable = false, length = 20)
 	private String customerId;
