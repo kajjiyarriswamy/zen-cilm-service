@@ -1,24 +1,33 @@
 package com.zenbank.ams.account_management_service.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 
 @Entity
-@Table(name="account")
+@Table(name = "account")
 public class Account {
-	@Id
-	@SequenceGenerator(name="bank",sequenceName ="accountid",initialValue =1000,allocationSize = 1 )
-	@GeneratedValue(generator = "bank",strategy = GenerationType.SEQUENCE)
-	private Long accountId;
-	
+
+    @Id
+    @SequenceGenerator(
+            name = "bank",
+            sequenceName = "accountid",
+            initialValue = 1000,
+            allocationSize = 1)
+    @GeneratedValue(generator = "bank", strategy = GenerationType.SEQUENCE)
+    private Long accountId;
+
+    @OneToMany(mappedBy = "account")
+    private List<AccountLimit> accountLimits;
 	@Column(name = "customer_id", unique = true, nullable = false, updatable = false, length = 20)
 	private String customerId;
 	
