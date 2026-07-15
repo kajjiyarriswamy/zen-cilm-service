@@ -1,8 +1,7 @@
-package com.zenbank.ams.account_management_service.Exceptions;
+package com.zenbank.ams.account_management_service.exception;
 
 public class PassbookRequestException extends RuntimeException {
-
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -18,6 +17,6 @@ public class PassbookRequestException extends RuntimeException {
     public String getErrorCode(){
 
         return errorCode; 
+    }
 
 }
-    }

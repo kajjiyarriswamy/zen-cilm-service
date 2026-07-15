@@ -1,29 +1,25 @@
-package com.zenbank.ams.account_management_service.Exceptions;
+package com.zenbank.ams.account_management_service.exception;
 
 import java.time.LocalDateTime;
 
-public class ErrorResponse {
+public class ExceptionErrorResponse {
+	
 	private String status;
-
-	private String errorCode;
-
-	private String message;
-
-	private LocalDateTime timestamp;
-
-	public ErrorResponse() {
+    private String errorCode;
+    private String message;
+    private LocalDateTime timestamp;
+    
+	public ExceptionErrorResponse() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public ErrorResponse(String status, String errorCode, String message, LocalDateTime timestamp) {
-
+	public ExceptionErrorResponse(String status, String errorCode, String message, LocalDateTime timestamp) {
+		super();
 		this.status = status;
-
 		this.errorCode = errorCode;
-
 		this.message = message;
-
 		this.timestamp = timestamp;
-
 	}
 
 	public String getStatus() {
@@ -57,5 +53,10 @@ public class ErrorResponse {
 	public void setTimestamp(LocalDateTime timestamp) {
 		this.timestamp = timestamp;
 	}
+    
+	
+	
+    
+    
 
 }
