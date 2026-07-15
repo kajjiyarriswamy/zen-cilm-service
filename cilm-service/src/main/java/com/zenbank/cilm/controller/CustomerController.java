@@ -215,6 +215,16 @@ public class CustomerController {
         );
     }
 
+    @DeleteMapping("/{customerId}")
+    public ResponseEntity<Map<String,Object>> DeleteCustomer(
+            @PathVariable Long CustomerId,
+            @RequestBody CustomerRequestDto requestDto){
+
+        customerService.deleteCustomer(CustomerId, requestDto);
+        return ResponseEntity.ok(
+                ApiResponseUtil.success("Customer Deleted Successsfully")
+        );
+    }
 
     @PutMapping("/{customerId}/preferences/notifications")
     public ResponseEntity<Map<String, Object>> updateNotificationPreferences(
@@ -264,17 +274,17 @@ public class CustomerController {
 		    return ResponseEntity.ok(ApiResponseUtil.success(response));
 	}
 		
-		@PostMapping("/{customerId}/kyc")
-		public ResponseEntity<Map<String, Object>> addCustomerKyc(
-		        @PathVariable Long customerId,
-		        @RequestBody CustomerKycRequestDto requestDto) {
-
-		    customerService.addCustomerKyc(customerId, requestDto);
-
-		    return ResponseEntity.ok(
-		            ApiResponseUtil.success("Customer KYC added successfully")
-		    );
-		}
+//		@PostMapping("/{customerId}/kyc")
+//		public ResponseEntity<Map<String, Object>> addCustomerKyc(
+//		        @PathVariable Long customerId,
+//		        @RequestBody CustomerKycRequestDto requestDto) {
+//
+//		    customerService.addCustomerKyc(customerId, requestDto);
+//
+//		    return ResponseEntity.ok(
+//		            ApiResponseUtil.success("Customer KYC added successfully")
+//		    );
+//		}
 	
 }
 

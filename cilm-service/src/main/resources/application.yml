@@ -3,9 +3,9 @@ spring:
     name: ${APPLICATION_NAME:zen-cilm-service}
 
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/cilm}
-    username: ${DB_USERNAME:system}
-    password: ${DB_PASSWORD:admin}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/cilm_ZenBanking}
+    username: root
+    password: Shiva@2001
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:

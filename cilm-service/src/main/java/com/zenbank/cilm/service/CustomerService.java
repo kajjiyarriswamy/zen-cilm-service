@@ -20,14 +20,10 @@ import com.zenbank.cilm.repository.CustomerContactRepository;
 import com.zenbank.cilm.repository.CustomerKycRepository;
 
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,7 +35,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 public class CustomerService {
@@ -814,43 +809,54 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 
 	}
 
+	public void deleteNominee(Long customerId, Long nomineeId) {
+	}
 
-	public void addCustomerKyc(Long customerId, CustomerKycRequestDto requestDto) {
-		Customer customer = customerRepository.findById(customerId)
-	            .orElseThrow(() -> new RuntimeException("Customer not found"));
+	public void deleteCustomer(Long customerId, CustomerRequestDto requestDto) {
+		Customer customer=customerRepository.findById(customerId)
+				.orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+        customerRepository.deleteById(customerId);
 
-	    CustomerKyc customerKyc = new CustomerKyc();
-	    
-
-	    customerKyc.setCustomer(customer);
-	    customerKyc.setPanVerified(requestDto.getPanVerified());
-	    customerKyc.setAadhaarVerified(requestDto.getAadhaarVerified());
-	    customerKyc.setKycStatus(requestDto.getKycStatus());
-	    customerKyc.setVerifiedBy(requestDto.getVerifiedBy());
-	    //customerKyc.setVerifiedDate(requestDto.getVerifiedDate());
-
-	    customerKycRepository.save(customerKyc);
-		
+		customerRepository.save(customer);
 	}
 
 
-	public void addCustomerKyc(Long customerId, CustomerKycRequestDto requestDto) {
-		Customer customer = customerRepository.findById(customerId)
-	            .orElseThrow(() -> new RuntimeException("Customer not found"));
-
-	    CustomerKyc customerKyc = new CustomerKyc();
-	    
-
-	    customerKyc.setCustomer(customer);
-	    customerKyc.setPanVerified(requestDto.getPanVerified());
-	    customerKyc.setAadhaarVerified(requestDto.getAadhaarVerified());
-	    customerKyc.setKycStatus(requestDto.getKycStatus());
-	    customerKyc.setVerifiedBy(requestDto.getVerifiedBy());
-	    //customerKyc.setVerifiedDate(requestDto.getVerifiedDate());
-
-	    customerKycRepository.save(customerKyc);
-		
-	}
+//	public void addCustomerKyc(Long customerId, CustomerKycRequestDto requestDto) {
+//		Customer customer = customerRepos;itory.findById(customerId)
+//	            .orElseThrow(() -> new RuntimeException("Customer not found"));
+//
+//	    CustomerKyc customerKyc = new CustomerKyc();
+//
+//
+//	    customerKyc.setCustomer(customer);
+//	    customerKyc.setPanVerified(requestDto.getPanVerified());
+//	    customerKyc.setAadhaarVerified(requestDto.getAadhaarVerified());
+//	    customerKyc.setKycStatus(requestDto.getKycStatus());
+//	    customerKyc.setVerifiedBy(requestDto.getVerifiedBy());
+//	    //customerKyc.setVerifiedDate(requestDto.getVerifiedDate());
+//
+//	    customerKycRepository.save(customerKyc);
+//
+//	}
+//
+//
+//	public void addCustomerKyc(Long customerId, CustomerKycRequestDto requestDto) {
+//		Customer customer = customerRepository.findById(customerId)
+//	            .orElseThrow(() -> new RuntimeException("Customer not found"));
+//
+//	    CustomerKyc customerKyc = new CustomerKyc();
+//
+//
+//	    customerKyc.setCustomer(customer);
+//	    customerKyc.setPanVerified(requestDto.getPanVerified());
+//	    customerKyc.setAadhaarVerified(requestDto.getAadhaarVerified());
+//	    customerKyc.setKycStatus(requestDto.getKycStatus());
+//	    customerKyc.setVerifiedBy(requestDto.getVerifiedBy());
+//	    //customerKyc.setVerifiedDate(requestDto.getVerifiedDate());
+//
+//	    customerKycRepository.save(customerKyc);
+//
+//	}
 	
 	
 }
