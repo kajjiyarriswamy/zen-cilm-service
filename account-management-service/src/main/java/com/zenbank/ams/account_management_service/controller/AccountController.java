@@ -34,7 +34,7 @@ public class AccountController {
 	     return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseUtility.accountCreated(responsedto));
 		 
 	}
-	//GET /api/v1/customers/{customerId}/accounts
+	
 	
 	@GetMapping("/customers/{customerId}/accounts")
 	public ResponseEntity<Map<String, Object>> accountsByCustomerId(@PathVariable String customerId){
@@ -44,6 +44,4 @@ public class AccountController {
 	}
 
 }
-//CUST10001
-//CUST20025
-//CUS40010
+

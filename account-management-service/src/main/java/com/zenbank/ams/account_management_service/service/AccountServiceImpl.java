@@ -21,9 +21,9 @@ public class AccountServiceImpl implements AccountServiceI {
 	@Autowired
 	private AccountRepository accountrepository;
 	
-	
+	@Override
 	public AccountResponseDto accountCreate(AccountRequestDto reqdto) {
-		if(reqdto.getCustomerId()!=null ) {
+		if(reqdto.getCustomerId()!=null &&  !reqdto.getCustomerId().isBlank()) {
 			Account ac = new Account();
 			ac.setAccountNumber(reqdto.getAccountNumber());
 			ac.setAccountStatus(reqdto.getAccountStatus());
@@ -55,8 +55,7 @@ public class AccountServiceImpl implements AccountServiceI {
 	@Override
 	public List<CustomerAccountsResponseDto> getAccountsByCustomerId(String custId) {
 		// TODO Auto-generated method stub
-		if(!(custId ==null ||  "null".equalsIgnoreCase(custId)) ) {
-			System.out.println("inside if");
+		if(!(custId ==null ||  "null".equalsIgnoreCase(custId)) && !custId.isBlank()) {
 		List<Account> accountslist = accountrepository.findBycustomerIdEquals(custId);
 		if(!accountslist.isEmpty()) {
 		List<CustomerAccountsResponseDto> list = new LinkedList<CustomerAccountsResponseDto>();
