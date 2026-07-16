@@ -54,7 +54,6 @@ public class CustomerService {
 	private final CustomerAuditRepository customerAuditRepository;
 	private final CustomerContactRepository customerContactRepository;
 	private final CustomerDocumentRepository customerDocumentRepository;
-	
 
     public CustomerService(CustomerRepository customerRepository, CustomerNomineeRepository customerNomineeRepository,AddressRepository customerAddressRepository,CustomerKycRepository customerKycRepository,CustomerContactRepository customerContactRepository,
             CustomerAuditRepository customerAuditRepository, CustomerDocumentRepository customerDocumentRepository) {
@@ -67,9 +66,9 @@ public class CustomerService {
 		this.customerDocumentRepository = customerDocumentRepository;
     }
 
-	
 
-	
+
+
 
 	@Transactional
 	public CustomerResponseDto createCustomer(CustomerRequestDto dto) {
@@ -437,7 +436,7 @@ customerAuditRepository.save(audit);
 	    customerRepository.save(customer);
 	}
 
-	
+
 	public void updateNotificationPreferences(Long customerId,
 	                                          CustomerPreferences request) {
 
@@ -458,9 +457,9 @@ customerAuditRepository.save(audit);
 
 // Save
 		customerRepository.save(customer);
-		
+
 	}
-	
+
 
 	public CustomerContactResponseDto addContact(String customerId, @Valid CustomerContactRequestDto requestDto) {
 
@@ -468,7 +467,7 @@ customerAuditRepository.save(audit);
 	}
 
 	/**public AddressResponseDto addAddress(Long customerId, AddressRequestDto requestDto) {
-	
+
 		Customer customer =  customerRepository.findByCustomerId(String.valueOf(customerId))
 
 		Customer customer = customerRepository.findByCustomerId(customerId)
@@ -563,7 +562,7 @@ audit.setNewValue(
 customerAuditRepository.save(audit);
 }
 
-	
+
 	public CustomerKycResponseDto getCustomerKyc(Long customerId) {
 
 	    Customer customer = customerRepository.findById(customerId)
@@ -587,7 +586,7 @@ customerAuditRepository.save(audit);
 	                                       String performedBy, String fromDate,
 	                                       String toDate, int page, int size) {*/
 
-
+// Add Addresses by using customerID
 public AddressResponseDto addAddress(String customerId, AddressRequestDto requestDto)
 {
 	Customer customer =  customerRepository.findByCustomerId(customerId)
@@ -611,7 +610,6 @@ public AddressResponseDto addAddress(String customerId, AddressRequestDto reques
 			throw new RuntimeException("Primary Address already exists");
 		}
 	}
-
 
 	CustomerAddress customerAddress = new CustomerAddress();
 	customerAddress.setCustomer(customer);
@@ -698,6 +696,7 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 	return response;
 }
 
+// Update Mobile number by using customerId
 	public CustomerContactResponseDto updateMobileNumber(
 			String customerId, CustomerContactRequestDto contactRequestDto) {
 		// Find customer
@@ -734,32 +733,32 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 			throw new RuntimeException("Customer verification failed");
 		}
 
-		//Store the old mobile number before updating it.
+//		Store the old mobile number before updating it.
 		String oldMobileNumber = customerContact.getMobileNumber();
 
-		// Update mobile number
+//		 Update mobile number
 		customerContact.setMobileNumber(mobile);
 		customerContactRepository.save(customerContact);
 
 		CustomerContactResponseDto response = null;
 		return response;
 	}
-	
+
 	public void verifyNominee(Long customerId, Long nomineeId, CustomerNomineeRequestDto dto) {
-		
+
 		Customer customer=customerRepository.findById(customerId)
 				.orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-		
+
 		CustomerNominee nominee=customerNomineeRepository.findByNomineeIdAndCustomer(nomineeId, customer)
 				.orElseThrow(() -> new ResourceNotFoundException("Nominee not found"));
-		
+
 		if ("VERIFIED".equalsIgnoreCase(nominee.getVerificationStatus())) {
-			
+
 			throw new NomineeAlreadyVerifiedException("Nominee already verified");
 		}
-		
+
 		nominee.setVerificationStatus("VERIFIED");
-		
+
 		customerNomineeRepository.save(nominee);
 	}
 
@@ -816,13 +815,58 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 		return response;
 
 	}
+	public CustomerContactResponseDto updateEmail(String customerId, CustomerContactRequestDto requestDto) {
+		Customer customer = customerRepository.findByCustomerId(customerId)
+				.orElseThrow(()->
+						new RuntimeException("Customer not found"));
+
+		CustomerContact customerContact = customerContactRepository.findByCustomer(customer)
+				.orElseThrow(()->
+						new RuntimeException("contact not found"));
+
+		String email = requestDto.getEmail();
+		if (email == null || email.isBlank()) {
+			throw new RuntimeException("Email cannot be null");
+		}
+
+		if(email.equals(customerContact.getEmail())) {
+			throw new RuntimeException("New email must be different from the existing email");
+		}
+
+		if(customerContactRepository.existsByEmail(email)) {
+			throw new RuntimeException("Email already exists");
+		}
+
+//		Store the old email number before updating it.
+		String oldEmail = customerContact.getEmail();
+
+//		update email
+		customerContact.setEmail(email);
+		customerContactRepository.save(customerContact);
+
+		CustomerAudit customerAudit = new CustomerAudit();
+		customerAudit.setCustomer(customer);
+		customerAudit.setAction("EMAIL_UPDATED");
+		customerAudit.setPerformedBy("BANK_EMPLOYEE");
+		customerAudit.setOldValue(oldEmail);
+		customerAudit.setNewValue(email);
+		customerAuditRepository.save(customerAudit);
+
+		CustomerContactResponseDto contactResponseDto = new CustomerContactResponseDto();
+		contactResponseDto.setStatus("SUCCESS");
+		contactResponseDto.setMessage("Email updated successfully.");
+
+		return contactResponseDto;
+
+	}
+
 
 	public void addCustomerKyc(Long customerId, CustomerKycRequestDto requestDto) {
 		Customer customer = customerRepository.findById(customerId)
 	            .orElseThrow(() -> new RuntimeException("Customer not found"));
 
 	    CustomerKyc customerKyc = new CustomerKyc();
-	    
+
 
 	    customerKyc.setCustomer(customer);
 	    customerKyc.setPanVerified(requestDto.getPanVerified());
@@ -832,37 +876,19 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 	    //customerKyc.setVerifiedDate(requestDto.getVerifiedDate());
 
 	    customerKycRepository.save(customerKyc);
+
 	}
-
-
-
-
 
 	public void deleteNominee(Long customerId, Long nomineeId) {
-		// TODO Auto-generated method stub
-		
+//		Customer customer = customerRepository.findByCustomerId(customerId)
+//				.orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+
+//		CustomerNominee nominee = customerNomineeRepository.findByNomineeIdAndCustomer(nomineeId, customer)
+//				.orElseThrow(() -> new ResourceNotFoundException("Nominee not found"));
+
+//		customerNomineeRepository.delete(nominee);
 	}
-		
 
-
-//	public void addCustomerKyc(Long customerId, CustomerKycRequestDto requestDto) {
-//		Customer customer = customerRepository.findById(customerId)
-//	            .orElseThrow(() -> new RuntimeException("Customer not found"));
-//
-//	    CustomerKyc customerKyc = new CustomerKyc();
-//	    
-//
-//	    customerKyc.setCustomer(customer);
-//	    customerKyc.setPanVerified(requestDto.getPanVerified());
-//	    customerKyc.setAadhaarVerified(requestDto.getAadhaarVerified());
-//	    customerKyc.setKycStatus(requestDto.getKycStatus());
-//	    customerKyc.setVerifiedBy(requestDto.getVerifiedBy());
-//	    //customerKyc.setVerifiedDate(requestDto.getVerifiedDate());
-//
-//	    customerKycRepository.save(customerKyc);
-//		
-//	}
-	
 	public CustomerKycResubmitResponseDto resubmitKyc(
 	        Long customerId,
 	        CustomerKycResubmitRequestDto request) {
@@ -896,6 +922,5 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 
 	    return response;
 	}
-	
-	
+
 }
