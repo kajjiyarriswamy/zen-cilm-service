@@ -392,7 +392,7 @@ customerAuditRepository.save(audit);
         }
 
 
-	public CustomerPreferenceResponseDto getCustomerPreference(Long customerId) {
+	/*public CustomerPreferenceResponseDto getCustomerPreference(Long customerId) {
 
 		Customer customer = customerRepository.findById(customerId)
 				.orElseThrow(() -> new RuntimeException("Customer not found"));
@@ -408,9 +408,9 @@ customerAuditRepository.save(audit);
 		return new CustomerPreferenceResponseDto(preferenceId, preference.getLanguage(),
 				preference.getCommunicationMode(), preference.getEmailEnabled(), preference.getSmsEnabled(),
 				preference.getMarketingEnabled());
-	}
+	}*/
 
-	public CustomerPreference createPreference(Long customerId, CustomerPreference preference) {
+	public CustomerPreferences createPreference(Long customerId, CustomerPreferences preference) {
 
 		Customer customer = customerRepository.findById(customerId)
 				.orElseThrow(() -> new RuntimeException("Customer not found"));
@@ -439,14 +439,14 @@ customerAuditRepository.save(audit);
 
 	
 	public void updateNotificationPreferences(Long customerId,
-	                                          CustomerPreference request) {
+	                                          CustomerPreferences request) {
 
 // Check customer exists
 		Customer customer = customerRepository.findById(customerId)
 				.orElseThrow(() -> new RuntimeException("Customer not found"));
 
 // Check preference exists
-		CustomerPreference preference = customer.getCustomerPreference();
+		CustomerPreferences preference = customer.getCustomerPreference();
 
 		if (preference == null) {
 			throw new RuntimeException("Customer preferences not found.");
@@ -500,7 +500,7 @@ customerAuditRepository.save(audit);
 		);
 	}*/
 	public void updatePreferences(Long customerId,
-            CustomerPreference request) {
+            CustomerPreferences request) {
 
 // Validate Customer
 Customer customer = customerRepository.findById(customerId)
@@ -508,7 +508,7 @@ Customer customer = customerRepository.findById(customerId)
   new RuntimeException("Customer not found"));
 
 // Validate Preferences
-CustomerPreference preference = customer.getCustomerPreference();
+CustomerPreferences preference = customer.getCustomerPreference();
 
 if (preference == null) {
 throw new RuntimeException("Customer preferences not found");
