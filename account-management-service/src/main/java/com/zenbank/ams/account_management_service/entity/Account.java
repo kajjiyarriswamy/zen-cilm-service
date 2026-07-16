@@ -1,7 +1,6 @@
 package com.zenbank.ams.account_management_service.entity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -12,19 +11,21 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 	@Entity
 	@Table(name = "account")
 	public class Account {
-		@Id
-		//@SequenceGenerator(name="bank",sequenceName ="accountid",initialValue =1000,allocationSize = 1 )
-		@GeneratedValue(generator = "bank",strategy = GenerationType.IDENTITY)
 
-		private Long accountId;
-		@Column(name = "customer_id", unique = true, nullable = false, updatable = false, length = 20)
-		private String customerId;
+	@Id
+//	@SequenceGenerator(name = "bank", sequenceName = "accountid", initialValue = 1000, allocationSize = 1)
+	@GeneratedValue(generator = "bank", strategy = GenerationType.SEQUENCE)
+	@Column(name="account_id")
+	private Long accountId;
+	@Column(name = "customer_id", unique = true, nullable = false, updatable = false, length = 20)
+	private String customerId;
 
 		@Column(name = "account_number", unique = true, nullable = false, updatable = false, length = 20)
 		private String accountNumber;
@@ -66,7 +67,7 @@ import jakarta.persistence.Table;
 		public Account(Long accountId, String customerId, String accountNumber, String accountType, String branchCode,
 		               String ifscCode, String currency, Double openingBalance, Double initialDeposit, Double availableBalance,
 		               Double ledgerBalance, String accountStatus, LocalDate openedDate, String createdBy, LocalDate createdDate,
-		               LocalDate updatedDate, Boolean chequeBookFacilityEnabled) {
+		               LocalDate updatedDate, Boolean chequeBookFacilityEnabled,List<AccountStatementPreference> statementPreferences) {
 
 			super();
 			this.accountId = accountId;
@@ -86,6 +87,7 @@ import jakarta.persistence.Table;
 			this.createdBy = createdBy;
 			this.createdDate = createdDate;
 			this.updatedDate = updatedDate;
+			this.statementPreferences = statementPreferences;
 		}
 
 		public Long getAccountId() {
@@ -135,9 +137,11 @@ import jakarta.persistence.Table;
 		public void setIfscCode(String ifscCode) {
 			this.ifscCode = ifscCode;
 		}
+
 		public Boolean getChequeBookFacilityEnabled() {
 			return chequeBookFacilityEnabled;
 		}
+
 		public void setChequeBookFacilityEnabled(Boolean chequeBookFacilityEnabled) {
 			this.chequeBookFacilityEnabled = chequeBookFacilityEnabled;
 		}
@@ -222,10 +226,19 @@ import jakarta.persistence.Table;
 			this.updatedDate = updatedDate;
 		}
 
+		public List<AccountStatementPreference> getStatementPreferences() {
 
+			return statementPreferences;
+        }
 
-
+        public void setStatementPreferences(List<AccountStatementPreference> statementPreferences) {
+			this.statementPreferences = statementPreferences;
+        }
 
 		@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 		private List<AccountStatementPreference> statementPreferences;
-	}
+
+
+		@OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+        private AccountLimit accountLimit;
+    }

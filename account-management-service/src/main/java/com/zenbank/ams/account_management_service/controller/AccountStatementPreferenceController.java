@@ -2,16 +2,15 @@ package com.zenbank.ams.account_management_service.controller;
 
 
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.zenbank.ams.account_management_service.dto.CreateStatementPreferenceRequest;
 import com.zenbank.ams.account_management_service.dto.StatementPreferenceResponse;
-
 import com.zenbank.ams.account_management_service.service.StatementPreferenceService;
-
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/accounts")
@@ -25,7 +24,7 @@ public class AccountStatementPreferenceController {
 
 	@PostMapping("/{accountId}/statement-preferences")
 	public ResponseEntity<StatementPreferenceResponse> createStatementPreference(@PathVariable Long accountId,
-			@Valid @RequestBody CreateStatementPreferenceRequest requestDto) {
+			@Validated @RequestBody CreateStatementPreferenceRequest requestDto) {
 
 		StatementPreferenceResponse response = statementPreferenceService.createStatementPreference(accountId,
 				requestDto);
@@ -41,4 +40,14 @@ public class AccountStatementPreferenceController {
 		return ResponseEntity.ok(response);
 
 	}
+	
+	@PutMapping("/{accountId}/statement-preferences")
+	public ResponseEntity<StatementPreferenceResponse> updateStatement(@PathVariable Long accountId,
+			@Valid @RequestBody CreateStatementPreferenceRequest dto){
+		
+		StatementPreferenceResponse response=statementPreferenceService.updateStatement(accountId, dto);
+		
+		return ResponseEntity.ok(response);
+	}
+	
 }
