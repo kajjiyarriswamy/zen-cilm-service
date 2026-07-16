@@ -1,43 +1,58 @@
 package com.zenbank.ams.account_management_service.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zenbank.ams.account_management_service.dto.AccountLimitRequestDto;
 import com.zenbank.ams.account_management_service.dto.AccountLimitResponseDto;
+import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.AccountLimit;
 import com.zenbank.ams.account_management_service.exception.AccountLimitError;
 import com.zenbank.ams.account_management_service.repository.AccountLimitRepository;
+import com.zenbank.ams.account_management_service.repository.AccountRepository;
 
 @Service
 public class AccountLimitServiceImpl implements IAccountLimitService {
 	
 	@Autowired
-	private AccountLimitRepository alRepo;
+	private AccountRepository accountRepo;
+
+	@Autowired
+	private AccountLimitRepository acclimitRepo;
 
 	@Override
-	public AccountLimitResponseDto createAccountLimit(AccountLimitRequestDto dto,Long accountId) {
-		if(accountId !=0 && accountId!=null) {
-			
-			AccountLimit al=new AccountLimit();
-			dto.setAccountId(accountId);
-			
-			al.setAccountId(dto.getAccountId());
-			al.setCreatedBy(dto.getCreatedBy());
-			al.setDailyAtmLimit(dto.getDailyAtmLimit());
-			al.setDailyImpsLimit(dto.getDailyImpsLimit());
-			al.setDailyUpiLimit(dto.getDailyUpiLimit());
-			al.setRtgsLimit(dto.getDailyRtgsLimit());
-			al.setMonthlyTransferLimit(dto.getMonthlyTransferLimit());
-			
-			AccountLimit acclimit=alRepo.save(al);
-			return AccountLimitResponseDto.fromEntity(acclimit);
-		}
-		else {
-		 throw new AccountLimitError("Transaction limits already configured for this account");
-		}
-		
+	public AccountLimitResponseDto createAccountLimit(AccountLimitRequestDto dto, Long accountId) {
+
+	    if(accountId != null && accountId != 0) {
+
+	        Account account = accountRepo.findById(accountId)
+	                .orElseThrow(() -> new AccountLimitError("Account not found"));
+
+	        AccountLimit al = new AccountLimit();
+
+	        al.setAccount(account);
+
+	        al.setCreatedBy(dto.getCreatedBy());
+
+	        al.setDailyAtmLimit(dto.getDailyAtmLimit());
+	        al.setDailyUpiLimit(dto.getDailyUpiLimit());
+	        al.setDailyImpsLimit(dto.getDailyImpsLimit());
+	        al.setDailyNeftLimit(dto.getDailyNeftLimit());
+	        al.setRtgsLimit(dto.getDailyRtgsLimit());
+	        al.setMonthlyTransferLimit(dto.getMonthlyTransferLimit());
+
+	        al.setStatus(dto.getStatus());
+
+	        al.setCreatedDate(LocalDateTime.now());
+	        al.setUpdatedDate(LocalDateTime.now());
+
+	        AccountLimit saved = acclimitRepo.save(al);
+
+	        return AccountLimitResponseDto.fromEntity(saved);
+	    }
+
+	    throw new AccountLimitError("Transaction limits already configured for this account");
 	}
-
-
 }

@@ -34,8 +34,11 @@ public void setLimitId(Long limitId) {
 	this.limitId = limitId;
 }	
 
-public static AccountLimitResponseDto fromEntity(AccountLimit accountent) {
-	return new AccountLimitResponseDto(accountent.getAccountId(),accountent.getLimitId());
+public static AccountLimitResponseDto fromEntity(AccountLimit accountEnt) {
+
+    return new AccountLimitResponseDto(
+            accountEnt.getAccount().getAccountId(),
+            accountEnt.getLimitId());
 }
 		
 
