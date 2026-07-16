@@ -1,6 +1,6 @@
 package com.zenbank.ams.account_management_service.service;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.zenbank.ams.account_management_service.entity.Account;
@@ -48,8 +48,3 @@ public class AccountServiceImpl implements AccountServiceI {
 		}
 		
 	}
-
-
-	
-
-}
