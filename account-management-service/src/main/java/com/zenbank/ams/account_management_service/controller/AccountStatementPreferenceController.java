@@ -44,4 +44,14 @@ public class AccountStatementPreferenceController {
 		return ResponseEntity.ok(response);
 
 	}
+	
+	@PutMapping("/{accountId}/statement-preferences")
+	public ResponseEntity<StatementPreferenceResponse> updateStatement(@PathVariable Long accountId,
+			@Valid @RequestBody CreateStatementPreferenceRequest dto){
+		
+		StatementPreferenceResponse response=statementPreferenceService.updateStatement(accountId, dto);
+		
+		return ResponseEntity.ok(response);
+	}
+	
 }

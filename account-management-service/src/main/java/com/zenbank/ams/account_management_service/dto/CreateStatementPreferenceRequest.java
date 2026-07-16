@@ -22,6 +22,8 @@ public class CreateStatementPreferenceRequest {
 	@NotBlank(message = "Password protected is required")
 	@Pattern(regexp = "Y|N", message = "Password protected must be Y or N")
 	private String passwordProtected;
+	
+	private String deliveryStatus;
 
 	public String getStatementType() {
 		return statementType;
@@ -55,6 +57,15 @@ public class CreateStatementPreferenceRequest {
 		this.passwordProtected = passwordProtected;
 	}
 
+	public String getDeliveryStatus() {
+		return deliveryStatus;
+	}
+
+	public void setDeliveryStatus(String deliveryStatus) {
+		this.deliveryStatus = deliveryStatus;
+	}
+
+	
 	
 
 }

@@ -1,20 +1,22 @@
 package com.zenbank.ams.account_management_service.service;
-
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.dto.AccountRequestDto;
 import com.zenbank.ams.account_management_service.dto.AccountResponseDto;
-import com.zenbank.ams.account_management_service.entity.Account;
+
 import com.zenbank.ams.account_management_service.exception.CustomerNotFound;
+
 import com.zenbank.ams.account_management_service.repository.AccountRepository;
 
 @Service
 public class AccountServiceImpl implements AccountServiceI {
 	
 	@Autowired
+
+
 	private AccountRepository accountrepository;
 	
 	
@@ -46,5 +48,3 @@ public class AccountServiceImpl implements AccountServiceI {
 		}
 		
 	}
-
-}
