@@ -6,13 +6,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import com.zenbank.ams.account_management_service.dto.CreatePassbookRequest;
 import com.zenbank.ams.account_management_service.dto.DeliveryAddressDto;
+import com.zenbank.ams.account_management_service.dto.PassbookRequestDetailsResponse;
 import com.zenbank.ams.account_management_service.dto.PassbookRequestResponse;
 import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.AccountPassbookRequest;
 import com.zenbank.ams.account_management_service.exception.PassbookRequestException;
+import com.zenbank.ams.account_management_service.exception.ResourceNotFoundException;
 import com.zenbank.ams.account_management_service.repository.AccountPassbookRequestRepository;
 import com.zenbank.ams.account_management_service.repository.AccountRepository;
 
@@ -95,5 +96,38 @@ public class AccountPassbookRequestServiceImpl implements AccountPassbookRequest
 
 		return response;
 
+	}
+
+	@Override
+	public PassbookRequestDetailsResponse getPassbookRequest(Long accountId, Long passbookRequestId) {
+
+		Account account=accountRepository.findById(accountId).orElseThrow(() ->
+		     new ResourceNotFoundException("Account not found"));
+
+		AccountPassbookRequest request = repository
+				.findByPassbookRequestIdAndAccountAccountId(passbookRequestId, accountId, account)
+				.orElseThrow(() -> new PassbookRequestException("PBK_005", "Passbook request not found."));
+
+		PassbookRequestDetailsResponse response = new PassbookRequestDetailsResponse();
+
+		response.setStatus("SUCCESS");
+
+		PassbookRequestDetailsResponse.PassbookRequestData data = new PassbookRequestDetailsResponse.PassbookRequestData();
+
+		data.setPassbookRequestId("PBR" + String.format("%06d", request.getPassbookRequestId()));
+
+		data.setAccountNumber(request.getAccountNumber());
+		data.setRequestType(request.getRequestType());
+		data.setRequestMode(request.getRequestMode());
+		data.setDeliveryMode(request.getDeliveryMode());
+		data.setRequestStatus(request.getRequestStatus());
+		data.setCourierTrackingNumber(request.getCourierTrackingNumber());
+		data.setDispatchDate(request.getDispatchDate());
+		data.setDeliveryDate(request.getDeliveryDate());
+		data.setRemarks(request.getRemarks());
+
+		response.setData(data);
+
+		return response;
 	}
 }
