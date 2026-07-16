@@ -37,9 +37,9 @@ public class StatementPreferenceService implements StatementPreferenceServiceImp
 		Account account = accountRepository.findById(accountId)
 				.orElseThrow(() -> new StatementPreferenceException("ACC_001", "Account not found"));
 
-	/*	if (!"ACTIVE".equalsIgnoreCase(account.getAccountStatus())) {
+		if (!"ACTIVE".equalsIgnoreCase(account.getAccountStatus())) {
 			throw new StatementPreferenceException("ACC_002", "Account is not active");
-		}*/
+		}
 
 		if (statementPreferenceRepository.existsByAccountAndDeliveryStatus(account, "ACTIVE")) {
 
@@ -97,6 +97,35 @@ public class StatementPreferenceService implements StatementPreferenceServiceImp
 		response.setData(data);
 
 		return response;
+	}
+
+	@Override
+	public StatementPreferenceResponse updateStatement(Long accountId, CreateStatementPreferenceRequest dto) {
+
+		Account account = accountRepository.findById(accountId)
+				.orElseThrow(() -> new ResourceNotFoundException("Account Not Found"));
+
+		AccountStatementPreference pr = statementPreferenceRepository.findByAccountAndDeliveryStatus(account, "ACTIVE")
+				.orElseThrow(() -> new ResourceNotFoundException("Statement preference not found"));
+
+		pr.setStatementType(dto.getStatementType());
+		pr.setStatementFrequency(dto.getStatementFrequency());
+		pr.setEmailId(dto.getEmailId());
+		pr.setPasswordProtected(dto.getPasswordProtected());
+		pr.setDeliveryStatus(dto.getDeliveryStatus());
+
+		pr.setUpdatedBy("EMP001");
+		pr.setUpdatedDate(LocalDateTime.now());
+
+		statementPreferenceRepository.save(pr);
+
+		StatementPreferenceResponse response = new StatementPreferenceResponse();
+
+		response.setStatus("SUCCESS");
+		response.setMessage("Statement preference updated successfully");
+
+		return response;
+
 	}
 
 }
