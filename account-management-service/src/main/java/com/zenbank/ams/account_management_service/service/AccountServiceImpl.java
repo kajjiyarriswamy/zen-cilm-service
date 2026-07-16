@@ -2,12 +2,15 @@ package com.zenbank.ams.account_management_service.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zenbank.ams.account_management_service.dto.AccountRequestDto;
 import com.zenbank.ams.account_management_service.dto.AccountResponseDto;
+import com.zenbank.ams.account_management_service.dto.CustomerAccountsResponseDto;
 import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.exception.CustomerNotFound;
 import com.zenbank.ams.account_management_service.repository.AccountRepository;
@@ -46,6 +49,33 @@ public class AccountServiceImpl implements AccountServiceI {
 		 throw new CustomerNotFound("customer dont have an account......");
 		}
 		
+	}
+
+
+	@Override
+	public List<CustomerAccountsResponseDto> getAccountsByCustomerId(String custId) {
+		// TODO Auto-generated method stub
+		if(!(custId ==null ||  "null".equalsIgnoreCase(custId)) ) {
+			System.out.println("inside if");
+		List<Account> accountslist = accountrepository.findBycustomerIdEquals(custId);
+		if(!accountslist.isEmpty()) {
+		List<CustomerAccountsResponseDto> list = new LinkedList<CustomerAccountsResponseDto>();
+		for(Account a : accountslist) {
+			CustomerAccountsResponseDto custAcResp = new CustomerAccountsResponseDto(a.getAccountNumber(),a.getAccountType(),
+					a.getAccountStatus());
+			list.add(custAcResp);
+			
+		}
+		return list;
+		}
+		else {
+			throw  new CustomerNotFound("Their is no Customer With this Id:"+custId);
+		}
+		
+		}
+		else {
+			throw  new CustomerNotFound("Please Enter correct CustomerId....!");
+		}
 	}
 
 }

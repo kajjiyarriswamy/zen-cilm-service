@@ -18,5 +18,13 @@ public class ApiResponseUtility {
 	        response.put("data", data);
 	        return response;
 	}
+	
+	public static Map<String,Object> getAccountsByCustomerId(String custId,Object data){
+		Map<String, Object> response = new LinkedHashMap<>();
+		response.put("customerId ",custId );
+		response.put("accounts ",data);
+		
+		return response;
+	}
 
 }

@@ -22,7 +22,7 @@ public class Account {
 	@SequenceGenerator(name = "bank", sequenceName = "accountid", initialValue = 1000, allocationSize = 1)
 	@GeneratedValue(generator = "bank", strategy = GenerationType.SEQUENCE)
 	private Long accountId;
-	@Column(name = "customer_id", unique = true, nullable = false, updatable = false, length = 20)
+	@Column(name = "customer_id", nullable = false, updatable = false, length = 20)
 	private String customerId;
 
 	@Column(name = "account_number", unique = true, nullable = false, updatable = false, length = 20)
@@ -30,28 +30,40 @@ public class Account {
 
 	@Column(name = "account_type", nullable = false, updatable = false, length = 20)
 	private String accountType;
+	
 	@Column(name = "branch_code", nullable = false, updatable = false, length = 20)
 	private String branchCode;
+	
 	@Column(name = "ifsc_code", nullable = false, updatable = false, length = 20)
 	private String ifscCode;
+	
 	@Column(name = "currency", nullable = false, updatable = false, length = 20)
 	private String currency;
+	
 	@Column(name = "opening_balance", nullable = false, updatable = false)
 	private Double openingBalance;
+	
 	@Column(name = "initial_deposit", nullable = false, updatable = false)
 	private Double initialDeposit;
+	
 	@Column(name = "available_balance", nullable = false, updatable = false)
 	private Double availableBalance;
+	
 	@Column(name = "ledger_balance", nullable = false, updatable = false)
 	private Double ledgerBalance;
+	
 	@Column(name = "account_status", nullable = false, updatable = false, length = 20)
 	private String accountStatus;
+	
 	@Column(name = "opened_date", nullable = false)
 	private LocalDate openedDate;
+	
 	@Column(name = "created_by", nullable = false, updatable = false, length = 20)
 	private String createdBy;
+	
 	@Column(name = "created_date", nullable = false)
 	private LocalDate createdDate;
+	 
 	@Column(name = "updated_date", nullable = false)
 	private LocalDate updatedDate;
 
