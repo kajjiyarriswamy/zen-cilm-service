@@ -8,9 +8,10 @@ public interface CustomerPreferencesService {
 	
 	 
 	 
-	CustomerPreferenceResponseDto createCustomerPreference(
-			 String customerId,
-		        CustomerPreferenceRequestDto requestDto);
+	CustomerPreferenceResponseDto createPreference(
+            String customerId,
+            CustomerPreferenceRequestDto request
+    );
 	
 	
 	

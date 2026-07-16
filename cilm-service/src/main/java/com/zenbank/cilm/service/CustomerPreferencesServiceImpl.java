@@ -15,43 +15,91 @@ import com.zenbank.cilm.repository.CustomerRepository;
 public class CustomerPreferencesServiceImpl implements CustomerPreferencesService {
 	
 	@Autowired
-	private CustomerRepository customerRepository;
-	
+	private  CustomerRepository customerRepository;
+
 	@Autowired
-	private CustomerPreferencesRepository customerPreferencesRepository;
+    private  CustomerPreferencesRepository customerPreferencesRepository;
 
 	@Override
-	public CustomerPreferenceResponseDto createCustomerPreference(
-	        String customerId,
-	        CustomerPreferenceRequestDto requestDto) {
+	public CustomerPreferenceResponseDto createPreference(String customerId, CustomerPreferenceRequestDto request) {
+		
+		
+		// Check customer exists
+        Customer customer = customerRepository
+                .findByCustomerId(customerId)
+                .orElseThrow(() -> 
+                    new RuntimeException(
+                    "Customer not found with id: " + customerId));
 
-	    Customer customer = customerRepository.findByCustomerId(customerId)
-	            .orElseThrow(() -> new RuntimeException("Customer not found."));
 
-	        // Create entity
-	        CustomerPreferences preference = new CustomerPreferences();
+        // Check preference already exists
+        if (customerPreferencesRepository
+                .findByCustomerCustomerId(customerId)
+                .isPresent()) {
 
-	        
-	        preference.setCustomer(customer);
-	        preference.setLanguage(requestDto.getLanguage());
-	        preference.setCommunicationMode(requestDto.getCommunicationMode());
-	        preference.setEmailEnabled(requestDto.getEmailEnabled());
-	        preference.setSmsEnabled(requestDto.getSmsEnabled());
-	        preference.setMarketingEnabled(requestDto.getMarketingEnabled());
+            throw new RuntimeException(
+                    "Customer preference already exists");
+        }
 
-	        // Save entity
-	        CustomerPreferences savedPreference =
-	        		customerPreferencesRepository.save(preference);
-	       // CustomerPreferences savedPreference = customerPreferencesRepository.save(preference);
+        // Create preference entity
+        CustomerPreferences preference =
+                new CustomerPreferences();
 
-	        // Prepare response
-	        CustomerPreferenceResponseDto response = new CustomerPreferenceResponseDto();
-	        response.setStatus("SUCCESS");
-	        response.setMessage("Customer preferences created successfully.");
-	        response.setPreferenceId(savedPreference.getPreferenceId());
 
-	        return response;
-	    }
-	}
+        preference.setCustomer(customer);
 
-	
+        preference.setLanguage(
+                request.getLanguage());
+
+        preference.setCommunicationMode(
+                request.getCommunicationMode());
+
+        preference.setEmailEnabled(
+                request.getEmailEnabled());
+
+        preference.setSmsEnabled(
+                request.getSmsEnabled());
+
+        preference.setMarketingEnabled(
+                request.getMarketingEnabled());
+
+
+        // Save
+        CustomerPreferences savedPreference =
+                customerPreferencesRepository.save(preference);
+
+
+
+        // Response DTO
+        CustomerPreferenceResponseDto response =
+                new CustomerPreferenceResponseDto();
+
+
+        response.setPreferenceId(
+                savedPreference.getPreferenceId());
+
+        response.setCustomerId(
+                customer.getCustomerId());
+
+        response.setLanguage(
+                savedPreference.getLanguage());
+
+        response.setCommunicationMode(
+                savedPreference.getCommunicationMode());
+
+        response.setEmailEnabled(
+                savedPreference.getEmailEnabled());
+
+        response.setSmsEnabled(
+                savedPreference.getSmsEnabled());
+
+        response.setMarketingEnabled(
+                savedPreference.getMarketingEnabled());
+
+
+        return response;
+    }
+}
+   
+
+   
