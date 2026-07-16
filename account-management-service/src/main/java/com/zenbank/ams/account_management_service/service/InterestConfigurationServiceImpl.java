@@ -2,6 +2,8 @@ package com.zenbank.ams.account_management_service.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.zenbank.ams.account_management_service.dto.CreateInterestConfigurationRequest;
 import com.zenbank.ams.account_management_service.dto.InterestConfigurationResponse;
+import com.zenbank.ams.account_management_service.dto.ViewInterestConfigurationDataDto;
+import com.zenbank.ams.account_management_service.dto.ViewInterestConfigurationResponseDto;
 import com.zenbank.ams.account_management_service.entity.InterestConfiguration;
 import com.zenbank.ams.account_management_service.repository.InterestConfigurationRepository;
 
@@ -47,6 +51,29 @@ public class InterestConfigurationServiceImpl implements InterestConfigurationSe
 		response.setStatus("SUCCESS");
 		response.setMessage("Interest configuration created successfully.");
 		response.setInterestId("INT"+100000+saved.getInterestId());
+		return response;
+	}
+
+	@Override
+	public ViewInterestConfigurationResponseDto viewInterestConfiguration() {
+		List<InterestConfiguration> configuration=interestConfigurationRepository.findAll();
+		if(configuration.isEmpty()) {
+			throw new RuntimeException("Interest configuration not found.");
+		}
+		List<ViewInterestConfigurationDataDto>data=new ArrayList<>();
+		for(InterestConfiguration con:configuration) {
+			ViewInterestConfigurationDataDto dto=new ViewInterestConfigurationDataDto();
+			dto.setInterestId("INT"+100000+con.getInterestId());
+			dto.setAccountType(con.getAccountType());
+			dto.setInterestRate(con.getInterestRate());
+			dto.setEffectiveFrom(con.getEffectiveFrom());
+			dto.setEffectiveTo(con.getEffectiveTo());
+			data.add(dto);
+			
+		}
+		ViewInterestConfigurationResponseDto response=new ViewInterestConfigurationResponseDto();
+		response.setStatus("Success");
+		response.setData(data);
 		return response;
 	}
 	

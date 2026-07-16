@@ -4,7 +4,7 @@ import com.zenbank.ams.account_management_service.dto.CreateStatementPreferenceR
 import com.zenbank.ams.account_management_service.dto.StatementPreferenceResponse;
 import com.zenbank.ams.account_management_service.entity.AccountStatementPreference;
 
-import jakarta.validation.Valid;
+//import jakarta.validation.Valid;
 
 public interface StatementPreferenceServiceImp {
 
