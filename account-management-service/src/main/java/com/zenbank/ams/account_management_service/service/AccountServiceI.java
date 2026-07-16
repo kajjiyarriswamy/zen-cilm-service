@@ -9,4 +9,7 @@ import com.zenbank.ams.account_management_service.dto.CustomerAccountsResponseDt
 public interface AccountServiceI {
 	public AccountResponseDto accountCreate(AccountRequestDto requestdto);
 	public List<CustomerAccountsResponseDto> getAccountsByCustomerId(String custId);
+
+
+
 }

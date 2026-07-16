@@ -1,7 +1,5 @@
 package com.zenbank.ams.account_management_service.service;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,6 +17,8 @@ import com.zenbank.ams.account_management_service.repository.AccountRepository;
 public class AccountServiceImpl implements AccountServiceI {
 	
 	@Autowired
+
+
 	private AccountRepository accountrepository;
 	
 	@Override
@@ -78,3 +78,5 @@ public class AccountServiceImpl implements AccountServiceI {
 	}
 
 }
+	
+

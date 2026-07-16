@@ -1,8 +1,9 @@
 package com.zenbank.ams.account_management_service.dto;
 
+import org.hibernate.annotations.processing.Pattern;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 
 public class CreateStatementPreferenceRequest {
 
@@ -21,6 +22,8 @@ public class CreateStatementPreferenceRequest {
 	@NotBlank(message = "Password protected is required")
 	@Pattern(regexp = "Y|N", message = "Password protected must be Y or N")
 	private String passwordProtected;
+	
+	private String deliveryStatus;
 
 	public String getStatementType() {
 		return statementType;
@@ -54,6 +57,15 @@ public class CreateStatementPreferenceRequest {
 		this.passwordProtected = passwordProtected;
 	}
 
+	public String getDeliveryStatus() {
+		return deliveryStatus;
+	}
+
+	public void setDeliveryStatus(String deliveryStatus) {
+		this.deliveryStatus = deliveryStatus;
+	}
+
+	
 	
 
 }

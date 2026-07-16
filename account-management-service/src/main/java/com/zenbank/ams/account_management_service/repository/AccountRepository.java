@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.zenbank.ams.account_management_service.entity.Account;
+
 @Repository
 public interface AccountRepository extends JpaRepository<Account,Long> {
 	public List<Account> findBycustomerIdEquals(String custId);
