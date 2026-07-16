@@ -24,10 +24,17 @@ public class AccountLimitController {
 	private IAccountLimitService limitservice;
 	
 	@PostMapping("/{accountId}/limits")
-	public ResponseEntity<Map<String,Object>> AccountLimit(@Validated @RequestBody @PathVariable Long accountId, AccountLimitRequestDto requestDto){
-		AccountLimitResponseDto responseDto=limitservice.createAccountLimit(requestDto,accountId);
-		return ResponseEntity.status(HttpStatus.OK).body(ApiResponseUtil.created(responseDto));
-	}
-	
+	public ResponseEntity<Map<String,Object>> accountLimit(
 
+	        @PathVariable Long accountId,
+
+	        @Validated
+	        @RequestBody
+	        AccountLimitRequestDto requestDto){
+
+	    AccountLimitResponseDto response =
+	            limitservice.createAccountLimit(requestDto, accountId);
+
+	    return ResponseEntity.ok(ApiResponseUtil.created(response));
+	}
 }

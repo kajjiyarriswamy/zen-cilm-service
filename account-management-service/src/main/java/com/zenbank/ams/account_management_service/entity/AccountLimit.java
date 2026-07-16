@@ -1,27 +1,30 @@
 package com.zenbank.ams.account_management_service.entity;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-@Table(name="account_limit")
 @Entity
+@Table(name="account_limit")
 public class AccountLimit {
-	
-@Id
-@GeneratedValue(strategy=GenerationType.IDENTITY)
-private Long limitId;	
-//@OneToOne
-@Column(name="account_id")
-private Long accountId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "limit_id")
+    private Long limitId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", nullable = false, unique = true)
+    private Account account;
 
 @Column(name="daily_atm_limit",precision=18,scale=2)
 private BigDecimal dailyAtmLimit;
@@ -57,20 +60,30 @@ public AccountLimit() {
 	super();
 }
 
+public AccountLimit(Long limitId, BigDecimal dailyAtmLimit, BigDecimal dailyUpiLimit,
+		BigDecimal dailyNeftLimit, BigDecimal dailyRtgsLimit, BigDecimal dailyImpsLimit,
+		BigDecimal monthlyTransferLimit, String status, String createdBy, LocalDateTime createdDate,
+		LocalDateTime updatedDate) {
+	super();
+	this.limitId = limitId;
+	this.dailyAtmLimit = dailyAtmLimit;
+	this.dailyUpiLimit = dailyUpiLimit;
+	this.dailyNeftLimit = dailyNeftLimit;
+	this.dailyRtgsLimit = dailyRtgsLimit;
+	this.dailyImpsLimit = dailyImpsLimit;
+	this.monthlyTransferLimit = monthlyTransferLimit;
+	this.status = status;
+	this.createdBy = createdBy;
+	this.createdDate = createdDate;
+	this.updatedDate = updatedDate;
+}
+
 public Long getLimitId() {
 	return limitId;
 }
 
 public void setLimitId(Long limitId) {
 	this.limitId = limitId;
-}
-
-public Long getAccountId() {
-	return accountId;
-}
-
-public void setAccountId(Long accountId) {
-	this.accountId = accountId;
 }
 
 public BigDecimal getDailyAtmLimit() {
@@ -153,6 +166,12 @@ public void setUpdatedDate(LocalDateTime updatedDate) {
 	this.updatedDate = updatedDate;
 }
 
+public Account getAccount() {
+    return account;
+}
 
+public void setAccount(Account account) {
+    this.account = account;
+}
 
 }

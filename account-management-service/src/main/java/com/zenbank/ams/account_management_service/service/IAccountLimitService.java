@@ -7,6 +7,4 @@ public interface IAccountLimitService {
 	
 	public AccountLimitResponseDto createAccountLimit(AccountLimitRequestDto dto,Long accountId);
 
-	
-
 }

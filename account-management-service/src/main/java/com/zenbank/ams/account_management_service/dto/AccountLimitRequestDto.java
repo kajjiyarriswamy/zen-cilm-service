@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 
 public class AccountLimitRequestDto {
 	
-	private Long accountId;
 	
 	private BigDecimal dailyAtmLimit;
 	
@@ -26,11 +25,10 @@ public class AccountLimitRequestDto {
 		super();
 	}
 
-	public AccountLimitRequestDto(Long accountId, BigDecimal dailyAtmLimit, BigDecimal dailyUpiLimit,
+	public AccountLimitRequestDto(BigDecimal dailyAtmLimit, BigDecimal dailyUpiLimit,
 			BigDecimal dailyImpsLimit, BigDecimal dailyNeftLimit, BigDecimal dailyRtgsLimit,
 			BigDecimal monthlyTransferLimit, String status, String createdBy) {
 		super();
-		this.accountId = accountId;
 		this.dailyAtmLimit = dailyAtmLimit;
 		this.dailyUpiLimit = dailyUpiLimit;
 		this.dailyImpsLimit = dailyImpsLimit;
@@ -39,14 +37,6 @@ public class AccountLimitRequestDto {
 		this.monthlyTransferLimit = monthlyTransferLimit;
 		this.status = status;
 		this.createdBy = createdBy;
-	}
-
-	public Long getAccountId() {
-		return accountId;
-	}
-
-	public void setAccountId(Long accountId) {
-		this.accountId = accountId;
 	}
 
 	public BigDecimal getDailyAtmLimit() {
