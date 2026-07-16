@@ -1,6 +1,6 @@
 package com.zenbank.ams.account_management_service.dto;
 
-import jakarta.persistence.Column;
+import java.math.BigDecimal;
 
 public class AccountRequestDto {
 
@@ -30,7 +30,6 @@ public class AccountRequestDto {
 
 	public AccountRequestDto() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public AccountRequestDto(String customerId, String accountNumber, String accountType, String branchCode,
