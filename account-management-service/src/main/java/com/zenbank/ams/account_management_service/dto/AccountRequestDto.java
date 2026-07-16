@@ -1,5 +1,7 @@
 package com.zenbank.ams.account_management_service.dto;
 
+import java.math.BigDecimal;
+
 public class AccountRequestDto {
 
 	private String customerId;
