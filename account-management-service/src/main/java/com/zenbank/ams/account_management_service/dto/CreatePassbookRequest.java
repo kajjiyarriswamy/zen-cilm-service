@@ -16,6 +16,10 @@ public class CreatePassbookRequest {
 
 	private String remarks;
 
+	private String branchCode;
+
+	private String branchName;
+
 	public String getCustomerId() {
 		return customerId;
 	}
@@ -70,6 +74,22 @@ public class CreatePassbookRequest {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public String getBranchCode() {
+		return branchCode;
+	}
+
+	public void setBranchCode(String branchCode) {
+		this.branchCode = branchCode;
+	}
+
+	public String getBranchName() {
+		return branchName;
+	}
+
+	public void setBranchName(String brachName) {
+		this.branchName = brachName;
 	}
 
 }

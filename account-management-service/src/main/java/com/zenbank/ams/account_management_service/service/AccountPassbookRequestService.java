@@ -8,5 +8,5 @@ public interface AccountPassbookRequestService {
 
 	PassbookRequestResponse createRequest(Long accountId, CreatePassbookRequest request);
 	PassbookRequestDetailsResponse getPassbookRequest(Long accountId,Long passbookRequestId);
-
+    PassbookRequestResponse updatePassbookRequest (Long accountId, Long passbookRequestId, CreatePassbookRequest request);
 }

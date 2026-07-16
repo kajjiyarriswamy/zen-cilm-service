@@ -130,4 +130,36 @@ public class AccountPassbookRequestServiceImpl implements AccountPassbookRequest
 
 		return response;
 	}
+
+	@Override
+	public PassbookRequestResponse updatePassbookRequest(Long accountId, Long passbookRequestId,
+			CreatePassbookRequest requestDto) {
+		
+		AccountPassbookRequest passbookRequest =repository.findByPassbookRequestIdAndAccountAccountId(passbookRequestId, accountId)
+				.orElseThrow(()->
+				new PassbookRequestException("PBK_005", "Passbook request not found"));
+		if ("PRINTED".equals(passbookRequest.getRequestStatus())
+	            || "READY_FOR_COLLECTION".equals(passbookRequest.getRequestStatus())
+	            || "DISPATCHED".equals(passbookRequest.getRequestStatus())
+	            || "DELIVERED".equals(passbookRequest.getRequestStatus())) {
+
+	        throw new PassbookRequestException(
+	                "PBK_006",
+	                "Passbook request cannot be updated after printing.");
+	    }
+
+		passbookRequest.setDeliveryMode(requestDto.getDeliveryMode());
+		passbookRequest.setBranchCode(requestDto.getBranchCode());
+		passbookRequest.setBranchName(requestDto.getBranchName());
+		passbookRequest.setRemarks(requestDto.getRemarks());
+		passbookRequest.setUpdatedBy("SYSTEM");
+		passbookRequest.setUpdatedDate(LocalDateTime.now());
+
+	    repository.save(passbookRequest);
+	    PassbookRequestResponse response = new PassbookRequestResponse();
+	    response.setStatus("SUCCESS");
+	    response.setMessage("Passbook request updated successfully.");
+
+	    return response;
+	}
 }
