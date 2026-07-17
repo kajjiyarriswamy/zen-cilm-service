@@ -33,6 +33,20 @@ public class GlobalExceptionHandler {
 	}
 	
 
+	@ExceptionHandler(PassbookRequestException.class)
+	public ResponseEntity<ErrorResponse> handleStatementPreferenceException(PassbookRequestException ex) {
+
+		ErrorResponse response = new ErrorResponse();
+
+		response.setStatus("FAILED");
+		response.setErrorCode(ex.getErrorCode());
+		response.setMessage(ex.getMessage());
+		response.setTimestamp(LocalDateTime.now());
+
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+	
+
 	@ExceptionHandler(StatementPreferenceException.class)
 	public ResponseEntity<ErrorResponse> handleStatementPreferenceException(StatementPreferenceException ex) {
 
