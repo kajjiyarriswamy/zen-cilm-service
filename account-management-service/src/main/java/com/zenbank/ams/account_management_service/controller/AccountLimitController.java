@@ -31,7 +31,7 @@ public class AccountLimitController {
 	public ResponseEntity<Map<String,Object>> accountLimit(
 
 	        @PathVariable Long accountId,
-	        @Validated
+	        @Valid
 	        @RequestBody
 	        AccountLimitRequestDto requestDto){
 

@@ -11,6 +11,7 @@ import com.zenbank.ams.account_management_service.dto.UpdateAccountLimitResponse
 import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.AccountLimit;
 import com.zenbank.ams.account_management_service.exception.AccountLimitError;
+import com.zenbank.ams.account_management_service.exception.AccountLimitNotFound;
 import com.zenbank.ams.account_management_service.repository.AccountLimitRepository;
 import com.zenbank.ams.account_management_service.repository.AccountRepository;
 
@@ -61,7 +62,8 @@ public class AccountLimitServiceImpl implements IAccountLimitService {
 	public UpdateAccountLimitResponseDto updateAccountLimit(AccountLimitRequestDto dto, Long accountId) {
 
 	    AccountLimit accountLimit = acclimitRepo.findByAccountAccountId(accountId)
-	            .orElseThrow(() -> new RuntimeException("Account limit not found"));
+	         .orElseThrow(()->new AccountLimitNotFound("Account limit not found"));
+	    
 
 	    accountLimit.setDailyAtmLimit(dto.getDailyAtmLimit());
 	    accountLimit.setDailyUpiLimit(dto.getDailyUpiLimit());
@@ -72,8 +74,10 @@ public class AccountLimitServiceImpl implements IAccountLimitService {
 
 	    acclimitRepo.save(accountLimit);
 
-	    return UpdateAccountLimitResponseDto.fromEntity(
-	            "success",
-	            "Transaction limits updated successfully.");
+		
+		  return UpdateAccountLimitResponseDto.fromEntity( "success",
+		  "Transaction limits updated successfully.");
+		 
+	   // return new UpdateAccountLimitResponseDto("success","Transaction limits updated successfully.");
 	}
 }
