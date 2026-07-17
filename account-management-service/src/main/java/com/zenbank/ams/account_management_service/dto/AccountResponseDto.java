@@ -12,21 +12,11 @@ public class AccountResponseDto {
 		
 	private String accountStatus;
 	
-	
-	
-
-
 	public AccountResponseDto() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 
-	
-
-
-	
-	
 	public AccountResponseDto(Long accountId, String accountNumber, String ifscCode, String accountStatus) {
 		super();
 		this.accountId = accountId;
@@ -35,42 +25,17 @@ public class AccountResponseDto {
 		this.accountStatus = accountStatus;
 	}
 
-
-
-
-
-
-
-	
-
 	public Long getAccountId() {
 		return accountId;
 	}
-
-
-
-
-
-
 
 	public void setAccountId(Long accountId) {
 		this.accountId = accountId;
 	}
 
-
-
-
-
-
-
 	public String getAccountNumber() {
 		return accountNumber;
 	}
-
-
-
-
-
 
 
 	public void setAccountNumber(String accountNumber) {
@@ -78,19 +43,9 @@ public class AccountResponseDto {
 	}
 
 
-
-
-
-
-
 	public String getIfscCode() {
 		return ifscCode;
 	}
-
-
-
-
-
 
 
 	public void setIfscCode(String ifscCode) {
@@ -98,29 +53,14 @@ public class AccountResponseDto {
 	}
 
 
-
-
-
-
-
 	public String getAccountStatus() {
 		return accountStatus;
 	}
 
 
-
-
-
-
-
 	public void setAccountStatus(String accountStatus) {
 		this.accountStatus = accountStatus;
 	}
-
-
-
-
-
 
 
 	public static AccountResponseDto fromEntity(Account account) {
@@ -131,12 +71,6 @@ public class AccountResponseDto {
 				account.getAccountId(),account.getAccountNumber(),account.getIfscCode(),account.getAccountStatus());	
 		
 	}
-	
-	
-	
-	
-	
-	
 	
 	
 
