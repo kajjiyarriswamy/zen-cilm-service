@@ -1,7 +1,12 @@
 package com.zenbank.ams.account_management_service.service;
+
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +15,7 @@ import com.zenbank.ams.account_management_service.dto.AccountRequestDto;
 import com.zenbank.ams.account_management_service.dto.AccountResponseDto;
 import com.zenbank.ams.account_management_service.dto.CustomerAccountsResponseDto;
 import com.zenbank.ams.account_management_service.entity.Account;
+import com.zenbank.ams.account_management_service.entity.NumOfRecordsResponseDto;
 import com.zenbank.ams.account_management_service.exception.CustomerNotFound;
 import com.zenbank.ams.account_management_service.repository.AccountRepository;
 
@@ -76,6 +82,30 @@ public class AccountServiceImpl implements AccountServiceI {
 		else {
 			throw  new CustomerNotFound("Please Enter correct CustomerId....!");
 		}
+	}
+
+
+
+	@Override
+	public  NumOfRecordsResponseDto getAccountsByParameters(String customerId, Long accountNumber, Long mobileNumber,
+			String panNumber, String status, String branchCode, Integer page, Integer size) {
+		// TODO Auto-generated method stub
+		
+		 Pageable pageable =  PageRequest.of(page,size);
+		 
+		List<Account> accountList =  accountrepository.findByCustomersByParams(customerId, accountNumber, mobileNumber, panNumber, status, branchCode, pageable);
+		if(!accountList.isEmpty()){
+			int count = accountList.size();
+			NumOfRecordsResponseDto numDto = new NumOfRecordsResponseDto("Success",count,List.of("Account entities or DTOs should be there"));
+			
+			return numDto;
+		}
+		else {
+			throw new CustomerNotFound("Enter Any valid customerId: , accountNumber: , mobileNumber: , panNumber: , status: , branchCode:");
+		}
+		
+		
+	
 	}
 
 }
