@@ -52,6 +52,7 @@ public class AccountServiceImpl implements AccountServiceI {
 	}
 
 
+
 	@Override
 	public List<CustomerAccountsResponseDto> getAccountsByCustomerId(String custId) {
 		// TODO Auto-generated method stub
@@ -79,4 +80,7 @@ public class AccountServiceImpl implements AccountServiceI {
 
 }
 	
+
+
+
 
