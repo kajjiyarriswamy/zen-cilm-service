@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.zenbank.ams.account_management_service.dto.AccountLimitRequestDto;
 import com.zenbank.ams.account_management_service.dto.AccountLimitResponseDto;
+import com.zenbank.ams.account_management_service.dto.UpdateAccountLimitResponseDto;
 import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.AccountLimit;
 import com.zenbank.ams.account_management_service.exception.AccountLimitError;
@@ -54,5 +55,25 @@ public class AccountLimitServiceImpl implements IAccountLimitService {
 	    }
 
 	    throw new AccountLimitError("Transaction limits already configured for this account");
+	}
+
+	
+	public UpdateAccountLimitResponseDto updateAccountLimit(AccountLimitRequestDto dto, Long accountId) {
+
+	    AccountLimit accountLimit = acclimitRepo.findByAccountAccountId(accountId)
+	            .orElseThrow(() -> new RuntimeException("Account limit not found"));
+
+	    accountLimit.setDailyAtmLimit(dto.getDailyAtmLimit());
+	    accountLimit.setDailyUpiLimit(dto.getDailyUpiLimit());
+	    accountLimit.setDailyImpsLimit(dto.getDailyImpsLimit());
+	    accountLimit.setDailyNeftLimit(dto.getDailyNeftLimit());
+	    accountLimit.setRtgsLimit(dto.getDailyRtgsLimit());
+	    accountLimit.setMonthlyTransferLimit(dto.getMonthlyTransferLimit());
+
+	    acclimitRepo.save(accountLimit);
+
+	    return UpdateAccountLimitResponseDto.fromEntity(
+	            "success",
+	            "Transaction limits updated successfully.");
 	}
 }
