@@ -43,9 +43,8 @@ public class AccountController {
 		
 	}
 
-<<<<<<< HEAD
+
 }
 
-=======
-}
->>>>>>> 7a36a80eb220a4e1aeee3a104478806aac1daf28
+
+
