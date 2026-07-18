@@ -1,10 +1,8 @@
 package com.zenbank.ams.account_management_service.dto;
 
-import org.hibernate.annotations.processing.Pattern;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-
+import jakarta.validation.constraints.Pattern;
 public class CreateStatementPreferenceRequest {
 
 	@NotBlank(message = "Statement type is required")
