@@ -19,7 +19,7 @@ public interface AccountPassbookRequestRepository extends JpaRepository<AccountP
 	boolean existsByAccountAccountIdAndRequestStatusIn(Long accountId, List<String> status);
 
 	Optional<AccountPassbookRequest> findByPassbookRequestIdAndAccountAccountId(Long passbookRequestId, Long accountId,
-			Account account);
+	Account account);
 
 	Optional<AccountPassbookRequest> findByPassbookRequestIdAndAccountAccountId(Long passbookRequestId, Long accountId);
 

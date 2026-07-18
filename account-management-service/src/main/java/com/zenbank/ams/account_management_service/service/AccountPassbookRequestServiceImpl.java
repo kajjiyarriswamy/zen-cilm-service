@@ -114,7 +114,7 @@ public class AccountPassbookRequestServiceImpl implements AccountPassbookRequest
 
 		AccountPassbookRequest request = repository
 				.findByPassbookRequestIdAndAccountAccountId(passbookRequestId, accountId, account)
-				.orElseThrow(() -> new PassbookRequestException("PBK_005", "Passbook request not found."));
+				.orElseThrow(() -> new PassbookRequestException("PBK_005", "Passbook request not found.")); 
 
 		PassbookRequestDetailsResponse response = new PassbookRequestDetailsResponse();
 
@@ -137,7 +137,7 @@ public class AccountPassbookRequestServiceImpl implements AccountPassbookRequest
 		response.setData(data);
 
 		return response;
-	}
+	} 
 
 	@Override
 	public PassbookRequestResponse updatePassbookRequest(Long accountId, Long passbookRequestId,

@@ -6,11 +6,9 @@ import jakarta.validation.constraints.Pattern;
 public class CreateStatementPreferenceRequest {
 
 	@NotBlank(message = "Statement type is required")
-	@Pattern(regexp = "EMAIL|PHYSICAL|BOTH", message = "Statement type must be EMAIL, PHYSICAL or BOTH")
 	private String statementType;
 
 	@NotBlank(message = "Statement frequency is required")
-	@Pattern(regexp = "DAILY|WEEKLY|MONTHLY|QUARTERLY", message = "Statement frequency must be DAILY, WEEKLY, MONTHLY or QUARTERLY")
 	private String statementFrequency;
 
 	@NotBlank(message = "Email is required")
@@ -18,7 +16,6 @@ public class CreateStatementPreferenceRequest {
 	private String emailId;
 
 	@NotBlank(message = "Password protected is required")
-	@Pattern(regexp = "Y|N", message = "Password protected must be Y or N")
 	private String passwordProtected;
 	
 	private String deliveryStatus;

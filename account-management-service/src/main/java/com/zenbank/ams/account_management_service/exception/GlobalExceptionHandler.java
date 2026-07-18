@@ -104,6 +104,75 @@ public class GlobalExceptionHandler {
 
 		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	@ExceptionHandler(AccountNotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleAccountNotFoundException(
+	        AccountNotFoundException ex) {
+
+	    ErrorResponse response = new ErrorResponse();
+
+	    response.setStatus("FAILED");
+	    response.setErrorCode("ACC_001");
+	    response.setMessage(ex.getMessage());
+	    response.setTimestamp(LocalDateTime.now());
+
+	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(AccountInactiveException.class)
+	public ResponseEntity<ErrorResponse> handleAccountInactiveException(
+	        AccountInactiveException ex) {
+
+	    ErrorResponse response = new ErrorResponse();
+
+	    response.setStatus("FAILED");
+	    response.setErrorCode("ACC_002");
+	    response.setMessage(ex.getMessage());
+	    response.setTimestamp(LocalDateTime.now());
+
+	    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(AlertPreferenceAlreadyExistsException.class)
+	public ResponseEntity<ErrorResponse> handleAlertPreferenceAlreadyExistsException(
+	        AlertPreferenceAlreadyExistsException ex) {
+
+	    ErrorResponse response = new ErrorResponse();
+
+	    response.setStatus("FAILED");
+	    response.setErrorCode("ALERT_001");
+	    response.setMessage(ex.getMessage());
+	    response.setTimestamp(LocalDateTime.now());
+
+	    return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(AlertPreferenceNotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleAlertPreferenceNotFoundException(
+	        AlertPreferenceNotFoundException ex) {
+
+	    ErrorResponse response = new ErrorResponse();
+
+	    response.setStatus("FAILED");
+	    response.setErrorCode("ALERT_002");
+	    response.setMessage(ex.getMessage());
+	    response.setTimestamp(LocalDateTime.now());
+
+	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+	}
+	@ExceptionHandler(InvalidNotificationModeException.class)
+	public ResponseEntity<ErrorResponse> handleInvalidNotificationModeException(
+	        InvalidNotificationModeException ex) {
+
+	    ErrorResponse response = new ErrorResponse();
+
+	    response.setStatus("FAILED");
+	    response.setErrorCode("ALERT_003");
+	    response.setMessage(ex.getMessage());
+	    response.setTimestamp(LocalDateTime.now());
+
+	    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
 
 
 }
