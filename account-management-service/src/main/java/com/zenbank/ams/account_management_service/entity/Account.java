@@ -20,11 +20,12 @@ import jakarta.persistence.Table;
 	public class Account {
 
 	@Id
-//	@SequenceGenerator(name = "bank", sequenceName = "accountid", initialValue = 1000, allocationSize = 1)
+	@SequenceGenerator(name = "bank", sequenceName = "accountid", initialValue = 1000, allocationSize = 1)
 	@GeneratedValue(generator = "bank", strategy = GenerationType.SEQUENCE)
-	@Column(name="account_id")
+	@Column(name="account_id",unique = true, nullable = false, updatable = false, length = 20)
 	private Long accountId;
-	@Column(name = "customer_id", unique = true, nullable = false, updatable = false, length = 20)
+
+	@Column(name = "customer_id",  nullable = false, updatable = false, length = 20)
 	private String customerId;
 
 		@Column(name = "account_number", unique = true, nullable = false, updatable = false, length = 20)
