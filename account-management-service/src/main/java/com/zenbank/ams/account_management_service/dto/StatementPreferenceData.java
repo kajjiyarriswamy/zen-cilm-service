@@ -1,13 +1,23 @@
 package com.zenbank.ams.account_management_service.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class StatementPreferenceData {
 
+	private Long accountId;
 	private String preferenceId;
     private String statementType;
     private String statementFrequency;
+    private String deliveryStatus;
     private String emailId;
     private String passwordProtected;
-    private String deliveryStatus;
+	public Long getAccountId() {
+		return accountId;
+	}
+	public void setAccountId(Long accountId) {
+		this.accountId = accountId;
+	}
 	public String getPreferenceId() {
 		return preferenceId;
 	}
@@ -26,6 +36,12 @@ public class StatementPreferenceData {
 	public void setStatementFrequency(String statementFrequency) {
 		this.statementFrequency = statementFrequency;
 	}
+	public String getDeliveryStatus() {
+		return deliveryStatus;
+	}
+	public void setDeliveryStatus(String deliveryStatus) {
+		this.deliveryStatus = deliveryStatus;
+	}
 	public String getEmailId() {
 		return emailId;
 	}
@@ -38,12 +54,8 @@ public class StatementPreferenceData {
 	public void setPasswordProtected(String passwordProtected) {
 		this.passwordProtected = passwordProtected;
 	}
-	public String getDeliveryStatus() {
-		return deliveryStatus;
-	}
-	public void setDeliveryStatus(String deliveryStatus) {
-		this.deliveryStatus = deliveryStatus;
-	}
+  
+	
     
     
 }
