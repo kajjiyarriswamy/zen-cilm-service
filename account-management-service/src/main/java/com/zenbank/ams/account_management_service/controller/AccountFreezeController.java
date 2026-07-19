@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,26 @@ public class AccountFreezeController {
 
         AccountFreezeResponseDto response =
                 accountFreezeService.freezeDebit(accountId, request);
+
+        return ResponseEntity.ok(response);
+    }
+    @PostMapping("/{accountId}/freeze/credit")
+    public ResponseEntity<AccountFreezeResponseDto> freezeCredit(
+            @PathVariable Long accountId,
+            @Valid @RequestBody AccountFreezeRequestDto request) {
+
+        AccountFreezeResponseDto response =
+                accountFreezeService.freezeCredit(accountId, request);
+
+        return ResponseEntity.ok(response);
+    }
+    @PutMapping("/{accountId}/unfreeze")
+    public ResponseEntity<AccountFreezeResponseDto> unfreezeAccount(
+            @PathVariable Long accountId,
+            @Valid @RequestBody AccountFreezeRequestDto request) {
+
+        AccountFreezeResponseDto response =
+                accountFreezeService.unfreezeAccount(accountId, request);
 
         return ResponseEntity.ok(response);
     }
