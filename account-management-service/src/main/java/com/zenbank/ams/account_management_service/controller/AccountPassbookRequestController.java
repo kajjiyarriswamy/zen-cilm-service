@@ -1,5 +1,7 @@
 package com.zenbank.ams.account_management_service.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,11 +11,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zenbank.ams.account_management_service.dto.CreatePassbookRequest;
 import com.zenbank.ams.account_management_service.dto.PassbookRequestDetailsResponse;
 import com.zenbank.ams.account_management_service.dto.PassbookRequestResponse;
+import com.zenbank.ams.account_management_service.dto.SearchPassbookRequestResponse;
 import com.zenbank.ams.account_management_service.service.AccountPassbookRequestService;
 
 @RestController
@@ -51,6 +55,20 @@ public class AccountPassbookRequestController {
 		PassbookRequestResponse response = service.updatePassbookRequest(accountId, passbookRequestId, request);
 
 		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/passbook-requests/search")
+	public ResponseEntity<SearchPassbookRequestResponse> searchPassbookRequests(
+
+			@RequestParam(required = false) String accountNumber, @RequestParam(required = false) String customerId,
+			@RequestParam(required = false) String requestType, @RequestParam(required = false) String requestStatus,
+			@RequestParam(required = false) String requestMode, @RequestParam(required = false) String deliveryMode,
+			@RequestParam(required = false) String branchCode, @RequestParam(required = false) LocalDate fromDate,
+			@RequestParam(required = false) LocalDate toDate, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+
+		return ResponseEntity.ok(service.searchPassbookRequest(accountNumber, customerId, requestType, requestStatus,
+				requestMode, deliveryMode, branchCode, fromDate, toDate, page, size));
 	}
 
 }

@@ -102,7 +102,7 @@ public class Customer {
 
 	@OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)//, fetch = FetchType.LAZY)
 	    @JsonManagedReference
-	    private CustomerPreference customerPreference;
+	    private CustomerPreferences customerPreference;
 	
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private List<CustomerContact> contacts;
@@ -440,13 +440,13 @@ public class Customer {
 
 
 
-	public CustomerPreference getCustomerPreference() {
+	public CustomerPreferences getCustomerPreference() {
 		return customerPreference;
 	}
 
 
 
-	public void setCustomerPreference(CustomerPreference customerPreference) {
+	public void setCustomerPreference(CustomerPreferences customerPreference) {
 		this.customerPreference = customerPreference;
 	}
 
