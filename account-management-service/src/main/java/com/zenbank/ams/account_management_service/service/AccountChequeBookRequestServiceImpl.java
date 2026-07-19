@@ -3,41 +3,41 @@ package com.zenbank.ams.account_management_service.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.zenbank.ams.account_management_service.dto.AccountCheckBookRequestDto;
-import com.zenbank.ams.account_management_service.dto.AccountCheckBookRequestDto.DeliveryAddressDto;
-import com.zenbank.ams.account_management_service.dto.AccountCheckBookResponseDto;
+import com.zenbank.ams.account_management_service.dto.AccountChequeBookRequestDto.DeliveryAddressDto;
+import com.zenbank.ams.account_management_service.dto.AccountChequeBookRequestDto;
+import com.zenbank.ams.account_management_service.dto.AccountChequeBookResponseDto;
 import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.AccountChequeBookRequest;
 import com.zenbank.ams.account_management_service.event.ChequeBookRequestCreatedEvent;
 import com.zenbank.ams.account_management_service.exception.ChequeBookRequestException;
-import com.zenbank.ams.account_management_service.repository.AccountCheckBookRequestRepository;
+import com.zenbank.ams.account_management_service.repository.AccountChequeBookRequestRepository;
 import com.zenbank.ams.account_management_service.repository.AccountRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class AccountCheckBookRequestServiceImpl implements AccountCheckBookRequestService {
+public class AccountChequeBookRequestServiceImpl implements AccountChequeBookRequestService {
 
     private static final List<String> ACTIVE_REQUEST_STATUSES = List.of("REQUESTED", "IN_PROGRESS", "APPROVED",
             "DISPATCHED");
 
     private final AccountRepository accountRepository;
-    private final AccountCheckBookRequestRepository accountCheckBookRequestRepository;
+    private final AccountChequeBookRequestRepository accountChequeBookRequestRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public AccountCheckBookRequestServiceImpl(AccountRepository accountRepository,
-            AccountCheckBookRequestRepository accountCheckBookRequestRepository,
+    public AccountChequeBookRequestServiceImpl(AccountRepository accountRepository,
+            AccountChequeBookRequestRepository accountChequeBookRequestRepository,
             ApplicationEventPublisher applicationEventPublisher) {
         this.accountRepository = accountRepository;
-        this.accountCheckBookRequestRepository = accountCheckBookRequestRepository;
+        this.accountChequeBookRequestRepository = accountChequeBookRequestRepository;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
     @Transactional
-    public AccountCheckBookResponseDto createAccountCheckBookRequest(AccountCheckBookRequestDto requestDto,
-            Long accountId) {
+    public AccountChequeBookResponseDto createAccountChequeBookRequest(AccountChequeBookRequestDto requestDto,
+                                                                      Long accountId) {
 
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new ChequeBookRequestException("CHQ_002", "Account must exist."));
@@ -60,13 +60,13 @@ public class AccountCheckBookRequestServiceImpl implements AccountCheckBookReque
         request.setUpdatedBy("SYSTEM");
         request.setUpdatedDate(LocalDateTime.now());
 
-        AccountChequeBookRequest savedRequest = accountCheckBookRequestRepository.save(request);
+        AccountChequeBookRequest savedRequest = accountChequeBookRequestRepository.save(request);
 
-        applicationEventPublisher.publishEvent(new ChequeBookRequestCreatedEvent(accountId,
-                savedRequest.getChequeBookId(), account.getCustomerId(), savedRequest.getAccountNumber(),
-                savedRequest.getRequestStatus(), savedRequest.getDeliveryMode(), savedRequest.getDeliveryAddress()));
+//        applicationEventPublisher.publishEvent(new ChequeBookRequestCreatedEvent(accountId,
+//                savedRequest.getChequeBookId(), account.getCustomerId(), savedRequest.getAccountNumber(),
+//                savedRequest.getRequestStatus(), savedRequest.getDeliveryMode(), savedRequest.getDeliveryAddress()));
 
-        AccountCheckBookResponseDto response = new AccountCheckBookResponseDto();
+        AccountChequeBookResponseDto response = new AccountChequeBookResponseDto();
         response.setStatus("SUCCESS");
         response.setMessage("Cheque book request created successfully.");
         response.setChequeBookRequestId(formatRequestId(savedRequest.getChequeBookId()));
@@ -84,7 +84,7 @@ public class AccountCheckBookRequestServiceImpl implements AccountCheckBookReque
         }
     }
 
-    private void validateRequest(Account account, AccountCheckBookRequestDto requestDto, Long accountId) {
+    private void validateRequest(Account account, AccountChequeBookRequestDto requestDto, Long accountId) {
         if (!account.getAccountNumber().equals(requestDto.getAccountNumber())) {
             throw new ChequeBookRequestException("CHQ_004", "Account number does not match the selected account.");
         }
@@ -108,7 +108,7 @@ public class AccountCheckBookRequestServiceImpl implements AccountCheckBookReque
             throw new ChequeBookRequestException("CHQ_008", "Delivery address is mandatory for the selected mode.");
         }
 
-        if (accountCheckBookRequestRepository.existsByAccountIdAndRequestStatusIn(accountId,
+        if (accountChequeBookRequestRepository.existsByAccountIdAndRequestStatusIn(accountId,
                 ACTIVE_REQUEST_STATUSES)) {
             throw new ChequeBookRequestException("CHQ_001",
                     "An active cheque book request already exists for this account.");
@@ -142,5 +142,32 @@ public class AccountCheckBookRequestServiceImpl implements AccountCheckBookReque
             return "";
         }
         return value.replace("\\", "\\\\").replace("\"", "\\\"");
+    }
+
+    @Override
+    public AccountChequeBookResponseDto getChequeBookRequest(Long accountId, Long chequeBookRequestId) {
+        accountRepository.findById(accountId)
+                .orElseThrow(()-> new ChequeBookRequestException("CHQ_009", "Account not found."));
+
+
+        AccountChequeBookRequest chequebook = accountChequeBookRequestRepository.findByAccountIdAndChequeBookId(accountId,chequeBookRequestId)
+                .orElseThrow(()-> new ChequeBookRequestException("CHQ_002", "Cheque book request ID Not found."));
+
+        AccountChequeBookResponseDto.DataResponse dataResponse = new AccountChequeBookResponseDto.DataResponse();
+        dataResponse.setChequeBookRequestId(formatRequestId(chequeBookRequestId));
+        dataResponse.setAccountNumber(chequebook.getAccountNumber());
+        dataResponse.setChequeBookType(chequebook.getChequeBookType());
+        dataResponse.setLeavesCount(chequebook.getLeavesCount());
+        dataResponse.setRequestMode(chequebook.getRequestMode());
+        dataResponse.setDeliveryMode(chequebook.getDeliveryMode());
+        dataResponse.setRequestStatus(chequebook.getRequestStatus());
+        dataResponse.setTrackingNumber(chequebook.getTrackingNumber());
+        dataResponse.setDispatchedDate(chequebook.getDispatchedDate());
+        dataResponse.setDeliveredDate(chequebook.getDeliveredDate());
+
+        AccountChequeBookResponseDto responseDto = new AccountChequeBookResponseDto();
+        responseDto.setStatus("SUCCESS");
+        responseDto.setData(dataResponse);
+        return responseDto;
     }
 }
