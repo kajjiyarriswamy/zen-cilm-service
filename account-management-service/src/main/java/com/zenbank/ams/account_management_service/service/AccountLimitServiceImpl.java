@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.zenbank.ams.account_management_service.dto.AccountLimitRequestDto;
 import com.zenbank.ams.account_management_service.dto.AccountLimitResponseDto;
+import com.zenbank.ams.account_management_service.dto.GetAccountLimitResponseDto;
 import com.zenbank.ams.account_management_service.dto.UpdateAccountLimitResponseDto;
 import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.AccountLimit;
@@ -80,4 +81,13 @@ public class AccountLimitServiceImpl implements IAccountLimitService {
 		 
 	   // return new UpdateAccountLimitResponseDto("success","Transaction limits updated successfully.");
 	}
+
+	
+		@Override
+		public GetAccountLimitResponseDto getAccountLimit(Long accountId) {
+			AccountLimit accountLimit=acclimitRepo.findByAccountAccountId(accountId)
+					.orElseThrow(()->new AccountLimitNotFound("Account limit not found"));
+			
+			return GetAccountLimitResponseDto.fromEntity(accountLimit);
+		}
 }

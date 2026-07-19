@@ -62,9 +62,6 @@ public class CreateStatementPreferenceRequest {
 
 	public void setDeliveryStatus(String deliveryStatus) {
 		this.deliveryStatus = deliveryStatus;
-	}
-
-	
-	
+	}	
 
 }

@@ -17,6 +17,8 @@ import com.zenbank.ams.account_management_service.dto.CreateStatementPreferenceR
 import com.zenbank.ams.account_management_service.dto.StatementPreferenceResponse;
 import com.zenbank.ams.account_management_service.service.StatementPreferenceService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/accounts")
 public class AccountStatementPreferenceController {
@@ -29,7 +31,7 @@ public class AccountStatementPreferenceController {
 
 	@PostMapping("/{accountId}/statement-preferences")
 	public ResponseEntity<StatementPreferenceResponse> createStatementPreference(@PathVariable Long accountId,
-			@Validated @RequestBody CreateStatementPreferenceRequest requestDto) {
+			@Valid @RequestBody CreateStatementPreferenceRequest requestDto) {
 
 		StatementPreferenceResponse response = statementPreferenceService.createStatementPreference(accountId,
 				requestDto);
@@ -48,7 +50,7 @@ public class AccountStatementPreferenceController {
 	
 	@PutMapping("/{accountId}/statement-preferences")
 	public ResponseEntity<StatementPreferenceResponse> updateStatement(@PathVariable Long accountId,
-			@Validated @RequestBody CreateStatementPreferenceRequest dto){
+			@Valid @RequestBody CreateStatementPreferenceRequest dto){
 		
 		StatementPreferenceResponse response=statementPreferenceService.updateStatement(accountId, dto);
 		
