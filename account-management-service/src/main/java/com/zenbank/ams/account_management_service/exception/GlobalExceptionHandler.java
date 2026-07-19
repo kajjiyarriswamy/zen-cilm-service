@@ -1,5 +1,7 @@
 package com.zenbank.ams.account_management_service.exception;
 
+
+
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,6 +34,20 @@ public class GlobalExceptionHandler {
 		
 		
 		return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
+	}
+	
+
+	@ExceptionHandler(PassbookRequestException.class)
+	public ResponseEntity<ErrorResponse> handleStatementPreferenceException(PassbookRequestException ex) {
+
+		ErrorResponse response = new ErrorResponse();
+
+		response.setStatus("FAILED");
+		response.setErrorCode(ex.getErrorCode());
+		response.setMessage(ex.getMessage());
+		response.setTimestamp(LocalDateTime.now());
+
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 	
 
@@ -88,5 +104,6 @@ public class GlobalExceptionHandler {
 
 		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+
 
 }

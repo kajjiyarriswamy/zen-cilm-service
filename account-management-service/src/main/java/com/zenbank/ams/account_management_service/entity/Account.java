@@ -21,9 +21,10 @@ public class Account {
 	@Id
 	@SequenceGenerator(name = "bank", sequenceName = "accountid", initialValue = 1000, allocationSize = 1)
 	@GeneratedValue(generator = "bank", strategy = GenerationType.SEQUENCE)
-	@Column(name="account_id")
+	@Column(name="account_id",unique = true, nullable = false, updatable = false, length = 20)
 	private Long accountId;
-	@Column(name = "customer_id", unique = true, nullable = false, updatable = false, length = 20)
+
+	@Column(name = "customer_id",  nullable = false, updatable = false, length = 20)
 	private String customerId;
 
 	@Column(name = "account_number", unique = true, nullable = false, updatable = false, length = 20)
@@ -53,18 +54,21 @@ public class Account {
 	@Column(name = "ledger_balance", nullable = false, updatable = false)
 	private Double ledgerBalance;
 	
+
+	
 	@Column(name="account_status",nullable = false, updatable = false,length=20)
 	private String accountStatus;
 	
 	@Column(name = "opened_date", nullable = false)
 	private LocalDate openedDate;
 	
+
 	@Column(name="created_by",nullable=false,updatable=false,length=20)
 	private String createdBy;
 	
 	@Column(name = "created_date", nullable = false)
 	private LocalDate createdDate;
-	
+
 	@Column(name = "updated_date", nullable = false)
 	private LocalDate updatedDate;
 
@@ -73,10 +77,12 @@ public class Account {
 		
 	}
 
+
 public Account(Long accountId, String customerId, String accountNumber, String accountType, String branchCode,
 			String ifscCode, String currency, Double openingBalance, Double initialDeposit, Double availableBalance,
 			Double ledgerBalance, String accountStatus, LocalDate openedDate, String createdBy, LocalDate createdDate,
 			LocalDate updatedDate, List<AccountStatementPreference> statementPreferences) {
+
 		super();
 		this.accountId = accountId;
 		this.customerId = customerId;
@@ -94,17 +100,26 @@ public Account(Long accountId, String customerId, String accountNumber, String a
 		this.createdBy = createdBy;
 		this.createdDate = createdDate;
 		this.updatedDate = updatedDate;
-		this.statementPreferences = statementPreferences;
+
 	}
+
+
+	
+
 
 
 public Long getAccountId() {
 	return accountId;
 }
 
-/*
- * public void setAccountId(Long accountId) { this.accountId = accountId; }
- */
+
+
+
+ public void setAccountId(Long accountId) { 
+	 this.accountId = accountId; 
+	 }
+ 
+
 
 public String getCustomerId() {
 	return customerId;

@@ -3,7 +3,10 @@ package com.zenbank.ams.account_management_service.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+<<<<<<< HEAD
 
+=======
+>>>>>>> fd430f733e218b37a6949fc9362ff843c6bf70f7
 public class CreateStatementPreferenceRequest {
 
 	@NotBlank(message = "Statement type is required")

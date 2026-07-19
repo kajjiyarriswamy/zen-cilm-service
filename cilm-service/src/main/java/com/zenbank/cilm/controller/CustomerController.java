@@ -6,7 +6,7 @@ import com.zenbank.cilm.dto.*;
 import com.zenbank.cilm.entity.CustomerNominee;
 import com.zenbank.cilm.repository.CustomerNomineeRepository;
 
-import com.zenbank.cilm.entity.CustomerPreference;
+import com.zenbank.cilm.entity.CustomerPreferences;
 import com.zenbank.cilm.service.CustomerKycRejectService;
 import com.zenbank.cilm.service.CustomerService;
 import com.zenbank.cilm.utility.ApiResponseUtil;
@@ -97,7 +97,7 @@ public class CustomerController {
     @PutMapping("/{customerId}/preferences")
     public ResponseEntity<Map<String, Object>> updatePreferences(
             @PathVariable Long customerId,
-            @RequestBody CustomerPreference preference) {
+            @RequestBody CustomerPreferences preference) {
 
         customerService.updatePreferences(customerId, preference);
 
@@ -167,7 +167,7 @@ public class CustomerController {
     }
 
 
-    @GetMapping("/{customerId}/preferences")
+   /* @GetMapping("/{customerId}/preferences")
     public ResponseEntity<Map<String, Object>> getCustomerPreference(
             @PathVariable Long customerId) {
 
@@ -175,14 +175,14 @@ public class CustomerController {
                 customerService.getCustomerPreference(customerId);
 
         return ResponseEntity.ok(ApiResponseUtil.success(response));
-    }
+    }*/
     
     @PostMapping("/{customerId}/preferences")
     public ResponseEntity<Map<String, Object>> createPreference(
             @PathVariable Long customerId,
-            @RequestBody CustomerPreference preference){
+            @RequestBody CustomerPreferences preference){
 
-        CustomerPreference saved =
+        CustomerPreferences saved =
                 customerService.createPreference(customerId, preference);
 
         return ResponseEntity.ok(ApiResponseUtil.success(saved));
@@ -218,7 +218,7 @@ public class CustomerController {
     @PutMapping("/{customerId}/preferences/notifications")
     public ResponseEntity<Map<String, Object>> updateNotificationPreferences(
             @PathVariable Long customerId,
-            @RequestBody CustomerPreference preference) {
+            @RequestBody CustomerPreferences preference) {
 
         customerService.updateNotificationPreferences(customerId, preference);
 
