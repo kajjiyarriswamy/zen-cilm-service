@@ -8,11 +8,9 @@ import com.zenbank.ams.account_management_service.dto.AccountChequeBookRequestDt
 import com.zenbank.ams.account_management_service.dto.AccountChequeBookResponseDto;
 import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.AccountChequeBookRequest;
-import com.zenbank.ams.account_management_service.event.ChequeBookRequestCreatedEvent;
 import com.zenbank.ams.account_management_service.exception.ChequeBookRequestException;
 import com.zenbank.ams.account_management_service.repository.AccountChequeBookRequestRepository;
 import com.zenbank.ams.account_management_service.repository.AccountRepository;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,14 +22,11 @@ public class AccountChequeBookRequestServiceImpl implements AccountChequeBookReq
 
     private final AccountRepository accountRepository;
     private final AccountChequeBookRequestRepository accountChequeBookRequestRepository;
-    private final ApplicationEventPublisher applicationEventPublisher;
 
     public AccountChequeBookRequestServiceImpl(AccountRepository accountRepository,
-            AccountChequeBookRequestRepository accountChequeBookRequestRepository,
-            ApplicationEventPublisher applicationEventPublisher) {
+            AccountChequeBookRequestRepository accountChequeBookRequestRepository) {
         this.accountRepository = accountRepository;
         this.accountChequeBookRequestRepository = accountChequeBookRequestRepository;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override
@@ -61,10 +56,6 @@ public class AccountChequeBookRequestServiceImpl implements AccountChequeBookReq
         request.setUpdatedDate(LocalDateTime.now());
 
         AccountChequeBookRequest savedRequest = accountChequeBookRequestRepository.save(request);
-
-//        applicationEventPublisher.publishEvent(new ChequeBookRequestCreatedEvent(accountId,
-//                savedRequest.getChequeBookId(), account.getCustomerId(), savedRequest.getAccountNumber(),
-//                savedRequest.getRequestStatus(), savedRequest.getDeliveryMode(), savedRequest.getDeliveryAddress()));
 
         AccountChequeBookResponseDto response = new AccountChequeBookResponseDto();
         response.setStatus("SUCCESS");
