@@ -23,15 +23,16 @@ import com.zenbank.ams.account_management_service.repository.AccountRepository;
 
 @Service
 public class AccountServiceImpl implements AccountServiceI {
-	
+
 	@Autowired
 
 
 	private AccountRepository accountrepository;
-	
+
+
 	@Override
 	public AccountResponseDto accountCreate(AccountRequestDto reqdto) {
-		if(reqdto.getCustomerId()!=null &&  !reqdto.getCustomerId().isBlank()) {
+		if (reqdto.getCustomerId() != null && !reqdto.getCustomerId().isBlank()) {
 			Account ac = new Account();
 			ac.setAccountNumber(reqdto.getAccountNumber());
 			ac.setAccountStatus(reqdto.getAccountStatus());
@@ -56,10 +57,8 @@ public class AccountServiceImpl implements AccountServiceI {
 		else {
 		 throw new CustomerNotFound("customer dont have an account......");
 		}
-		
+
 	}
-
-
 
 	@Override
 	public List<CustomerAccountsResponseDto> getAccountsByCustomerId(String custId) {
@@ -132,8 +131,3 @@ public class AccountServiceImpl implements AccountServiceI {
 	}
 
 }
-	
-
-
-
-
