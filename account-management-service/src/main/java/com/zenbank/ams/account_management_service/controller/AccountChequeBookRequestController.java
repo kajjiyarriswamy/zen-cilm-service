@@ -32,4 +32,10 @@ public class AccountChequeBookRequestController {
         AccountChequeBookResponseDto response = accountChequeBookRequestService.getChequeBookRequest(accountId, chequeBookRequestId);
         return ResponseEntity.ok(response);
     }
+
+    @PutMapping("{accountId}/chequeBook/{chequeBookRequestId}")
+    public ResponseEntity<AccountChequeBookResponseDto> updateChequeBookRequest(@PathVariable Long accountId, @PathVariable Long chequeBookRequestId, @RequestBody AccountChequeBookRequestDto requestDto) {
+        AccountChequeBookResponseDto responseDto = accountChequeBookRequestService.updateChequeRequest(requestDto,accountId, chequeBookRequestId);
+        return ResponseEntity.ok(responseDto);
+    }
 }

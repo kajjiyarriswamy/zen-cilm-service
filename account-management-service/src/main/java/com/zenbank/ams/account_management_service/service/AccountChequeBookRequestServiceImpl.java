@@ -1,5 +1,6 @@
 package com.zenbank.ams.account_management_service.service;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,9 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AccountChequeBookRequestServiceImpl implements AccountChequeBookRequestService {
 
-    private static final List<String> ACTIVE_REQUEST_STATUSES = List.of("REQUESTED", "IN_PROGRESS", "APPROVED",
-            "DISPATCHED");
-
     private final AccountRepository accountRepository;
     private final AccountChequeBookRequestRepository accountChequeBookRequestRepository;
 
@@ -28,6 +26,10 @@ public class AccountChequeBookRequestServiceImpl implements AccountChequeBookReq
         this.accountRepository = accountRepository;
         this.accountChequeBookRequestRepository = accountChequeBookRequestRepository;
     }
+
+    private static final List<String> ACTIVE_REQUEST_STATUSES = List.of("REQUESTED", "IN_PROGRESS", "APPROVED",
+            "DISPATCHED");
+
 
     @Override
     @Transactional
@@ -159,6 +161,36 @@ public class AccountChequeBookRequestServiceImpl implements AccountChequeBookReq
         AccountChequeBookResponseDto responseDto = new AccountChequeBookResponseDto();
         responseDto.setStatus("SUCCESS");
         responseDto.setData(dataResponse);
+        return responseDto;
+    }
+
+    @Override
+    public AccountChequeBookResponseDto updateChequeRequest(AccountChequeBookRequestDto accountChequeBookRequestDto, Long accountId, Long chequeBookRequestId) {
+
+        accountRepository.findById(accountId)
+                .orElseThrow(() -> new ChequeBookRequestException("CHQ_001", "Account not found."));
+
+        AccountChequeBookRequest request = accountChequeBookRequestRepository.findByAccountIdAndChequeBookId(accountId, chequeBookRequestId)
+                .orElseThrow(()-> new ChequeBookRequestException("CHQ_002", "Cheque book request ID Not found."));
+
+
+
+//        AccountChequeBookRequest request = new AccountChequeBookRequest();
+
+        if ("DISPATCHED".equalsIgnoreCase(request.getRequestStatus())) {
+            throw new ChequeBookRequestException("CHQ_003", "Cheque book request cannot be updated after dispatch.");
+
+        }
+
+        request.setDeliveryMode(accountChequeBookRequestDto.getDeliveryMode());
+        request.setDeliveryAddress(serializeAddress(accountChequeBookRequestDto.getDeliveryAddress()));
+
+        accountChequeBookRequestRepository.save(request);
+
+        AccountChequeBookResponseDto responseDto = new AccountChequeBookResponseDto();
+        responseDto.setStatus("SUCCESS");
+        responseDto.setMessage("Cheque book request updated successfully.");
+
         return responseDto;
     }
 }
