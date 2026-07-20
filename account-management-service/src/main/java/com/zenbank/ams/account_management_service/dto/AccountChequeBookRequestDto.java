@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class AccountCheckBookRequestDto {
+public class AccountChequeBookRequestDto {
 
     @NotBlank(message = "Customer ID is required")
     private String customerId;
@@ -28,11 +28,11 @@ public class AccountCheckBookRequestDto {
     @NotNull(message = "Delivery address is required")
     private DeliveryAddressDto deliveryAddress;
 
-    public AccountCheckBookRequestDto() {
+    public AccountChequeBookRequestDto() {
         super();
     }
 
-    public AccountCheckBookRequestDto(String customerId, String accountNumber, String chequeBookType,
+    public AccountChequeBookRequestDto(String customerId, String accountNumber, String chequeBookType,
             Integer leavesCount, String requestMode, String deliveryMode, DeliveryAddressDto deliveryAddress) {
         super();
         this.customerId = customerId;
