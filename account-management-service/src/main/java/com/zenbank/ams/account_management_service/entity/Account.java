@@ -56,7 +56,7 @@ public class Account {
 	
 
 	
-	@Column(name="account_status",nullable = false, updatable = false,length=20)
+	@Column(name="account_status",nullable = false, length=20)
 	private String accountStatus;
 	
 	@Column(name = "opened_date", nullable = false)
