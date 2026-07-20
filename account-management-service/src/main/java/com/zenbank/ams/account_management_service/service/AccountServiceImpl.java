@@ -48,15 +48,15 @@ public class AccountServiceImpl implements AccountServiceI {
 			ac.setInitialDeposit(reqdto.getInitialDeposit());
 			ac.setUpdatedDate(LocalDate.now());
 			Account savedAccount = accountrepository.save(ac);
-
+			
 			return AccountResponseDto.fromEntity(savedAccount);
-
-		} else {
-			throw new CustomerNotFound("customer dont have an account......");
+			
+		}
+		else {
+		 throw new CustomerNotFound("customer dont have an account......");
 		}
 
 	}
-
 
 	@Override
 	public List<CustomerAccountsResponseDto> getAccountsByCustomerId(String custId) {
