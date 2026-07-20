@@ -56,9 +56,6 @@ public class AccountServiceImpl implements AccountServiceI {
 		}
 		
 	}
-<<<<<<< HEAD
-}
-=======
 
 
 
@@ -110,6 +107,7 @@ public class AccountServiceImpl implements AccountServiceI {
 		
 	
 	}
+	
 
 }
 	
@@ -117,4 +115,4 @@ public class AccountServiceImpl implements AccountServiceI {
 
 
 
->>>>>>> fd430f733e218b37a6949fc9362ff843c6bf70f7
+
