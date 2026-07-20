@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.zenbank.ams.account_management_service.dto.CreateStatementPreferenceRequest;
 import com.zenbank.ams.account_management_service.dto.StatementPreferenceData;
@@ -20,8 +21,6 @@ import com.zenbank.ams.account_management_service.exception.ResourceNotFoundExce
 import com.zenbank.ams.account_management_service.exception.StatementPreferenceException;
 import com.zenbank.ams.account_management_service.repository.AccountRepository;
 import com.zenbank.ams.account_management_service.repository.AccountStatementPreferenceRepository;
-
-import jakarta.validation.Valid;
 
 @Service
 public class StatementPreferenceService implements StatementPreferenceServiceImp {
@@ -38,7 +37,7 @@ public class StatementPreferenceService implements StatementPreferenceServiceImp
 
 	@Override
 	public StatementPreferenceResponse createStatementPreference(Long accountId,
-			@Valid CreateStatementPreferenceRequest requestDto) {
+			@Validated CreateStatementPreferenceRequest requestDto) {
 
 		Account account = accountRepository.findById(accountId)
 				.orElseThrow(() -> new StatementPreferenceException("ACC_001", "Account not found"));
