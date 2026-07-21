@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: account-management-service
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/account_management
+    username: root
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: update

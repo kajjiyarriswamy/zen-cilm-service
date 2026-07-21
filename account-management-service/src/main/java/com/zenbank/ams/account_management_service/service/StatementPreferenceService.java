@@ -2,9 +2,16 @@ package com.zenbank.ams.account_management_service.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 //import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.annotation.Validated;
 
 import com.zenbank.ams.account_management_service.dto.CreateStatementPreferenceRequest;
 import com.zenbank.ams.account_management_service.dto.StatementPreferenceData;
@@ -15,8 +22,6 @@ import com.zenbank.ams.account_management_service.exception.ResourceNotFoundExce
 import com.zenbank.ams.account_management_service.exception.StatementPreferenceException;
 import com.zenbank.ams.account_management_service.repository.AccountRepository;
 import com.zenbank.ams.account_management_service.repository.AccountStatementPreferenceRepository;
-
-import jakarta.validation.Valid;
 
 @Service
 public class StatementPreferenceService implements StatementPreferenceServiceImp {
@@ -33,7 +38,7 @@ public class StatementPreferenceService implements StatementPreferenceServiceImp
 
 	@Override
 	public StatementPreferenceResponse createStatementPreference(Long accountId,
-			@Valid CreateStatementPreferenceRequest requestDto) {
+			@Validated CreateStatementPreferenceRequest requestDto) {
 
 		Account account = accountRepository.findById(accountId)
 				.orElseThrow(() -> new StatementPreferenceException("ACC_001", "Account not found"));
@@ -127,6 +132,48 @@ public class StatementPreferenceService implements StatementPreferenceServiceImp
 
 		return response;
 
+	}
+
+	@Override
+	public Map<String, Object> searchAccount(Long accountId, String statementType, 
+			String statementFrequency,
+			String deliveryStatus, int page, int size) {
+		
+		Pageable pageable=PageRequest.of(page, size);
+		
+		Page<AccountStatementPreference> accountPage=statementPreferenceRepository
+				.searchAccountStatement(accountId, statementType, statementFrequency, deliveryStatus, 
+						pageable);
+		
+		if(accountPage.isEmpty()) {
+			throw new ResourceNotFoundException("No statement preferenes found");
+			
+		}
+		
+		List<StatementPreferenceData> datas=accountPage.getContent()
+				.stream().map(entity -> {
+					
+				StatementPreferenceData dto= new StatementPreferenceData();
+				
+						dto.setAccountId(entity.getAccount().getAccountId());
+						dto.setStatementType(entity.getStatementType());
+						dto.setStatementFrequency(entity.getStatementFrequency());
+						dto.setDeliveryStatus(entity.getDeliveryStatus());
+						
+						return dto;
+				}).toList();
+		
+		Map<String, Object> response=new LinkedHashMap<>();
+		
+		
+		response.put("page", accountPage.getNumber());
+		response.put("size", accountPage.getSize());
+		response.put("totalRecords", accountPage.getNumberOfElements());
+		response.put("data", datas);
+		
+		
+		
+		return response;
 	}
 
 }

@@ -3,11 +3,6 @@ package com.zenbank.ams.account_management_service.exception;
 
 
 import java.time.LocalDateTime;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -21,6 +16,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 	
+
+	@ExceptionHandler(AccountLimitError.class)
+	public ResponseEntity<ErrorResponse> accountIdNotFound(AccountLimitError ex){
+		
+		ErrorResponse er= new ErrorResponse( "FAILED","ACC_LIMIT_001",ex.getMessage());
+			return new ResponseEntity<>(er, HttpStatus.NOT_FOUND);
+		
+	}
+
 	@ExceptionHandler(CustomerNotFound.class)
 	public ResponseEntity<ExceptionErrorResponse> customerResourceNotFound(CustomerNotFound e){
 		ExceptionErrorResponse error = new ExceptionErrorResponse("FAILED",
@@ -33,8 +37,35 @@ public class GlobalExceptionHandler {
 	}
 	
 
+	@ExceptionHandler(PassbookRequestException.class)
+	public ResponseEntity<ErrorResponse> handleStatementPreferenceException(PassbookRequestException ex) {
+
+		ErrorResponse response = new ErrorResponse();
+
+		response.setStatus("FAILED");
+		response.setErrorCode(ex.getErrorCode());
+		response.setMessage(ex.getMessage());
+		response.setTimestamp(LocalDateTime.now());
+
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+	
+
 	@ExceptionHandler(StatementPreferenceException.class)
 	public ResponseEntity<ErrorResponse> handleStatementPreferenceException(StatementPreferenceException ex) {
+
+		ErrorResponse response = new ErrorResponse();
+
+		response.setStatus("FAILED");
+		response.setErrorCode(ex.getErrorCode());
+		response.setMessage(ex.getMessage());
+		response.setTimestamp(LocalDateTime.now());
+
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(ChequeBookRequestException.class)
+	public ResponseEntity<ErrorResponse> handleChequeBookRequestException(ChequeBookRequestException ex) {
 
 		ErrorResponse response = new ErrorResponse();
 
@@ -86,4 +117,6 @@ public class GlobalExceptionHandler {
 
 		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+
+
 }

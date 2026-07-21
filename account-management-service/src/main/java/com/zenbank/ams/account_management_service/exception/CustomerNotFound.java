@@ -4,7 +4,6 @@ public class CustomerNotFound extends RuntimeException {
 
 	public CustomerNotFound(String Mesage) {
 		super(Mesage);
-		// TODO Auto-generated constructor stub
 	}
 	
 	

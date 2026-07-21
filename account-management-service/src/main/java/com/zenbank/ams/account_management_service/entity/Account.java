@@ -1,7 +1,6 @@
 package com.zenbank.ams.account_management_service.entity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -12,18 +11,21 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "account")
 public class Account {
-	@Id
-	//@SequenceGenerator(name="bank",sequenceName ="accountid",initialValue =1000,allocationSize = 1 )
-	@GeneratedValue(generator = "bank",strategy = GenerationType.IDENTITY)
 
+	@Id
+	@SequenceGenerator(name = "bank", sequenceName = "accountid", initialValue = 1000, allocationSize = 1)
+	@GeneratedValue(generator = "bank", strategy = GenerationType.SEQUENCE)
+	@Column(name = "account_id", unique = true, nullable = false, updatable = false, length = 20)
 	private Long accountId;
-	@Column(name = "customer_id", unique = true, nullable = false, updatable = false, length = 20)
+
+	@Column(name = "customer_id", nullable = false, updatable = false, length = 20)
 	private String customerId;
 
 	@Column(name = "account_number", unique = true, nullable = false, updatable = false, length = 20)
@@ -43,9 +45,11 @@ public class Account {
 	private Double initialDeposit;
 	@Column(name = "available_balance", nullable = false, updatable = false)
 	private Double availableBalance;
+	@Column(name = "cheque_book_facility_enabled")
+	private Boolean chequeBookFacilityEnabled;
 	@Column(name = "ledger_balance", nullable = false, updatable = false)
 	private Double ledgerBalance;
-	@Column(name = "account_status", nullable = false, updatable = false, length = 20)
+	@Column(name = "account_status", nullable = false, length = 20)
 	private String accountStatus;
 	@Column(name = "opened_date", nullable = false)
 	private LocalDate openedDate;
@@ -58,13 +62,14 @@ public class Account {
 
 	public Account() {
 		super();
-		// TODO Auto-generated constructor stub
+	
 	}
 
 	public Account(Long accountId, String customerId, String accountNumber, String accountType, String branchCode,
 			String ifscCode, String currency, Double openingBalance, Double initialDeposit, Double availableBalance,
 			Double ledgerBalance, String accountStatus, LocalDate openedDate, String createdBy, LocalDate createdDate,
-			LocalDate updatedDate) {
+			LocalDate updatedDate, Boolean chequeBookFacilityEnabled,
+			List<AccountStatementPreference> statementPreferences) {
 
 		super();
 		this.accountId = accountId;
@@ -78,11 +83,13 @@ public class Account {
 		this.initialDeposit = initialDeposit;
 		this.availableBalance = availableBalance;
 		this.ledgerBalance = ledgerBalance;
+		this.chequeBookFacilityEnabled = chequeBookFacilityEnabled;
 		this.accountStatus = accountStatus;
 		this.openedDate = openedDate;
 		this.createdBy = createdBy;
 		this.createdDate = createdDate;
 		this.updatedDate = updatedDate;
+		this.statementPreferences = statementPreferences;
 	}
 
 	public Long getAccountId() {
@@ -131,6 +138,14 @@ public class Account {
 
 	public void setIfscCode(String ifscCode) {
 		this.ifscCode = ifscCode;
+	}
+
+	public Boolean getChequeBookFacilityEnabled() {
+		return chequeBookFacilityEnabled;
+	}
+
+	public void setChequeBookFacilityEnabled(Boolean chequeBookFacilityEnabled) {
+		this.chequeBookFacilityEnabled = chequeBookFacilityEnabled;
 	}
 
 	public String getCurrency() {
@@ -213,10 +228,18 @@ public class Account {
 		this.updatedDate = updatedDate;
 	}
 
+	public List<AccountStatementPreference> getStatementPreferences() {
 
+		return statementPreferences;
+	}
 
+	public void setStatementPreferences(List<AccountStatementPreference> statementPreferences) {
+		this.statementPreferences = statementPreferences;
+	}
 
-
-@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<AccountStatementPreference> statementPreferences;
+
+	@OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private AccountLimit accountLimit;
 }
