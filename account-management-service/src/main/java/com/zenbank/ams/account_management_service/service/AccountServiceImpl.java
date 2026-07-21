@@ -48,9 +48,9 @@ public class AccountServiceImpl implements AccountServiceI {
 			ac.setInitialDeposit(reqdto.getInitialDeposit());
 			ac.setUpdatedDate(LocalDate.now());
 			Account savedAccount = accountrepository.save(ac);
-			
+
 			return AccountResponseDto.fromEntity(savedAccount);
-			
+
 		}
 		else {
 		 throw new CustomerNotFound("customer dont have an account......");
@@ -69,14 +69,14 @@ public class AccountServiceImpl implements AccountServiceI {
 			CustomerAccountsResponseDto custAcResp = new CustomerAccountsResponseDto(a.getAccountNumber(),a.getAccountType(),
 					a.getAccountStatus());
 			list.add(custAcResp);
-			
+
 		}
 		return list;
 		}
 		else {
 			throw  new CustomerNotFound("Their is no Customer With this Id:"+custId);
 		}
-		
+
 		}
 		else {
 			throw  new CustomerNotFound("Please Enter correct CustomerId....!");
@@ -89,22 +89,22 @@ public class AccountServiceImpl implements AccountServiceI {
 	public  NumOfRecordsResponseDto getAccountsByParameters(String customerId, Long accountNumber, Long mobileNumber,
 			String panNumber, String status, String branchCode, Integer page, Integer size) {
 		// TODO Auto-generated method stub
-		
+
 		 Pageable pageable =  PageRequest.of(page,size);
-		 
+
 		List<Account> accountList =  accountrepository.findByCustomersByParams(customerId, accountNumber, mobileNumber, panNumber, status, branchCode, pageable);
 		if(!accountList.isEmpty()){
 			int count = accountList.size();
 			NumOfRecordsResponseDto numDto = new NumOfRecordsResponseDto("Success",count,List.of("Account entities or DTOs should be there"));
-			
+
 			return numDto;
 		}
 		else {
 			throw new CustomerNotFound("Enter Any valid customerId: , accountNumber: , mobileNumber: , panNumber: , status: , branchCode:");
 		}
-		
-		
-	
+
+
+
 	}
 
 }

@@ -1,16 +1,23 @@
 package com.zenbank.ams.account_management_service.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import com.zenbank.ams.account_management_service.dto.AccountChequeBookRequestDto.DeliveryAddressDto;
 import com.zenbank.ams.account_management_service.dto.AccountChequeBookRequestDto;
 import com.zenbank.ams.account_management_service.dto.AccountChequeBookResponseDto;
+import com.zenbank.ams.account_management_service.dto.AccountChequeBookSearchResponseDto;
 import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.AccountChequeBookRequest;
 import com.zenbank.ams.account_management_service.exception.ChequeBookRequestException;
 import com.zenbank.ams.account_management_service.repository.AccountChequeBookRequestRepository;
 import com.zenbank.ams.account_management_service.repository.AccountRepository;
+import com.zenbank.ams.account_management_service.specification.AccountChequeBookRequestSpecification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -161,4 +168,76 @@ public class AccountChequeBookRequestServiceImpl implements AccountChequeBookReq
         responseDto.setData(dataResponse);
         return responseDto;
     }
+
+    @Override
+    public AccountChequeBookSearchResponseDto searchChequeBookRequests(String accountNumber, String customerId, String requestStatus, String chequeBookType, String requestMode, LocalDate fromDate, LocalDate toDate, int page, int size) {
+
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Specification<AccountChequeBookRequest> specification =
+                AccountChequeBookRequestSpecification.searchChequeBookRequests(
+                        accountNumber,
+                        customerId,
+                        requestStatus,
+                        chequeBookType,
+                        requestMode,
+                        fromDate,
+                        toDate);
+
+        Page<AccountChequeBookRequest> result =
+                accountChequeBookRequestRepository.findAll(specification, pageable);
+
+        if (result.isEmpty()) {
+
+            throw new ChequeBookRequestException("CHQ_001", "No cheque book requests found.");
+
+//            AccountChequeBookSearchResponseDto response =
+//                    new AccountChequeBookSearchResponseDto();
+//
+//            response.setStatus("FAILED");
+//            response.setMessage("No cheque book requests found.");
+//
+//            return response;
+        }
+
+        List<AccountChequeBookSearchResponseDto.SearchData> data =
+                result.getContent()
+                        .stream()
+                        .map(request -> {
+
+                            AccountChequeBookSearchResponseDto.SearchData dto =
+                                    new AccountChequeBookSearchResponseDto.SearchData();
+
+                            dto.setChequeBookRequestId(
+                                    formatRequestId(request.getChequeBookId()));
+
+                            dto.setAccountNumber(request.getAccountNumber());
+
+                            dto.setChequeBookType(request.getChequeBookType());
+
+                            dto.setLeavesCount(request.getLeavesCount());
+
+                            dto.setRequestStatus(request.getRequestStatus());
+
+                            dto.setRequestMode(request.getRequestMode());
+
+                            return dto;
+
+                        }).toList();
+
+        AccountChequeBookSearchResponseDto response =
+                new AccountChequeBookSearchResponseDto();
+
+        response.setStatus("SUCCESS");
+        response.setPage(result.getNumber());
+        response.setSize(result.getSize());
+        response.setTotalRecords(result.getTotalElements());
+        response.setData(data);
+
+        return response;
+
+    }
+
+
 }
