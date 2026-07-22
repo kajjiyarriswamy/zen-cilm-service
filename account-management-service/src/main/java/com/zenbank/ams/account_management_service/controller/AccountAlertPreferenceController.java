@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.zenbank.ams.account_management_service.dto.AccountAlertPreferenceResponse;
 import com.zenbank.ams.account_management_service.dto.CreateAccountAlertPreferenceRequest;
+import com.zenbank.ams.account_management_service.dto.GetAlertPreference;
 import com.zenbank.ams.account_management_service.service.AccountAlertPreferenceService;
 
 import jakarta.validation.Valid;
@@ -33,5 +34,13 @@ public class AccountAlertPreferenceController {
         return new ResponseEntity<>(
                 service.createPreferance(accountId, request),
                 HttpStatus.CREATED);
+    }
+    
+    @GetMapping("/{accountId}/alert-preferences")
+    public ResponseEntity<GetAlertPreference> getAlertPreference(
+            @PathVariable Long accountId) {
+
+        return ResponseEntity.ok(
+                service.getAlertPreference(accountId));
     }
 }

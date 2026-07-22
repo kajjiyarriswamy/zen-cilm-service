@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 
 import com.zenbank.ams.account_management_service.dto.AccountAlertPreferenceResponse;
+import com.zenbank.ams.account_management_service.dto.AlertPreferenceData;
 import com.zenbank.ams.account_management_service.dto.CreateAccountAlertPreferenceRequest;
+import com.zenbank.ams.account_management_service.dto.GetAlertPreference;
 import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.AccountAlertPreference;
 import com.zenbank.ams.account_management_service.exception.BusinessException;
@@ -106,6 +108,39 @@ public class AccountAlertPreferenceServiceImpl  implements AccountAlertPreferenc
 	        response.setPreferenceId("ALP" + (100000 + saved.getPreferenceId()));
 
 	        return response;
+	}
+	
+	
+	@Override
+	public GetAlertPreference getAlertPreference(Long accountId) {
+
+	    AccountAlertPreference preference = repository
+	            .findByAccount_AccountId(accountId)
+	            .orElseThrow(() -> new ResourceNotFoundException("Alert preference not found."));
+
+	    AlertPreferenceData data = new AlertPreferenceData();
+
+	    data.setPreferenceId("ALP" + (100000 + preference.getPreferenceId()));
+	    data.setDebitAlert(preference.getDebitAlert());
+	    data.setCreditAlert(preference.getCreditAlert());
+	    data.setLowBalanceAlert(preference.getLowBalanceAlert());
+	    data.setMinimumBalance(preference.getMinimumBalance());
+	    data.setChequeBounceAlert(preference.getChequeBounceAlert());
+	    data.setEmiDueAlert(preference.getEmiDueAlert());
+	    data.setInterestCreditAlert(preference.getInterestCreditAlert());
+	    data.setLoginAlert(preference.getLoginAlert());
+	    data.setLargeTransactionAlert(preference.getLargeTransactionAlert());
+	    data.setLargeTransactionAmount(preference.getLargeTransactionAmount());
+	    data.setNotificationMode(preference.getNotificationMode());
+	    data.setMobileNumber(preference.getMobileNumber());
+	    data.setEmail(preference.getEmail());
+	    data.setStatus(preference.getStatus());
+
+	    GetAlertPreference response = new GetAlertPreference();
+	    response.setStatus("SUCCESS");
+	    response.setData(data);
+
+	    return response;
 	}
 
 }
