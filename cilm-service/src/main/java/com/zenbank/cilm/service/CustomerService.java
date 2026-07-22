@@ -352,7 +352,7 @@ public void updateCustomer(Long customerId, CustomerRequestDto requestDto) {
 	customerRepository.save(customer);
 }
 
-
+//Post Customer contact details
 
 	public CustomerContactResponseDto addContact(String customerId, @Valid CustomerContactRequestDto requestDto) {
 		Customer customer = customerRepository.findByCustomerId(customerId)
@@ -602,6 +602,8 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 
 		return response;
 	}
+	
+	
 
 
 }
