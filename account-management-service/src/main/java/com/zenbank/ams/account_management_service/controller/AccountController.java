@@ -72,6 +72,26 @@ public class AccountController {
 	}
 	
 	
+	
+
+	@PatchMapping("/accounts/{accountId}/block")
+	public ResponseEntity<BlockedResponseDto> blockAccountByAccountId(@PathVariable Long accountId,@RequestBody BlockedRequestDto blockeddto){
+		BlockedResponseDto blockresp  = accountservice.accountBlockingById(accountId,blockeddto);
+		return new ResponseEntity<BlockedResponseDto>(blockresp,HttpStatus.CREATED);
+		
+	}
+	
+	
+	@PatchMapping("/accounts/{accountId}/unblock")
+	public ResponseEntity<UnblockedResponseDto> unblockAccountsById(@PathVariable Long accountId, @RequestBody UnblockRequestDto unblockdto){
+		
+	UnblockedResponseDto  unblock = accountservice.unblockingAccountById(accountId,unblockdto);
+	
+		return new ResponseEntity<UnblockedResponseDto>(unblock,HttpStatus.OK);
+		
+	}
+	
+	
 
 
 }
