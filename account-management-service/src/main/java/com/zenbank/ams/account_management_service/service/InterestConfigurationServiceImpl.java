@@ -104,5 +104,4 @@ public class InterestConfigurationServiceImpl implements InterestConfigurationSe
 		
 	}
 	
-	
 }

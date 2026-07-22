@@ -5,7 +5,6 @@ import com.zenbank.ams.account_management_service.dto.InterestConfigurationRespo
 import com.zenbank.ams.account_management_service.dto.UpdateInterestConfigurationRequest;
 import com.zenbank.ams.account_management_service.dto.UpdateInterestConfigurationResponseDto;
 import com.zenbank.ams.account_management_service.dto.ViewInterestConfigurationResponseDto;
-
 public interface InterestConfigurationService {
 	
 	InterestConfigurationResponse createInterestConfiguration(
