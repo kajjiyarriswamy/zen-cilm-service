@@ -21,6 +21,8 @@ import com.zenbank.ams.account_management_service.dto.AccountResponseDto;
 import com.zenbank.ams.account_management_service.dto.BlockedRequestDto;
 import com.zenbank.ams.account_management_service.dto.BlockedResponseDto;
 import com.zenbank.ams.account_management_service.dto.CustomerAccountsResponseDto;
+import com.zenbank.ams.account_management_service.dto.UnblockRequestDto;
+import com.zenbank.ams.account_management_service.dto.UnblockedResponseDto;
 import com.zenbank.ams.account_management_service.entity.NumOfRecordsResponseDto;
 import com.zenbank.ams.account_management_service.service.AccountServiceI;
 import com.zenbank.ams.account_management_service.utility.ApiResponseUtility;
@@ -77,6 +79,16 @@ public class AccountController {
 	public ResponseEntity<BlockedResponseDto> blockAccountByAccountId(@PathVariable Long accountId,@RequestBody BlockedRequestDto blockeddto){
 		BlockedResponseDto blockresp  = accountservice.accountBlockingById(accountId,blockeddto);
 		return new ResponseEntity<BlockedResponseDto>(blockresp,HttpStatus.CREATED);
+		
+	}
+	
+	
+	@PatchMapping("/accounts/{accountId}/unblock")
+	public ResponseEntity<UnblockedResponseDto> unblockAccountsById(@PathVariable Long accountId, @RequestBody UnblockRequestDto unblockdto){
+		
+	UnblockedResponseDto  unblock = accountservice.unblockingAccountById(accountId,unblockdto);
+	
+		return new ResponseEntity<UnblockedResponseDto>(unblock,HttpStatus.OK);
 		
 	}
 
