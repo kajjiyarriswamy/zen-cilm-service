@@ -3,7 +3,7 @@ package com.zenbank.ams.account_management_service.service;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
-
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -13,7 +13,11 @@ import org.springframework.stereotype.Service;
 
 import com.zenbank.ams.account_management_service.dto.AccountRequestDto;
 import com.zenbank.ams.account_management_service.dto.AccountResponseDto;
+import com.zenbank.ams.account_management_service.dto.BlockedRequestDto;
+import com.zenbank.ams.account_management_service.dto.BlockedResponseDto;
 import com.zenbank.ams.account_management_service.dto.CustomerAccountsResponseDto;
+import com.zenbank.ams.account_management_service.dto.UnblockRequestDto;
+import com.zenbank.ams.account_management_service.dto.UnblockedResponseDto;
 import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.NumOfRecordsResponseDto;
 import com.zenbank.ams.account_management_service.exception.CustomerNotFound;
@@ -58,6 +62,7 @@ public class AccountServiceImpl implements AccountServiceI {
 
 	}
 
+	}
 
 	@Override
 	public List<CustomerAccountsResponseDto> getAccountsByCustomerId(String custId) {
