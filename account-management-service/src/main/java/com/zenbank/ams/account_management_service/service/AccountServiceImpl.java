@@ -16,6 +16,8 @@ import com.zenbank.ams.account_management_service.dto.AccountResponseDto;
 import com.zenbank.ams.account_management_service.dto.BlockedRequestDto;
 import com.zenbank.ams.account_management_service.dto.BlockedResponseDto;
 import com.zenbank.ams.account_management_service.dto.CustomerAccountsResponseDto;
+import com.zenbank.ams.account_management_service.dto.UnblockRequestDto;
+import com.zenbank.ams.account_management_service.dto.UnblockedResponseDto;
 import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.NumOfRecordsResponseDto;
 import com.zenbank.ams.account_management_service.exception.CustomerNotFound;
@@ -129,5 +131,33 @@ public class AccountServiceImpl implements AccountServiceI {
 		
 		throw new CustomerNotFound("Customer doesnot exit with this Id"+" "+accountId);
 	}
+
+	@Override
+	public UnblockedResponseDto unblockingAccountById(Long accountId, UnblockRequestDto unblockdto) {
+		// TODO Auto-generated method stub
+		
+		Optional<Account> opt = accountrepository.findById(accountId);
+		if(opt.isPresent()) {
+			Account acc = opt.get();
+			if(acc.getAccountStatus().equalsIgnoreCase("Blocked") && unblockdto.getReason().equalsIgnoreCase("Fraud Investigation Completed")) {
+				acc.setAccountStatus("ACTIVE");
+				Long aid= accountrepository.save(acc).getAccountId();
+				if(aid>0) {
+					return new UnblockedResponseDto("SUCCESS","Account unblocked successfully");
+				}
+				else {
+					throw new CustomerNotFound("No Accounts Found With this AccountId.....");
+				}
+				
+			}
+			else {
+				throw new CustomerNotFound("Account is Already Unblocked...");
+			}
+		}
+		
+		throw new CustomerNotFound("Enter valid account Id..");
+	}
+	
+	
 
 }
