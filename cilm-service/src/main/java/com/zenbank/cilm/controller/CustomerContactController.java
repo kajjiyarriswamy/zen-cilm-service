@@ -26,16 +26,14 @@ public class CustomerContactController {
     @PostMapping("/{customerId}/contacts")
     public ResponseEntity<?> addContact(@PathVariable String customerId,
                                         @Validated(CustomerContactRequestDto.Create.class) @RequestBody CustomerContactRequestDto requestDto) {
-        try {
+     
             CustomerContactResponseDto response =
                     customerService.addContact(customerId, requestDto);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new CustomerContactResponseDto("FAILED", e.getMessage(), null, null));
-        }
+       
     }
+    
     @PutMapping("/{customerId}/contacts/mobile")
     public ResponseEntity<CustomerContactResponseDto> updateCustomerContactPhoneNumber(
             @PathVariable String customerId, @RequestBody CustomerContactRequestDto contactRequestDto) {

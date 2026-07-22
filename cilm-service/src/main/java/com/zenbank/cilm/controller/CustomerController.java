@@ -167,7 +167,7 @@ public class CustomerController {
     }
 
 
-   /* @GetMapping("/{customerId}/preferences")
+  /* @GetMapping("/{customerId}/preferences")
     public ResponseEntity<Map<String, Object>> getCustomerPreference(
             @PathVariable Long customerId) {
 

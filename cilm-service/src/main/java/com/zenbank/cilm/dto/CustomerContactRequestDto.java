@@ -9,6 +9,8 @@ import jakarta.validation.constraints.Pattern;
 public class CustomerContactRequestDto {
 
     public interface Create {}
+    
+   
 
     @NotBlank(message = "Mobile number is required", groups = Create.class)
     @Pattern(regexp = "^[0-9]{10}$", message = "Mobile number must be 10 digits")
@@ -24,6 +26,8 @@ public class CustomerContactRequestDto {
 
     @NotBlank(message = "Preferred contact mode is required", groups = Create.class)
     private String preferredContactMode;
+    
+    
 
     public String getMobileNumber() { return mobileNumber; }
     public void setMobileNumber(String mobileNumber) { this.mobileNumber = mobileNumber; }

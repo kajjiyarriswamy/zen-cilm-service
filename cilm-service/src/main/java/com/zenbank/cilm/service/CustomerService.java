@@ -396,7 +396,7 @@ customerAuditRepository.save(audit);
 		Customer customer = customerRepository.findById(customerId)
 				.orElseThrow(() -> new RuntimeException("Customer not found"));
 
-		CustomerPreference preference = customer.getCustomerPreference();
+		//CustomerPreference preference = customer.getCustomerPreference();
 
 		if (preference == null) {
 			throw new RuntimeException("Customer preferences not found.");
@@ -460,11 +460,37 @@ customerAuditRepository.save(audit);
 
 	}
 
+	//
 
-	public CustomerContactResponseDto addContact(String customerId, @Valid CustomerContactRequestDto requestDto) {
+	
+	
+	 public CustomerContactResponseDto addContact(String customerId,
+	            CustomerContactRequestDto requestDto) {
 
-		return null;
-	}
+	        Customer customer = customerRepository.findByCustomerId(customerId)
+	                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+	        CustomerContact contact = new CustomerContact();
+	        contact.setCustomer(customer);
+	        contact.setMobileNumber(requestDto.getMobileNumber());
+	        contact.setAlternateMobile(requestDto.getAlternateMobile());
+	        contact.setEmail(requestDto.getEmail());
+	        contact.setLandline(requestDto.getLandline());
+	        contact.setPreferredContactMode(requestDto.getPreferredContactMode());
+
+	        CustomerContact savedContact = customerContactRepository.save(contact);
+
+	        CustomerContactResponseDto response = new CustomerContactResponseDto();
+	        response.setContactId("CNT" + (100000 + savedContact.getContactId()));
+	        response.setMobileNumber(savedContact.getMobileNumber());
+	        response.setAlternateMobile(savedContact.getAlternateMobile());
+	        response.setEmail(savedContact.getEmail());
+	        response.setLandline(savedContact.getLandline());
+	        response.setPreferredContactMode(savedContact.getPreferredContactMode());
+
+	        return response;
+	    }
+	
 
 	/**public AddressResponseDto addAddress(Long customerId, AddressRequestDto requestDto) {
 
@@ -763,6 +789,7 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 	}
 
 
+	//Get customer contacts
 
 	public Map<String, Object> getContactsByCustomerId(String customerId) {
 		Map<String, Object> response = new LinkedHashMap<>();
@@ -853,8 +880,8 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 		customerAuditRepository.save(customerAudit);
 
 		CustomerContactResponseDto contactResponseDto = new CustomerContactResponseDto();
-		contactResponseDto.setStatus("SUCCESS");
-		contactResponseDto.setMessage("Email updated successfully.");
+		//contactResponseDto.setStatus("SUCCESS");
+		//contactResponseDto.setMessage("Email updated successfully.");
 
 		return contactResponseDto;
 
