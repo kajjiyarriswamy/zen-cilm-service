@@ -56,11 +56,6 @@ public class AccountServiceImpl implements AccountServiceI {
 		}
 		
 	}
-<<<<<<< HEAD
-}
-=======
-
-
 
 	@Override
 	public List<CustomerAccountsResponseDto> getAccountsByCustomerId(String custId) {
@@ -107,14 +102,5 @@ public class AccountServiceImpl implements AccountServiceI {
 			throw new CustomerNotFound("Enter Any valid customerId: , accountNumber: , mobileNumber: , panNumber: , status: , branchCode:");
 		}
 		
-		
-	
 	}
-
 }
-	
-
-
-
-
->>>>>>> fd430f733e218b37a6949fc9362ff843c6bf70f7
