@@ -62,6 +62,8 @@ public class AccountServiceImpl implements AccountServiceI {
 
 	}
 
+	}
+
 	@Override
 	public List<CustomerAccountsResponseDto> getAccountsByCustomerId(String custId) {
 		// TODO Auto-generated method stub
@@ -111,53 +113,5 @@ public class AccountServiceImpl implements AccountServiceI {
 	
 	}
 
-
-
-	@Override
-	public BlockedResponseDto accountBlockingById(Long accountId,BlockedRequestDto blockeddto) {
-		// TODO Auto-generated method stub
-		Optional<Account> opt = accountrepository.findById(accountId);
-		if(opt.isPresent() && blockeddto.getReason().equalsIgnoreCase("Fraud Detection")) {
-			Account acc = opt.get();
-			acc.setAccountStatus("BLOCKED");
-			Account ac = accountrepository.save(acc);
-			if(ac.getAccountId()>0) {
-			return new BlockedResponseDto("SUCCESS","Account blocked successfully.");
-			}
-			else {
-				throw new CustomerNotFound("Account is in Active ");
-			}
-		}
-		
-		throw new CustomerNotFound("Customer doesnot exit with this Id"+" "+accountId);
-	}
-
-	@Override
-	public UnblockedResponseDto unblockingAccountById(Long accountId, UnblockRequestDto unblockdto) {
-		// TODO Auto-generated method stub
-		
-		Optional<Account> opt = accountrepository.findById(accountId);
-		if(opt.isPresent()) {
-			Account acc = opt.get();
-			if(acc.getAccountStatus().equalsIgnoreCase("Blocked") && unblockdto.getReason().equalsIgnoreCase("Fraud Investigation Completed")) {
-				acc.setAccountStatus("ACTIVE");
-				Long aid= accountrepository.save(acc).getAccountId();
-				if(aid>0) {
-					return new UnblockedResponseDto("SUCCESS","Account unblocked successfully");
-				}
-				else {
-					throw new CustomerNotFound("No Accounts Found With this AccountId.....");
-				}
-				
-			}
-			else {
-				throw new CustomerNotFound("Account is Already Unblocked...");
-			}
-		}
-		
-		throw new CustomerNotFound("Enter valid account Id..");
-	}
-	
-	
-
 }
+
