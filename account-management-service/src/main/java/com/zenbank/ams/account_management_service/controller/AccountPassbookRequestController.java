@@ -1,5 +1,6 @@
 package com.zenbank.ams.account_management_service.controller;
 
+import java.security.Provider.Service;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,9 @@ import com.zenbank.ams.account_management_service.dto.CreatePassbookRequest;
 import com.zenbank.ams.account_management_service.dto.PassbookRequestDetailsResponse;
 import com.zenbank.ams.account_management_service.dto.PassbookRequestResponse;
 import com.zenbank.ams.account_management_service.dto.SearchPassbookRequestResponse;
+import com.zenbank.ams.account_management_service.dto.UpdateNicknameRequest;
 import com.zenbank.ams.account_management_service.service.AccountPassbookRequestService;
+import com.zenbank.ams.account_management_service.service.AccountServiceI;
 
 @RestController
 @RequestMapping("/api/v1/accounts")
@@ -69,6 +72,14 @@ public class AccountPassbookRequestController {
 
 		return ResponseEntity.ok(service.searchPassbookRequest(accountNumber, customerId, requestType, requestStatus,
 				requestMode, deliveryMode, branchCode, fromDate, toDate, page, size));
+	}
+	
+	@PutMapping("/{accountId}/nickname")
+	public ResponseEntity<PassbookRequestResponse> updateNickname(
+			@PathVariable Long accountId,
+			@RequestBody UpdateNicknameRequest request){
+				PassbookRequestResponse response= service.updateNickname(accountId, request);
+				return ResponseEntity.ok(response);
 	}
 
 }
