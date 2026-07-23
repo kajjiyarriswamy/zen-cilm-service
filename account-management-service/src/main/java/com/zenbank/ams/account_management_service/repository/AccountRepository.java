@@ -13,8 +13,8 @@ import com.zenbank.ams.account_management_service.entity.Account;
 @Repository
 public interface AccountRepository extends JpaRepository<Account,Long> {
 	public List<Account> findBycustomerIdEquals(String custId);
-	
-	
+
+
 	 @Query("""
 		        SELECT a
 		        FROM Account a
@@ -33,9 +33,9 @@ public interface AccountRepository extends JpaRepository<Account,Long> {
             @Param("branchCode") String branchCode,
             Pageable pageable);
 
-	 
-	 
-	 
-	 
-	 
+
+
+
+
+
 }
