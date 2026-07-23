@@ -3,6 +3,9 @@ package com.zenbank.deposit_service.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.zenbank.deposit_service.enums.DepositStatus;
 import com.zenbank.deposit_service.enums.DepositTypeCode;
@@ -25,46 +28,49 @@ public class DepositType {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="type_id",length =19)
+	@Column(name="type_id")
 	private Long typeId;
 	
-	@Column(name="type_code",length =20,unique = true)
+	@Column(name="type_code",nullable=false,length =20,unique = true)
 	@Enumerated(EnumType.STRING)
 	private DepositTypeCode typeCode;
 	
-	@Column(name="type_name",length =50)
+	@Column(name="type_name",nullable=false,length =50)
 	private String typeName;
 	
 	@Column(name="description",length =250)
 	private String description;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name="status",length =20)
+	@Column(name="status",nullable=false,length =20)
 	private DepositStatus status;
 	
 	@Column(name="created_by",length =50)
 	private String createdBy;
 	
 	@Column(name="created_date")
+	@CreationTimestamp
 	private LocalDateTime createdDate;
+	
 	
 	@Column(name="updated_by",length =50)
 	private String updatedBy;
 	
+	@UpdateTimestamp
 	@Column(name="updated_date")
 	private LocalDateTime updatedDate;
 	
-	@OneToMany(mappedBy = "deposit_type",
+	@OneToMany(mappedBy = "depositType",
 			   cascade = CascadeType.ALL,
 			   fetch = FetchType.LAZY)
 	@JsonManagedReference
-	private List<DepositTransaction> depositTransaction;
+	private List<DepositTransaction> depositTransactions;
 	
 	public DepositType() {
 	}
 
 	public DepositType(Long typeId, DepositTypeCode typeCode, String typeName, String description, DepositStatus status,
-			String createdBy, LocalDateTime createdDate, String updatedBy, LocalDateTime updatedDate) {
+			String createdBy, String updatedBy) {
 		super();
 		this.typeId = typeId;
 		this.typeCode = typeCode;
@@ -72,9 +78,7 @@ public class DepositType {
 		this.description = description;
 		this.status = status;
 		this.createdBy = createdBy;
-		this.createdDate = createdDate;
 		this.updatedBy = updatedBy;
-		this.updatedDate = updatedDate;
 	}
 
 	public Long getTypeId() {
@@ -149,6 +153,13 @@ public class DepositType {
 		this.updatedDate = updatedDate;
 	}
 	
+	public List<DepositTransaction> getDepositTransactions() {
+	    return depositTransactions;
+	}
+
+	public void setDepositTransactions(List<DepositTransaction> depositTransactions) {
+	    this.depositTransactions = depositTransactions;
+	}
 	
 	
 	
