@@ -10,6 +10,7 @@ public interface AccountChequeBookRequestService {
 
     AccountChequeBookResponseDto createAccountChequeBookRequest(AccountChequeBookRequestDto accountChequeBookRequestDto, Long accountId);
     AccountChequeBookResponseDto getChequeBookRequest(Long accountId, Long chequeBookRequestId);
+    AccountChequeBookResponseDto updateChequeRequest(AccountChequeBookRequestDto accountChequeBookRequestDto, Long accountId, Long chequeBookRequestId);
 
     AccountChequeBookSearchResponseDto searchChequeBookRequests(
             String accountNumber,
@@ -22,4 +23,5 @@ public interface AccountChequeBookRequestService {
             int page,
             int size
     );
+
 }

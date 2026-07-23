@@ -3,7 +3,7 @@ package com.zenbank.ams.account_management_service.service;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
-
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import com.zenbank.ams.account_management_service.dto.AccountRequestDto;
 import com.zenbank.ams.account_management_service.dto.AccountResponseDto;
+import com.zenbank.ams.account_management_service.dto.BlockedRequestDto;
+import com.zenbank.ams.account_management_service.dto.BlockedResponseDto;
 import com.zenbank.ams.account_management_service.dto.CustomerAccountsResponseDto;
 import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.NumOfRecordsResponseDto;
@@ -105,6 +107,27 @@ public class AccountServiceImpl implements AccountServiceI {
 
 
 
+	}
+
+
+
+	@Override
+	public BlockedResponseDto accountBlockingById(Long accountId,BlockedRequestDto blockeddto) {
+		// TODO Auto-generated method stub
+		Optional<Account> opt = accountrepository.findById(accountId);
+		if(opt.isPresent() && blockeddto.getReason().equalsIgnoreCase("Fraud Detection")) {
+			Account acc = opt.get();
+			acc.setAccountStatus("BLOCKED");
+			Account ac = accountrepository.save(acc);
+			if(ac.getAccountId()>0) {
+			return new BlockedResponseDto("SUCCESS","Account blocked successfully.");
+			}
+			else {
+				throw new CustomerNotFound("Account is in Active ");
+			}
+		}
+		
+		throw new CustomerNotFound("Customer doesnot exit with this Id"+" "+accountId);
 	}
 
 }

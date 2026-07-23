@@ -1,6 +1,7 @@
 package com.zenbank.ams.account_management_service.service;
 
 import java.time.LocalDate;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,15 +18,13 @@ import com.zenbank.ams.account_management_service.specification.AccountChequeBoo
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AccountChequeBookRequestServiceImpl implements AccountChequeBookRequestService {
-
-    private static final List<String> ACTIVE_REQUEST_STATUSES = List.of("REQUESTED", "IN_PROGRESS", "APPROVED",
-            "DISPATCHED");
 
     private final AccountRepository accountRepository;
     private final AccountChequeBookRequestRepository accountChequeBookRequestRepository;
@@ -35,6 +34,10 @@ public class AccountChequeBookRequestServiceImpl implements AccountChequeBookReq
         this.accountRepository = accountRepository;
         this.accountChequeBookRequestRepository = accountChequeBookRequestRepository;
     }
+
+    private static final List<String> ACTIVE_REQUEST_STATUSES = List.of("REQUESTED", "IN_PROGRESS", "APPROVED",
+            "DISPATCHED");
+
 
     @Override
     @Transactional
@@ -169,74 +172,72 @@ public class AccountChequeBookRequestServiceImpl implements AccountChequeBookReq
         return responseDto;
     }
 
+
+    public AccountChequeBookResponseDto updateChequeRequest(AccountChequeBookRequestDto accountChequeBookRequestDto, Long accountId, Long chequeBookRequestId) {
+
+        accountRepository.findById(accountId)
+                .orElseThrow(() -> new ChequeBookRequestException("CHQ_001", "Account not found."));
+
+        AccountChequeBookRequest request = accountChequeBookRequestRepository.findByAccountIdAndChequeBookId(accountId, chequeBookRequestId)
+                .orElseThrow(()-> new ChequeBookRequestException("CHQ_002", "Cheque book request ID Not found."));
+
+        if ("DISPATCHED".equalsIgnoreCase(request.getRequestStatus())) {
+            throw new ChequeBookRequestException("CHQ_003", "Cheque book request cannot be updated after dispatch.");
+
+        }
+
+        request.setDeliveryMode(accountChequeBookRequestDto.getDeliveryMode());
+        request.setDeliveryAddress(serializeAddress(accountChequeBookRequestDto.getDeliveryAddress()));
+
+        accountChequeBookRequestRepository.save(request);
+
+        AccountChequeBookResponseDto responseDto = new AccountChequeBookResponseDto();
+        responseDto.setStatus("SUCCESS");
+        responseDto.setMessage("Cheque book request updated successfully.");
+
+        return responseDto;
+    }
+
     @Override
     public AccountChequeBookSearchResponseDto searchChequeBookRequests(String accountNumber, String customerId, String requestStatus, String chequeBookType, String requestMode, LocalDate fromDate, LocalDate toDate, int page, int size) {
 
-
         Pageable pageable = PageRequest.of(page, size);
-
-        Specification<AccountChequeBookRequest> specification =
-                AccountChequeBookRequestSpecification.searchChequeBookRequests(
-                        accountNumber,
-                        customerId,
-                        requestStatus,
-                        chequeBookType,
-                        requestMode,
-                        fromDate,
-                        toDate);
-
-        Page<AccountChequeBookRequest> result =
-                accountChequeBookRequestRepository.findAll(specification, pageable);
-
+        Page<AccountChequeBookRequest> result = accountChequeBookRequestRepository.searchChequeBookRequests(
+                accountNumber,customerId,requestStatus,chequeBookType,requestMode,
+                fromDate == null ? null : fromDate.atStartOfDay(),
+                toDate ==  null ? null : toDate.atTime(23,59,59),pageable);
         if (result.isEmpty()) {
-
-            throw new ChequeBookRequestException("CHQ_001", "No cheque book requests found.");
-
-//            AccountChequeBookSearchResponseDto response =
-//                    new AccountChequeBookSearchResponseDto();
-//
-//            response.setStatus("FAILED");
-//            response.setMessage("No cheque book requests found.");
-//
-//            return response;
+            throw new ChequeBookRequestException(
+                    "CHQ_001",
+                    "No cheque book requests found.");
         }
-
         List<AccountChequeBookSearchResponseDto.SearchData> data =
                 result.getContent()
                         .stream()
-                        .map(request -> {
-
-                            AccountChequeBookSearchResponseDto.SearchData dto =
+                        .map(request ->{
+                            AccountChequeBookSearchResponseDto.SearchData responseDto =
                                     new AccountChequeBookSearchResponseDto.SearchData();
 
-                            dto.setChequeBookRequestId(
-                                    formatRequestId(request.getChequeBookId()));
+                            responseDto.setChequeBookRequestId(formatRequestId(request.getChequeBookId()));
+                            responseDto.setAccountNumber(request.getAccountNumber());
+                            responseDto.setChequeBookType(request.getChequeBookType());
+                            responseDto.setLeavesCount(request.getLeavesCount());
+                            responseDto.setRequestStatus(request.getRequestStatus());
+                            responseDto.setRequestMode(request.getRequestMode());
 
-                            dto.setAccountNumber(request.getAccountNumber());
-
-                            dto.setChequeBookType(request.getChequeBookType());
-
-                            dto.setLeavesCount(request.getLeavesCount());
-
-                            dto.setRequestStatus(request.getRequestStatus());
-
-                            dto.setRequestMode(request.getRequestMode());
-
-                            return dto;
+                            return responseDto;
 
                         }).toList();
 
-        AccountChequeBookSearchResponseDto response =
-                new AccountChequeBookSearchResponseDto();
-
+        AccountChequeBookSearchResponseDto response = new  AccountChequeBookSearchResponseDto();
         response.setStatus("SUCCESS");
         response.setPage(result.getNumber());
         response.setSize(result.getSize());
         response.setTotalRecords(result.getTotalElements());
         response.setData(data);
 
-        return response;
 
+        return response;
     }
 
 

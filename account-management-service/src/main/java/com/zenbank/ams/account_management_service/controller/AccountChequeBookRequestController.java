@@ -37,6 +37,11 @@ public class AccountChequeBookRequestController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping("{accountId}/chequeBook/{chequeBookRequestId}")
+    public ResponseEntity<AccountChequeBookResponseDto> updateChequeBookRequest(@PathVariable Long accountId, @PathVariable Long chequeBookRequestId, @RequestBody AccountChequeBookRequestDto requestDto) {
+        AccountChequeBookResponseDto responseDto = accountChequeBookRequestService.updateChequeRequest(requestDto,accountId, chequeBookRequestId);
+        return ResponseEntity.ok(responseDto);
+    }
 
     @GetMapping("/search/chequebook")
     public ResponseEntity<AccountChequeBookSearchResponseDto> search(
@@ -65,27 +70,13 @@ public class AccountChequeBookRequestController {
             @RequestParam(defaultValue = "10")
             int size){
 
-        return ResponseEntity.ok(
+        AccountChequeBookSearchResponseDto response = accountChequeBookRequestService.searchChequeBookRequests(
+                accountNumber, customerId, requestStatus, chequeBookType,
+                requestMode, fromDate, toDate, page, size);
 
-                accountChequeBookRequestService.searchChequeBookRequests(
-
-                        accountNumber,
-
-                        customerId,
-
-                        requestStatus,
-
-                        chequeBookType,
-
-                        requestMode,
-
-                        fromDate,
-
-                        toDate,
-
-                        page,
-
-                        size));
+        return ResponseEntity.ok(accountChequeBookRequestService.searchChequeBookRequests(
+                accountNumber, customerId, requestStatus, chequeBookType,
+                requestMode, fromDate, toDate, page, size
+        ));
     }
-
 }
