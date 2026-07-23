@@ -264,7 +264,12 @@ import jakarta.persistence.Table;
 		@OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         private AccountLimit accountLimit;
 		
+<<<<<<< Updated upstream
 		@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 		private List<JointAccountHolder> jointAccountHolders;
 		
+=======
+		@OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+		private AccountClosure accountClosure;
+>>>>>>> Stashed changes
   }
