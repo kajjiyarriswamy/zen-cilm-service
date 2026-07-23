@@ -10,7 +10,7 @@ public interface AccountChequeBookRequestRepository extends JpaRepository<Accoun
 
     boolean existsByAccountIdAndRequestStatusIn(Long accountId, Collection<String> requestStatuses);
 
-//    Optional<AccountChequeBookRequest> findByChequeBookId(Long chequeBookId);
+   Optional<AccountChequeBookRequest> findByChequeBookId(Long chequeBookId);
     Optional<AccountChequeBookRequest> findByAccountIdAndChequeBookId(
             Long accountId,
             Long chequeBookId);

@@ -22,7 +22,7 @@ public class AccountCheckBookRequestController {
         this.accountCheckBookRequestService = accountCheckBookRequestService;
     }
 
-    @PostMapping("/{accountId}/cheque-books")
+    @PostMapping("/{accountId}/cheque-book")
     public ResponseEntity<AccountCheckBookResponseDto> createChequeBookRequest(@PathVariable Long accountId,
             @Valid @RequestBody AccountCheckBookRequestDto requestDto) {
 

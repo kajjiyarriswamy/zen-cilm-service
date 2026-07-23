@@ -12,27 +12,35 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import com.zenbank.ams.account_management_service.dto.CreateJointHolderRequest;
 import com.zenbank.ams.account_management_service.dto.CreateStatementPreferenceRequest;
+import com.zenbank.ams.account_management_service.dto.JointHolderResponse;
 import com.zenbank.ams.account_management_service.dto.StatementPreferenceData;
 import com.zenbank.ams.account_management_service.dto.StatementPreferenceResponse;
 import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.AccountStatementPreference;
+import com.zenbank.ams.account_management_service.entity.JointAccountHolder;
 import com.zenbank.ams.account_management_service.exception.ResourceNotFoundException;
 import com.zenbank.ams.account_management_service.exception.StatementPreferenceException;
+import com.zenbank.ams.account_management_service.repository.AccountHolderRepository;
 import com.zenbank.ams.account_management_service.repository.AccountRepository;
 import com.zenbank.ams.account_management_service.repository.AccountStatementPreferenceRepository;
+
+import jakarta.validation.Valid;
 
 @Service
 public class StatementPreferenceService implements StatementPreferenceServiceImp {
 
 	private final AccountRepository accountRepository;
 	private final AccountStatementPreferenceRepository statementPreferenceRepository;
+	private final AccountHolderRepository accountHolderRepository;
 
 	public StatementPreferenceService(AccountRepository accountRepository,
-			AccountStatementPreferenceRepository statementPreferenceRepository) {
+			AccountStatementPreferenceRepository statementPreferenceRepository, AccountHolderRepository accountHolderRepository) {
 
 		this.accountRepository = accountRepository;
 		this.statementPreferenceRepository = statementPreferenceRepository;
+		this.accountHolderRepository=accountHolderRepository;
 	}
 
 	@Override
@@ -172,6 +180,39 @@ public class StatementPreferenceService implements StatementPreferenceServiceImp
 		
 		
 		
+		return response;
+	}
+	
+    @Override
+	public JointHolderResponse createAccountHolder(Long accountId, 
+			@Valid CreateJointHolderRequest request) {
+		Account account=accountRepository.findById(accountId).orElseThrow(()
+				-> new ResourceNotFoundException("Account Id Not available "));
+		
+		JointAccountHolder holder=new JointAccountHolder();
+		
+		holder.setAccount(account);
+		holder.setHolderName(request.getHolderName());
+		holder.setRelationship(request.getRelationship());
+		holder.setOperationMode(request.getOperationMode());
+		holder.setCustomerId(request.getCustomerId());
+		holder.setStatus("ACTIVE");
+		holder.setCreateDate(LocalDateTime.now());
+		holder.setCreatedBy("SYSTEM");
+		
+		holder.setUpdatedDate(LocalDateTime.now());
+		holder.setUpdatedBy("SYSTEM");
+		
+		accountHolderRepository.save(holder);
+		
+		JointHolderResponse response=new JointHolderResponse();
+		
+		response.setStatus("SUCCESS");
+		response.setMessage("Joint account holder added successfully");
+		response.setHolderId("JoinHolder " + holder.getHolderId());
+		
+				
+				
 		return response;
 	}
 
