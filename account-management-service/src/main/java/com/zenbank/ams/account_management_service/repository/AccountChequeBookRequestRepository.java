@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 
-public interface AccountChequeBookRequestRepository extends JpaRepository<AccountChequeBookRequest, Long>, JpaSpecificationExecutor<AccountChequeBookRequest> {
+public interface AccountChequeBookRequestRepository extends JpaRepository<AccountChequeBookRequest, Long> {
 
     boolean existsByAccountIdAndRequestStatusIn(Long accountId, Collection<String> requestStatuses);
 

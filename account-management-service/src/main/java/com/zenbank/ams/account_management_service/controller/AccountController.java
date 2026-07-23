@@ -50,24 +50,6 @@ public class AccountController {
 		return ResponseEntity.status(HttpStatus.FOUND).body(ApiResponseUtility.getAccountsByCustomerId(customerId, responsedto));
 		
 	}
-	
-
-
-//	@PostMapping("/accounts")
-//	public ResponseEntity<Map<String, Object>> createAccount(@RequestBody AccountRequestDto requestDto ){
-//		 AccountResponseDto responsedto = accountservice.accountCreate(requestDto);
-//	     return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseUtility.accountCreated(responsedto));
-//
-//	}
-
-
-//	@GetMapping("/customers/{customerId}/accounts")
-//	public ResponseEntity<Map<String, Object>> accountsByCustomerId(@PathVariable String customerId){
-//		 List<CustomerAccountsResponseDto>  responsedto = accountservice.getAccountsByCustomerId(customerId);
-//		return ResponseEntity.status(HttpStatus.FOUND).body(ApiResponseUtility.getAccountsByCustomerId(customerId, responsedto));
-//
-//	}
-
 
 
 

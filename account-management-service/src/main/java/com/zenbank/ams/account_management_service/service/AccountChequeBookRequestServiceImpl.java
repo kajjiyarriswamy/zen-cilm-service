@@ -14,12 +14,9 @@ import com.zenbank.ams.account_management_service.entity.AccountChequeBookReques
 import com.zenbank.ams.account_management_service.exception.ChequeBookRequestException;
 import com.zenbank.ams.account_management_service.repository.AccountChequeBookRequestRepository;
 import com.zenbank.ams.account_management_service.repository.AccountRepository;
-import com.zenbank.ams.account_management_service.specification.AccountChequeBookRequestSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -173,6 +170,7 @@ public class AccountChequeBookRequestServiceImpl implements AccountChequeBookReq
     }
 
 
+    @Override
     public AccountChequeBookResponseDto updateChequeRequest(AccountChequeBookRequestDto accountChequeBookRequestDto, Long accountId, Long chequeBookRequestId) {
 
         accountRepository.findById(accountId)
