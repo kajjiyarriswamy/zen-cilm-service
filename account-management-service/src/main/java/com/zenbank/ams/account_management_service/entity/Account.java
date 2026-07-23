@@ -263,4 +263,8 @@ import jakarta.persistence.Table;
 
 		@OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         private AccountLimit accountLimit;
+		
+		@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+		private List<JointAccountHolder> jointAccountHolders;
+		
   }
