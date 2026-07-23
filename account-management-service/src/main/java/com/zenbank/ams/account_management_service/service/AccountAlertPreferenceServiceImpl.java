@@ -143,4 +143,84 @@ public class AccountAlertPreferenceServiceImpl  implements AccountAlertPreferenc
 	    return response;
 	}
 
+	@Override
+	public AccountAlertPreferenceResponse updateAlertPreference(
+	        Long accountId,
+	        CreateAccountAlertPreferenceRequest request) {
+
+	    // Validate Account
+	    Account account = accountRepository.findById(accountId)
+	            .orElseThrow(() ->
+	                    new ResourceNotFoundException("Account not found."));
+
+	    if (!"ACTIVE".equalsIgnoreCase(account.getAccountStatus())) {
+	        throw new BusinessException("Account is not active.");
+	    }
+
+	    // Find Existing Preference
+	    AccountAlertPreference preference = repository
+	            .findByAccount_AccountId(accountId)
+	            .orElseThrow(() ->
+	                    new ResourceNotFoundException("Alert preference not found."));
+
+	    // Validation
+	    if ("Y".equalsIgnoreCase(request.getLargeTransactionAlert())) {
+
+	        if (request.getLargeTransactionAmount() == null
+	                || request.getLargeTransactionAmount().doubleValue() <= 0) {
+
+	            throw new BusinessException(
+	                    "Large transaction amount must be greater than zero.");
+	        }
+	    }
+
+	    if ("Y".equalsIgnoreCase(request.getLowBalanceAlert())) {
+
+	        if (request.getMinimumBalance() == null
+	                || request.getMinimumBalance().doubleValue() <= 0) {
+
+	            throw new BusinessException(
+	                    "Minimum balance must be greater than zero.");
+	        }
+	    }
+
+	    if (!(request.getNotificationMode().equalsIgnoreCase("SMS")
+	            || request.getNotificationMode().equalsIgnoreCase("EMAIL")
+	            || request.getNotificationMode().equalsIgnoreCase("BOTH"))) {
+
+	        throw new BusinessException("Invalid notification mode.");
+	    }
+
+	    // Update Fields
+	    preference.setDebitAlert(request.getDebitAlert());
+	    preference.setCreditAlert(request.getCreditAlert());
+	    preference.setLowBalanceAlert(request.getLowBalanceAlert());
+	    preference.setMinimumBalance(request.getMinimumBalance());
+	    preference.setChequeBounceAlert(request.getChequeBounceAlert());
+	    preference.setEmiDueAlert(request.getEmiDueAlert());
+	    preference.setInterestCreditAlert(request.getInterestCreditAlert());
+	    preference.setLoginAlert(request.getLoginAlert());
+	    preference.setLargeTransactionAlert(request.getLargeTransactionAlert());
+	    preference.setLargeTransactionAmount(request.getLargeTransactionAmount());
+	    preference.setNotificationMode(request.getNotificationMode());
+	    preference.setMobileNumber(request.getMobileNumber());
+	    preference.setEmail(request.getEmail());
+	    preference.setStatus(request.getStatus());
+
+	    preference.setUpdatedBy("SYSTEM");
+	    preference.setUpdatedDate(LocalDateTime.now());
+
+	    repository.save(preference);
+
+	    //  Save Audit Record
+
+	    AccountAlertPreferenceResponse response =
+	            new AccountAlertPreferenceResponse();
+
+	    response.setStatus("SUCCESS");
+	    response.setMessage("Account alert preference updated successfully.");
+
+	    return response;
+	}
+	
 }

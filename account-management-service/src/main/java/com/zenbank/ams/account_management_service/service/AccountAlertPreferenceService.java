@@ -15,6 +15,8 @@ public interface AccountAlertPreferenceService {
 	GetAlertPreference getAlertPreference(Long accountId);
 	
 	
-	
+	AccountAlertPreferenceResponse updateAlertPreference(
+	        Long accountId,
+	        CreateAccountAlertPreferenceRequest request);
 
 }

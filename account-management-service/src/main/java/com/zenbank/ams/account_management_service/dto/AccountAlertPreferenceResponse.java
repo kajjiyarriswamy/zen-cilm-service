@@ -1,5 +1,8 @@
 package com.zenbank.ams.account_management_service.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountAlertPreferenceResponse {
 
     private String status;

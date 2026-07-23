@@ -43,4 +43,12 @@ public class AccountAlertPreferenceController {
         return ResponseEntity.ok(
                 service.getAlertPreference(accountId));
     }
+    @PutMapping("/{accountId}/alert-preferences")
+    public ResponseEntity<AccountAlertPreferenceResponse> updateAlertPreference(
+            @PathVariable Long accountId,
+            @Valid @RequestBody CreateAccountAlertPreferenceRequest request) {
+
+        return ResponseEntity.ok(
+                service.updateAlertPreference(accountId, request));
+    }
 }
