@@ -8,7 +8,7 @@ import com.zenbank.ams.account_management_service.dto.UpdateDebitCardRequest;
 
 public interface DebitCardService {
 
-   // DebitCardResponse createDebitCardRequest(DebitCardRequest requestDto);
+   
 	 DebitCardResponse createDebitCardRequest(DebitCardRequest requestDto, Long accountId);
 	 
 	 DebitCardResponseDto getDebitCardByAccountIdAndDebitCardId(Long accountId, Long debitCardId);
@@ -18,6 +18,7 @@ public interface DebitCardService {
 		        Long accountId,
 		        Long debitCardId,
 		        UpdateDebitCardRequest request);
+	
    
     
 }

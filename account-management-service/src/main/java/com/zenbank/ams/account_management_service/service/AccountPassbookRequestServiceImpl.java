@@ -18,6 +18,7 @@ import com.zenbank.ams.account_management_service.dto.DeliveryAddressDto;
 import com.zenbank.ams.account_management_service.dto.PassbookRequestDetailsResponse;
 import com.zenbank.ams.account_management_service.dto.PassbookRequestResponse;
 import com.zenbank.ams.account_management_service.dto.SearchPassbookRequestResponse;
+import com.zenbank.ams.account_management_service.dto.UpdateNicknameRequest;
 import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.AccountPassbookRequest;
 import com.zenbank.ams.account_management_service.exception.PassbookRequestException;
@@ -210,6 +211,25 @@ public class AccountPassbookRequestServiceImpl implements AccountPassbookRequest
 
 		response.setData(list);
 
+		return response;
+	}
+
+	@Override
+	public PassbookRequestResponse updateNickname(Long accountId, UpdateNicknameRequest request) {
+		// TODO Auto-generated method stub
+		Account account= accountRepository.findById(accountId)
+				.orElseThrow(() ->
+				new PassbookRequestException("ACC_001", "Account not found"));
+		
+		account.setNickname(request.getNickname());
+		
+		accountRepository.save(account);
+		
+		PassbookRequestResponse response =new PassbookRequestResponse();
+		
+		response.setStatus("SUUCESS");
+		response.setMessage("Account nickname updated successfully");
+		
 		return response;
 	}
 }
