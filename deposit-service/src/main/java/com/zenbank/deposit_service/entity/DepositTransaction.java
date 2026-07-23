@@ -283,9 +283,9 @@ public class DepositTransaction {
 //	private DepositType depositType;
 //
 //	
-//	@ManyToOne(fetch=FetchType.LAZY)
-//	@JoinColumn(name="deposit_channel_id",referencedColumnName ="channel_id")
-//	private DepositChannel depositchannel;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="deposit_channel_id",referencedColumnName ="channel_id")
+	private DepositChannel depositchannel;
 
 
 	
