@@ -114,7 +114,7 @@ public class AccountPassbookRequestServiceImpl implements AccountPassbookRequest
 				.orElseThrow(() -> new ResourceNotFoundException("Account not found"));
 
 		AccountPassbookRequest request = repository
-				.findByPassbookRequestIdAndAccountAccountId(passbookRequestId, accountId, account)
+				.findByPassbookRequestIdAndAccountAccountIdAndAccount(passbookRequestId, accountId, account)
 				.orElseThrow(() -> new PassbookRequestException("PBK_005", "Passbook request not found."));
 
 		PassbookRequestDetailsResponse response = new PassbookRequestDetailsResponse();
