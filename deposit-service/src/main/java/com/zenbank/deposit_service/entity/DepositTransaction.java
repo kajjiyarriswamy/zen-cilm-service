@@ -30,7 +30,9 @@ public class DepositTransaction {
 	
 	@Column(name="customer_id", nullable = false,updatable = false)
 	private Long customerId;
-	@Column(name="deposit_type_id", nullable = false,updatable = false)
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="deposit_type_id",referencedColumnName ="type_id")
 	private Long depositTypeId;
 	
 	@Column(name="deposit_channel_id", nullable = false)
