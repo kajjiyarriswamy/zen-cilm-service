@@ -62,7 +62,6 @@ public class AccountServiceImpl implements AccountServiceI {
 
 	}
 
-	
 
 	@Override
 	public List<CustomerAccountsResponseDto> getAccountsByCustomerId(String custId) {
@@ -109,9 +108,8 @@ public class AccountServiceImpl implements AccountServiceI {
 			throw new CustomerNotFound("Enter Any valid customerId: , accountNumber: , mobileNumber: , panNumber: , status: , branchCode:");
 		}
 		
-		
-	
 	}
+
 	@Override
 	public BlockedResponseDto accountBlockingById(Long accountId,BlockedRequestDto blockeddto) {
 		// TODO Auto-generated method stub
@@ -160,6 +158,3 @@ public class AccountServiceImpl implements AccountServiceI {
 	
 
 }
-
-
-
