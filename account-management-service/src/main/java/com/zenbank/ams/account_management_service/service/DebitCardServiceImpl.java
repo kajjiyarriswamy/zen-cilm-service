@@ -3,6 +3,7 @@ package com.zenbank.ams.account_management_service.service;
 
 
 import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.zenbank.ams.account_management_service.dto.DebitCardRequest;
 import com.zenbank.ams.account_management_service.dto.DebitCardResponse;
 import com.zenbank.ams.account_management_service.dto.DebitCardResponseDto;
+import com.zenbank.ams.account_management_service.dto.DebitCardUpdateRequest;
 import com.zenbank.ams.account_management_service.dto.DebitCardUpdateResponse;
 import com.zenbank.ams.account_management_service.dto.DispatchAddress;
-import com.zenbank.ams.account_management_service.dto.UpdateDebitCardRequest;
 import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.AccountDebitCard;
 import com.zenbank.ams.account_management_service.exception.DebitCardException;
@@ -202,7 +203,7 @@ public class DebitCardServiceImpl implements DebitCardService {
     @Override
     public DebitCardUpdateResponse updateDebitCardRequest(Long accountId,
                                                           Long debitCardId,
-                                                          UpdateDebitCardRequest request) {
+                                                          DebitCardUpdateRequest request) {
 
         AccountDebitCard debitCard = debitCardRepository
                 .findByAccount_AccountIdAndDebitCardId(accountId, debitCardId)

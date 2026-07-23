@@ -5,7 +5,7 @@ package com.zenbank.ams.account_management_service.dto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 
-public class UpdateDebitCardRequest {
+public class DebitCardUpdateRequest {
 
     @NotBlank(message = "Delivery mode is required")
     private String deliveryMode;
