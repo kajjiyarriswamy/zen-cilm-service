@@ -15,27 +15,29 @@ public class DebitCardUpdateRequest {
 
     private String remarks;
 
-    public String getDeliveryMode() {
-        return deliveryMode;
-    }
+	public String getDeliveryMode() {
+		return deliveryMode;
+	}
 
-    public void setDeliveryMode(String deliveryMode) {
-        this.deliveryMode = deliveryMode;
-    }
+	public void setDeliveryMode(String deliveryMode) {
+		this.deliveryMode = deliveryMode;
+	}
 
-    public DispatchAddress getDispatchAddress() {
-        return dispatchAddress;
-    }
+	public DispatchAddress getDispatchAddress() {
+		return dispatchAddress;
+	}
 
-    public void setDispatchAddress(DispatchAddress dispatchAddress) {
-        this.dispatchAddress = dispatchAddress;
-    }
+	public void setDispatchAddress(DispatchAddress dispatchAddress) {
+		this.dispatchAddress = dispatchAddress;
+	}
 
-    public String getRemarks() {
-        return remarks;
-    }
+	public String getRemarks() {
+		return remarks;
+	}
 
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+    
 }

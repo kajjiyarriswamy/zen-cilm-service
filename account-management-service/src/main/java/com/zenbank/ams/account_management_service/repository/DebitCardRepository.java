@@ -27,5 +27,6 @@ public interface DebitCardRepository extends JpaRepository<AccountDebitCard, Lon
             Long accountId,
             
             Long debitCardId);
+   
 
 }
