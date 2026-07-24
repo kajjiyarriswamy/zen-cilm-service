@@ -23,7 +23,7 @@ import jakarta.persistence.Table;
 public class ChequeDeposit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cheque_deposit_id")
+    @Column(name = "cheque_deposit_id",length=19)
     private Long chequeDepositId;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -52,7 +52,7 @@ public class ChequeDeposit {
     private String micrCode;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "cheque_status", length = 30)
+    @Column(name = "cheque_status", length = 30,updatable = true)
     private ChequeStatus chequeStatus;
 
     @Column(name = "clearing_date")
