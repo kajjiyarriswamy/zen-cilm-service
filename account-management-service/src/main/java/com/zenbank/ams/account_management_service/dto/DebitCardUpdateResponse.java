@@ -1,15 +1,17 @@
 package com.zenbank.ams.account_management_service.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class AccountAlertPreferenceResponse {
+public class DebitCardUpdateResponse {
 
     private String status;
-
     private String message;
 
-    private String preferenceId;
+    public DebitCardUpdateResponse() {
+    }
+
+    public DebitCardUpdateResponse(String status, String message) {
+        this.status = status;
+        this.message = message;
+    }
 
 	public String getStatus() {
 		return status;
@@ -27,13 +29,5 @@ public class AccountAlertPreferenceResponse {
 		this.message = message;
 	}
 
-	public String getPreferenceId() {
-		return preferenceId;
-	}
-
-	public void setPreferenceId(String preferenceId) {
-		this.preferenceId = preferenceId;
-	}
     
-
 }
