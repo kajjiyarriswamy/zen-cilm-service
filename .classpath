@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="account-management-service/src/main/java"/>
-	<classpathentry kind="src" path="account-management-service/src/test/java"/>
-	<classpathentry kind="src" path="cilm-service/src/main/java"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21"/>
-	<classpathentry kind="src" path="cilm-service/src/test/java"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>
