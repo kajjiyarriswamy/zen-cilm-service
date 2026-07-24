@@ -50,9 +50,9 @@ public class AccountController {
 		return ResponseEntity.status(HttpStatus.FOUND).body(ApiResponseUtility.getAccountsByCustomerId(customerId, responsedto));
 		
 	}
-	
-	
-	
+
+
+
 	@GetMapping("/accounts/search")
 	public ResponseEntity<NumOfRecordsResponseDto> searchAccountsByPhoneNum(@RequestParam(required =false) String customerId,
 			@RequestParam(required = false) Long accountNumber,
@@ -62,13 +62,13 @@ public class AccountController {
 			@RequestParam(required = false) String branchCode,
 			@RequestParam(defaultValue = "0") Integer page,
 			@RequestParam(defaultValue = "10") Integer size
-			
+
 			){
 		NumOfRecordsResponseDto numRecordsResDto = accountservice.getAccountsByParameters(customerId,accountNumber,
 				mobileNumber,panNumber,status,branchCode,page,size);
-		
+
 		return new ResponseEntity<NumOfRecordsResponseDto>(numRecordsResDto,HttpStatus.FOUND);
-		
+
 	}
 	
 	
