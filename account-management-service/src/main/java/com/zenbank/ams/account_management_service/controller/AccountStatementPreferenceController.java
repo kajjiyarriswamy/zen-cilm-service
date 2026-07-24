@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zenbank.ams.account_management_service.dto.CreateJointHolderRequest;
 import com.zenbank.ams.account_management_service.dto.CreateStatementPreferenceRequest;
+import com.zenbank.ams.account_management_service.dto.JointHolderResponse;
 import com.zenbank.ams.account_management_service.dto.StatementPreferenceResponse;
 import com.zenbank.ams.account_management_service.service.StatementPreferenceService;
 import com.zenbank.ams.account_management_service.utility.ApiResponseUtility;
@@ -71,6 +73,16 @@ public class AccountStatementPreferenceController {
 
 		return ResponseEntity.ok(ApiResponseUtility.success(statementPreferenceService.searchAccount(accountId,
 				statementType, statementFrequency, deliveryStatus, page, size)));
+	}
+	@PostMapping("/{accountId}/joint-holders")
+	public ResponseEntity<JointHolderResponse> createJointHolder(
+	        @PathVariable Long accountId,
+	        @Valid @RequestBody CreateJointHolderRequest request) {
+
+	    JointHolderResponse response =
+	            statementPreferenceService.createAccountHolder(accountId, request);
+
+	    return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 }

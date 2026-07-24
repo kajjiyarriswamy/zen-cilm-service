@@ -1,179 +1,292 @@
 package com.zenbank.deposit_service.entity;
 
+
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "deposit_transaction")
+@Table(name="deposit_transaction")
 public class DepositTransaction {
+	@Id
+	@SequenceGenerator(name = "bank", sequenceName = "depositid", initialValue = 1000, allocationSize = 1)
+	@GeneratedValue(generator = "bank", strategy = GenerationType.SEQUENCE)
+	@Column(name = "deposit_id", unique = true, nullable = false, updatable = false, length = 20)
+	private Long depositId;
+	
+	@Column(name="transaction_reference",unique = true, nullable = false, updatable = false, length = 20)
+	private String transactionReference;
+	
+	@Column(name="account_id", nullable = false,updatable = false)
+	private Long accountId;
+	
+	@Column(name="customer_id", nullable = false,updatable = false)
+	private Long customerId;
+	@Column(name="deposit_type_id", nullable = false,updatable = false)
+	private Long depositTypeId;
+	
+	@Column(name="deposit_channel_id", nullable = false)
+    private Long depositChannelId;
+	@Column(name="amount", nullable = false,updatable = false)
+	private Double amount;
+	
+	@Column(name="currency", nullable = false,updatable = false)
+	private String currency;
+	
+	@Column(name="transaction_date", nullable = false,updatable = false)
+	private LocalDate transactionDate;
+	
+	@Column(name="value_date", nullable = false,updatable = false)
+	private LocalDate valueDate;
+	@Column(name="transaction_status", nullable = false)
+	private String transactionStatus;
+	@Column(name="remarks", nullable = false)
+	private String remarks;
+	@Column(name="branch_code", nullable = false,updatable = false)
+	private String branchCode;
+	@Column(name="branch_name", nullable = false,updatable = false)
+	private String branchName;
+	@Column(name="initiated_by", nullable = false,updatable = false)
+	private String initiatedBy;
+	@Column(name="approved_by", nullable = false,updatable = false)
+	private String approvedBy;
+	@Column(name="approval_status", nullable = false)
+	private String approvalStatus;
+	@Column(name="created_by", nullable = false)
+	private String createdBy;
+	@Column(name="created_date", nullable = false,updatable = false)
+	private LocalDate createdDate;
+	@Column(name="updated_by", nullable = false)
+	private String updatedBy;
+	@Column(name="updated_date", nullable = false,updatable = false)
+	private LocalDate updatedDate;
+	
+	
+	
+	
+	public DepositTransaction() {
+		super();
+	}
+	
+	
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "deposit_id")
-    private Long depositId;
+	public DepositTransaction(Long depositId, String transactionReference, Long accountId, Long customerId,
+			Long depositTypeId, Long depositChannelId, Double amount, String currency, LocalDate transactionDate,
+			LocalDate valueDate, String transactionStatus, String remarks, String branchCode, String branchName,
+			String initiatedBy, String approvedBy, String approvalStatus, String createdBy, LocalDate createdDate,
+			String updatedBy, LocalDate updatedDate) {
+		super();
+		this.depositId = depositId;
+		this.transactionReference = transactionReference;
+		this.accountId = accountId;
+		this.customerId = customerId;
+		this.depositTypeId = depositTypeId;
+		this.depositChannelId = depositChannelId;
+		this.amount = amount;
+		this.currency = currency;
+		this.transactionDate = transactionDate;
+		this.valueDate = valueDate;
+		this.transactionStatus = transactionStatus;
+		this.remarks = remarks;
+		this.branchCode = branchCode;
+		this.branchName = branchName;
+		this.initiatedBy = initiatedBy;
+		this.approvedBy = approvedBy;
+		this.approvalStatus = approvalStatus;
+		this.createdBy = createdBy;
+		this.createdDate = createdDate;
+		this.updatedBy = updatedBy;
+		this.updatedDate = updatedDate;
+	}
 
-    @Column(name = "transaction_reference", unique = true, nullable = false, length = 50)
-    private String transactionReference;
 
-    @Column(name = "account_id", nullable = false)
-    private Long accountId;
 
-    @Column(name = "customer_id", nullable = false, length = 20)
-    private String customerId;
+	public Long getDepositId() {
+		return depositId;
+	}
 
-    @Column(name = "amount", nullable = false)
-    private Double amount;
+	public void setDepositId(Long depositId) {
+		this.depositId = depositId;
+	}
 
-    @Column(name = "currency", nullable = false, length = 10)
-    private String currency;
+	public String getTransactionReference() {
+		return transactionReference;
+	}
 
-    @Column(name = "deposit_type", nullable = false, length = 20)
-    private String depositType;
+	public void setTransactionReference(String transactionReference) {
+		this.transactionReference = transactionReference;
+	}
 
-    @Column(name = "deposit_channel", nullable = false, length = 20)
-    private String depositChannel;
+	public Long getAccountId() {
+		return accountId;
+	}
 
-    @Column(name = "status", nullable = false, length = 20)
-    private String status;
+	public void setAccountId(Long accountId) {
+		this.accountId = accountId;
+	}
 
-    @Column(name = "remarks")
-    private String remarks;
+	public Long getCustomerId() {
+		return customerId;
+	}
 
-    @Column(name = "branch_code", length = 20)
-    private String branchCode;
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
 
-    @Column(name = "branch_name", length = 100)
-    private String branchName;
+	public Long getDepositTypeId() {
+		return depositTypeId;
+	}
 
-    @Column(name = "transaction_date", nullable = false)
-    private LocalDateTime transactionDate;
+	public void setDepositTypeId(Long depositTypeId) {
+		this.depositTypeId = depositTypeId;
+	}
 
-    public DepositTransaction() {
-    }
+	public Long getDepositChannelId() {
+		return depositChannelId;
+	}
 
-    public DepositTransaction(String transactionReference, Long accountId, String customerId, Double amount,
-                              String currency, String depositType, String depositChannel, String status,
-                              String remarks, String branchCode, String branchName, LocalDateTime transactionDate) {
-        this.transactionReference = transactionReference;
-        this.accountId = accountId;
-        this.customerId = customerId;
-        this.amount = amount;
-        this.currency = currency;
-        this.depositType = depositType;
-        this.depositChannel = depositChannel;
-        this.status = status;
-        this.remarks = remarks;
-        this.branchCode = branchCode;
-        this.branchName = branchName;
-        this.transactionDate = transactionDate;
-    }
+	public void setDepositChannelId(Long depositChannelId) {
+		this.depositChannelId = depositChannelId;
+	}
 
-    public Long getDepositId() {
-        return depositId;
-    }
+	public Double getAmount() {
+		return amount;
+	}
 
-    public void setDepositId(Long depositId) {
-        this.depositId = depositId;
-    }
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
 
-    public String getTransactionReference() {
-        return transactionReference;
-    }
+	public String getCurrency() {
+		return currency;
+	}
 
-    public void setTransactionReference(String transactionReference) {
-        this.transactionReference = transactionReference;
-    }
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
 
-    public Long getAccountId() {
-        return accountId;
-    }
+	public LocalDate getTransactionDate() {
+		return transactionDate;
+	}
 
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
-    }
+	public void setTransactionDate(LocalDate transactionDate) {
+		this.transactionDate = transactionDate;
+	}
 
-    public String getCustomerId() {
-        return customerId;
-    }
+	public LocalDate getValueDate() {
+		return valueDate;
+	}
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
+	public void setValueDate(LocalDate valueDate) {
+		this.valueDate = valueDate;
+	}
 
-    public Double getAmount() {
-        return amount;
-    }
+	public String getTransactionStatus() {
+		return transactionStatus;
+	}
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
+	public void setTransactionStatus(String transactionStatus) {
+		this.transactionStatus = transactionStatus;
+	}
 
-    public String getCurrency() {
-        return currency;
-    }
+	public String getRemarks() {
+		return remarks;
+	}
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
 
-    public String getDepositType() {
-        return depositType;
-    }
+	public String getBranchCode() {
+		return branchCode;
+	}
 
-    public void setDepositType(String depositType) {
-        this.depositType = depositType;
-    }
+	public void setBranchCode(String branchCode) {
+		this.branchCode = branchCode;
+	}
 
-    public String getDepositChannel() {
-        return depositChannel;
-    }
+	public String getBranchName() {
+		return branchName;
+	}
 
-    public void setDepositChannel(String depositChannel) {
-        this.depositChannel = depositChannel;
-    }
+	public void setBranchName(String branchName) {
+		this.branchName = branchName;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public String getInitiatedBy() {
+		return initiatedBy;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public void setInitiatedBy(String initiatedBy) {
+		this.initiatedBy = initiatedBy;
+	}
 
-    public String getRemarks() {
-        return remarks;
-    }
+	public String getApprovedBy() {
+		return approvedBy;
+	}
 
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
+	public void setApprovedBy(String approvedBy) {
+		this.approvedBy = approvedBy;
+	}
 
-    public String getBranchCode() {
-        return branchCode;
-    }
+	public String getApprovalStatus() {
+		return approvalStatus;
+	}
 
-    public void setBranchCode(String branchCode) {
-        this.branchCode = branchCode;
-    }
+	public void setApprovalStatus(String approvalStatus) {
+		this.approvalStatus = approvalStatus;
+	}
 
-    public String getBranchName() {
-        return branchName;
-    }
+	public String getCreatedBy() {
+		return createdBy;
+	}
 
-    public void setBranchName(String branchName) {
-        this.branchName = branchName;
-    }
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
 
-    public LocalDateTime getTransactionDate() {
-        return transactionDate;
-    }
+	public LocalDate getCreatedDate() {
+		return createdDate;
+	}
 
-    public void setTransactionDate(LocalDateTime transactionDate) {
-        this.transactionDate = transactionDate;
-    }
+	public void setCreatedDate(LocalDate createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public LocalDate getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(LocalDate updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+
+//	@ManyToOne(fetch=FetchType.LAZY)
+//	@JoinColumn(name="deposit_type_id",referencedColumnName ="type_id")
+//	private DepositType depositType;
+//
+//	
+//	@ManyToOne(fetch=FetchType.LAZY)
+//	@JoinColumn(name="deposit_channel_id",referencedColumnName ="channel_id")
+//	private DepositChannel depositchannel;
+
+
 }
