@@ -1,5 +1,6 @@
 package com.zenbank.deposit_service.entity;
 
+
 import java.time.LocalDate;
 
 import jakarta.persistence.Column;
@@ -288,5 +289,4 @@ public class DepositTransaction {
 //	private DepositChannel depositchannel;
 
 
-	
 }
