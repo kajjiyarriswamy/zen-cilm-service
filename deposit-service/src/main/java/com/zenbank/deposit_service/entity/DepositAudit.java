@@ -1,12 +1,7 @@
 package com.zenbank.deposit_service.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "deposit_audit")
@@ -17,38 +12,47 @@ public class DepositAudit {
     @Column(name = "audit_id")
     private Long auditId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "deposit_id", nullable = false)
+    private DepositTransaction depositTransaction;
+
     @Column(name = "action", nullable = false, length = 50)
     private String action;
-
-    @Column(name = "customer_id", nullable = false, length = 20)
-    private String customerId;
-
-    @Column(name = "account_id", nullable = false)
-    private Long accountId;
-
-    @Column(name = "amount", nullable = false)
-    private Double amount;
 
     @Column(name = "performed_by", nullable = false, length = 50)
     private String performedBy;
 
-    @Column(name = "status", nullable = false, length = 20)
-    private String status;
+    @Column(name = "old_value",  nullable = false)
+    private String oldValue;
 
-    @Column(name = "created_date", nullable = false)
-    private LocalDateTime createdDate;
+    @Column(name = "new_value",   nullable = false)
+    private String newValue;
+
+    @Column(name = "ip_address",  nullable = false, length = 50)
+    private String ipAddress;
+
+    @Column(name = "device_info",   nullable = false, length = 200)
+    private String deviceInfo;
+
+    @Column(name = "audit_status", nullable = false, length = 20)
+    private String auditStatus;
+
+    @Column(name = "created_date")
+    private LocalDate createdDate;
 
     public DepositAudit() {
     }
 
-    public DepositAudit(String action, String customerId, Long accountId, Double amount, String performedBy,
-                        String status, LocalDateTime createdDate) {
+    public DepositAudit(Long auditId, DepositTransaction depositTransaction, String action, String performedBy, String oldValue, String newValue, String ipAddress, String deviceInfo, String auditStatus, LocalDate createdDate) {
+        this.auditId = auditId;
+        this.depositTransaction = depositTransaction;
         this.action = action;
-        this.customerId = customerId;
-        this.accountId = accountId;
-        this.amount = amount;
         this.performedBy = performedBy;
-        this.status = status;
+        this.oldValue = oldValue;
+        this.newValue = newValue;
+        this.ipAddress = ipAddress;
+        this.deviceInfo = deviceInfo;
+        this.auditStatus = auditStatus;
         this.createdDate = createdDate;
     }
 
@@ -60,36 +64,20 @@ public class DepositAudit {
         this.auditId = auditId;
     }
 
+    public DepositTransaction getDepositTransaction() {
+        return depositTransaction;
+    }
+
+    public void setDepositTransaction(DepositTransaction depositTransaction) {
+        this.depositTransaction = depositTransaction;
+    }
+
     public String getAction() {
         return action;
     }
 
     public void setAction(String action) {
         this.action = action;
-    }
-
-    public String getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
-
-    public Long getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
     }
 
     public String getPerformedBy() {
@@ -100,19 +88,51 @@ public class DepositAudit {
         this.performedBy = performedBy;
     }
 
-    public String getStatus() {
-        return status;
+    public String getOldValue() {
+        return oldValue;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setOldValue(String oldValue) {
+        this.oldValue = oldValue;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public String getNewValue() {
+        return newValue;
+    }
+
+    public void setNewValue(String newValue) {
+        this.newValue = newValue;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    public String getDeviceInfo() {
+        return deviceInfo;
+    }
+
+    public void setDeviceInfo(String deviceInfo) {
+        this.deviceInfo = deviceInfo;
+    }
+
+    public String getAuditStatus() {
+        return auditStatus;
+    }
+
+    public void setAuditStatus(String auditStatus) {
+        this.auditStatus = auditStatus;
+    }
+
+    public LocalDate getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
     }
 }
