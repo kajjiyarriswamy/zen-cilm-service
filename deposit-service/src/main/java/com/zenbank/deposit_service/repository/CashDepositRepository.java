@@ -6,5 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.zenbank.deposit_service.entity.CashDeposit;
 @Repository
 public interface CashDepositRepository extends JpaRepository<CashDeposit, Long> {
+	
+	
 
 }
