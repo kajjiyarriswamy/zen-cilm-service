@@ -49,7 +49,7 @@ import jakarta.persistence.Table;
 		private Boolean chequeBookFacilityEnabled;
 		@Column(name = "ledger_balance", nullable = false, updatable = false)
 		private Double ledgerBalance;
-		@Column(name = "account_status", nullable = false, updatable = false, length = 20)
+		@Column(name = "account_status", nullable = false, updatable = true, length = 20)
 		private String accountStatus;
 		@Column(name = "opened_date", nullable = false)
 		private LocalDate openedDate;
@@ -264,12 +264,10 @@ import jakarta.persistence.Table;
 		@OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         private AccountLimit accountLimit;
 		
-<<<<<<< Updated upstream
 		@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 		private List<JointAccountHolder> jointAccountHolders;
 		
-=======
+
 		@OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 		private AccountClosure accountClosure;
->>>>>>> Stashed changes
   }
