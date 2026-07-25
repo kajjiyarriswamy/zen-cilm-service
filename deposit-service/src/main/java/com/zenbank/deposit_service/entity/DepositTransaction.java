@@ -2,7 +2,9 @@ package com.zenbank.deposit_service.entity;
 
 
 import java.time.LocalDate;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,73 +13,83 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="deposit_transaction")
+@Table(name = "deposit_transaction")
 public class DepositTransaction {
 	@Id
 	@SequenceGenerator(name = "bank", sequenceName = "depositid", initialValue = 1000, allocationSize = 1)
 	@GeneratedValue(generator = "bank", strategy = GenerationType.SEQUENCE)
 	@Column(name = "deposit_id", unique = true, nullable = false, updatable = false, length = 20)
 	private Long depositId;
-	
-	@Column(name="transaction_reference",unique = true, nullable = false, updatable = false, length = 20)
+
+	@Column(name = "transaction_reference", unique = true, nullable = false, updatable = false, length = 20)
 	private String transactionReference;
-	
-	@Column(name="account_id", nullable = false,updatable = false)
+
+	@Column(name = "account_id", nullable = false, updatable = false)
 	private Long accountId;
-	
-	@Column(name="customer_id", nullable = false,updatable = false)
+
+	@Column(name = "customer_id", nullable = false, updatable = false)
 	private Long customerId;
-	@Column(name="deposit_type_id", nullable = false,updatable = false)
+	@Column(name = "deposit_type_id", nullable = false, updatable = false)
 	private Long depositTypeId;
-	
-	@Column(name="deposit_channel_id", nullable = false)
-    private Long depositChannelId;
-	@Column(name="amount", nullable = false,updatable = false)
+
+	@Column(name = "deposit_channel_id", nullable = false)
+	private Long depositChannelId;
+	@Column(name = "amount", nullable = false, updatable = false)
 	private Double amount;
-	
-	@Column(name="currency", nullable = false,updatable = false)
+
+	@Column(name = "currency", nullable = false, updatable = false)
 	private String currency;
-	
-	@Column(name="transaction_date", nullable = false,updatable = false)
+
+	@Column(name = "transaction_date", nullable = false, updatable = false)
 	private LocalDate transactionDate;
-	
-	@Column(name="value_date", nullable = false,updatable = false)
+
+	@Column(name = "value_date", nullable = false, updatable = false)
 	private LocalDate valueDate;
-	@Column(name="transaction_status", nullable = false)
+	@Column(name = "transaction_status", nullable = false)
 	private String transactionStatus;
-	@Column(name="remarks", nullable = false)
+	@Column(name = "remarks", nullable = false)
 	private String remarks;
-	@Column(name="branch_code", nullable = false,updatable = false)
+	@Column(name = "branch_code", nullable = false, updatable = false)
 	private String branchCode;
-	@Column(name="branch_name", nullable = false,updatable = false)
+	@Column(name = "branch_name", nullable = false, updatable = false)
 	private String branchName;
-	@Column(name="initiated_by", nullable = false,updatable = false)
+	@Column(name = "initiated_by", nullable = false, updatable = false)
 	private String initiatedBy;
-	@Column(name="approved_by", nullable = false,updatable = false)
+	@Column(name = "approved_by", nullable = false, updatable = false)
 	private String approvedBy;
-	@Column(name="approval_status", nullable = false)
+	@Column(name = "approval_status", nullable = false)
 	private String approvalStatus;
-	@Column(name="created_by", nullable = false)
+	@Column(name = "created_by", nullable = false)
 	private String createdBy;
-	@Column(name="created_date", nullable = false,updatable = false)
+	@Column(name = "created_date", nullable = false, updatable = false)
 	private LocalDate createdDate;
-	@Column(name="updated_by", nullable = false)
+	@Column(name = "updated_by", nullable = false)
 	private String updatedBy;
-	@Column(name="updated_date", nullable = false,updatable = false)
+	@Column(name = "updated_date", nullable = false, updatable = false)
 	private LocalDate updatedDate;
 	
+	@OneToMany(mappedBy = "depositTransaction", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<DepositAudit> depositAudits;
+	// added this for relationship for two entities
 	
+	public List<DepositAudit> getDepositAudits() {
+	    return depositAudits;
+	}
+
+	public void setDepositAudits(List<DepositAudit> depositAudits) {
+	    this.depositAudits = depositAudits;
+	}
 	
-	
+	// getter setter add for above
+
 	public DepositTransaction() {
 		super();
 	}
-	
-	
 
 	public DepositTransaction(Long depositId, String transactionReference, Long accountId, Long customerId,
 			Long depositTypeId, Long depositChannelId, Double amount, String currency, LocalDate transactionDate,
@@ -107,8 +119,6 @@ public class DepositTransaction {
 		this.updatedBy = updatedBy;
 		this.updatedDate = updatedDate;
 	}
-
-
 
 	public Long getDepositId() {
 		return depositId;
@@ -278,6 +288,8 @@ public class DepositTransaction {
 		this.updatedDate = updatedDate;
 	}
 
+	@OneToMany(mappedBy = "depositTransaction", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<DepositStatusHistory> statusHistory;
 
 //	@ManyToOne(fetch=FetchType.LAZY)
 //	@JoinColumn(name="deposit_type_id",referencedColumnName ="type_id")

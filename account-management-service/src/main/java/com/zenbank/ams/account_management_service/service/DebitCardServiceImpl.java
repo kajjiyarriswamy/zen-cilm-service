@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.zenbank.ams.account_management_service.dto.DebitCardRequest;
 import com.zenbank.ams.account_management_service.dto.DebitCardResponse;
 import com.zenbank.ams.account_management_service.dto.DebitCardResponseDto;
+import com.zenbank.ams.account_management_service.dto.DebitCardUpdateRequest;
+import com.zenbank.ams.account_management_service.dto.DebitCardUpdateResponse;
 import com.zenbank.ams.account_management_service.dto.DispatchAddress;
 import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.AccountDebitCard;
@@ -197,4 +199,49 @@ public class DebitCardServiceImpl implements DebitCardService {
 
         return response;
     }
+    @Override
+    public DebitCardUpdateResponse updateDebitCardRequest(Long accountId,
+                                                          Long debitCardId,
+                                                          DebitCardUpdateRequest request) {
+
+        AccountDebitCard debitCard = debitCardRepository
+                .findByAccount_AccountIdAndDebitCardId(accountId, debitCardId)
+                .orElseThrow(() -> new DebitCardException(
+                        "CARD_404",
+                        "Debit card request not found."));
+
+        // Cannot update after card is printed
+        if ("PRINTED".equalsIgnoreCase(debitCard.getCardStatus())) {
+            throw new DebitCardException(
+                    "CARD_400",
+                    "Debit card request cannot be updated after card is printed.");
+        }
+
+        // Update delivery mode
+        debitCard.setDeliveryMode(request.getDeliveryMode());
+
+        // Update dispatch address
+        if (request.getDispatchAddress() != null) {
+            debitCard.setDispatchAddress(
+                    serializeAddress(request.getDispatchAddress()));
+        }
+
+        // Update remarks
+        debitCard.setRemarks(request.getRemarks());
+
+        // Audit fields
+        debitCard.setUpdatedBy("SYSTEM"); // or logged-in user
+        debitCard.setUpdatedDate(LocalDateTime.now());
+
+        debitCardRepository.save(debitCard);
+
+        DebitCardUpdateResponse response = new DebitCardUpdateResponse();
+        response.setStatus("SUCCESS");
+        response.setMessage("Debit card request updated successfully.");
+
+        return response;
+        
+    }
+    
 }
+
