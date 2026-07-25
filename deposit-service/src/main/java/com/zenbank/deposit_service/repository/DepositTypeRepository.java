@@ -2,8 +2,8 @@ package com.zenbank.deposit_service.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.zenbank.deposit_service.enums.DepositStatus;
+import com.zenbank.deposit_service.entity.DepositType;
 
-public interface DepositTypeRepository extends JpaRepository<DepositStatus, Long> {
+public interface DepositTypeRepository extends JpaRepository<DepositType, Long> {
 
 }
