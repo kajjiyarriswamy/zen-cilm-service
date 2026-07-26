@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import com.zenbank.ams.account_management_service.entity.AccountDebitCard;
 
 @Repository
-public interface DebitCardRepository extends JpaRepository<AccountDebitCard, Long> {
+public interface DebitCardRepository extends JpaRepository<AccountDebitCard, Long>,JpaSpecificationExecutor<AccountDebitCard> {
 
     // Existing method
     boolean existsByAccount_AccountIdAndCardStatusIn(
