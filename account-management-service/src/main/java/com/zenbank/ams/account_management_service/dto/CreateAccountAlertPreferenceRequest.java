@@ -29,6 +29,8 @@ package com.zenbank.ams.account_management_service.dto;
 	    private String largeTransactionAlert;
 
 	    private BigDecimal largeTransactionAmount;
+	    
+	    private String status;
 
 	    @NotBlank
 	    private String notificationMode;
@@ -143,6 +145,13 @@ package com.zenbank.ams.account_management_service.dto;
 			this.email = email;
 		}
 	    
+		public String getStatus() {
+		    return status;
+		}
+
+		public void setStatus(String status) {
+		    this.status = status;
+		}
 
 	   
 	}
