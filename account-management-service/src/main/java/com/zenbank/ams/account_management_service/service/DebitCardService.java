@@ -1,5 +1,7 @@
 package com.zenbank.ams.account_management_service.service;
 
+import java.util.Map;
+
 import com.zenbank.ams.account_management_service.dto.DebitCardRequest;
 import com.zenbank.ams.account_management_service.dto.DebitCardResponse;
 import com.zenbank.ams.account_management_service.dto.DebitCardResponseDto;
@@ -16,6 +18,15 @@ public interface DebitCardService {
 		        Long accountId,
 		        Long debitCardId,
 		        DebitCardUpdateRequest request);
+	 
+	 Map<String, Object> searchDebitCards(
+		        String accountNumber,
+		        String cardType,
+		        String cardStatus,
+		        String issueType,
+		        int page,
+		        int size);
+
 
 	 
 	
