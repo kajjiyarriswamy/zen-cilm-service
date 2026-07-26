@@ -1,0 +1,168 @@
+1. What is Kafka?
+Answer: Kafka is a distributed event streaming platform used to publish, store, and process real-time data streams.
+
+2. Why Kafka?
+Answer: Kafka provides high throughput, fault tolerance, scalability, and asynchronous communication between applications.
+
+3. Producer vs Consumer?
+Answer: A Producer sends messages to Kafka, while a Consumer reads messages from Kafka.
+
+4. What is a Topic?
+Answer: A Topic is a logical category or channel where Kafka stores related messages.
+
+5. What is a Partition?
+Answer: A Partition is a subdivision of a topic that enables parallel processing and scalability.
+
+6. What is an Offset?
+Answer: An Offset is the unique position of a message within a partition.
+
+7. What is a Broker?
+Answer: A Broker is a Kafka server that stores topics, partitions, and serves producer/consumer requests.
+
+8. What is ZooKeeper? (or KRaft)
+Answer: ZooKeeper manages Kafka cluster metadata in older versions, while KRaft replaces ZooKeeper by managing metadata internally.
+
+9. What is Replication?
+Answer: Replication creates copies of partitions across brokers to ensure fault tolerance and high availability.
+
+10. What is a Consumer Group?
+Answer: A Consumer Group is a set of consumers that cooperatively consume partitions of a topic.
+
+11. Why are partitions required?
+Answer: Partitions enable parallel processing, scalability, and load distribution across brokers and consumers.
+
+12. What is Consumer Lag?
+Answer: Consumer Lag is the difference between the latest offset and the consumer's current offset.
+
+13. What is Rebalancing?
+Answer: Rebalancing is the process of redistributing partitions among consumers when consumers join or leave a group.
+
+14. Leader vs Follower?
+Answer: The Leader handles all reads and writes, while Followers replicate the Leader's data.
+
+15. What happens if a broker crashes?
+Answer: A follower replica is promoted as the new leader, ensuring continuous availability if replication is configured.
+
+16. What are acks?
+Answer: Acks define how many broker acknowledgements a producer waits for before considering a message successfully written.
+
+17. What is ISR (In-Sync Replica)?
+Answer: ISR is the set of follower replicas that are fully synchronized with the leader.
+
+18. How is ordering maintained?
+Answer: Kafka guarantees message ordering only within a partition.
+
+19. What is a Message Key?
+Answer: A Message Key determines the partition for a message and preserves ordering for the same key.
+
+20. Kafka Architecture?
+Answer: Kafka architecture consists of Producers, Topics, Partitions, Brokers, Consumers, Consumer Groups, and Replication working together in a distributed cluster.
+
+21. What is an Idempotent Producer?
+Answer: An Idempotent Producer prevents duplicate message writes during retries.
+
+22. What is Exactly Once Semantics?
+Answer: Exactly Once Semantics ensures each message is processed exactly one time without loss or duplication.
+
+23. What are Transactions in Kafka?
+Answer: Kafka Transactions allow multiple producer operations to be committed or rolled back atomically.
+
+24. What is High Availability?
+Answer: High Availability ensures Kafka continues operating even if one or more brokers fail.
+
+25. What is Partition Strategy?
+Answer: Partition Strategy determines how messages are distributed across partitions, usually based on a message key or partitioner.
+
+26. How do you tune Kafka Performance?
+Answer: Kafka performance is improved by optimizing partitions, batching, compression, replication, producer settings, and consumer concurrency.
+
+27. What are Retention Policies?
+Answer: Retention Policies define how long Kafka keeps messages before deleting them.
+
+28. What is Log Compaction?
+Answer: Log Compaction retains only the latest message for each unique key while removing older versions.
+
+29. How do you Monitor Kafka?
+Answer: Kafka is monitored using metrics such as consumer lag, throughput, broker health, disk usage, and tools like Prometheus, Grafana, or CloudWatch.
+
+30. What is Kafka Security?
+Answer: Kafka Security protects the cluster using SSL for encryption, SASL for authentication, and ACLs for authorization.
+
+31. Can multiple consumers read the same partition?
+Answer: Yes, only if they belong to different consumer groups; within the same group, only one consumer reads a partition.
+
+32. Can one consumer read multiple partitions?
+Answer: Yes, a single consumer can be assigned multiple partitions.
+
+33. Can one partition have multiple consumers in the same group?
+Answer: No, one partition is assigned to only one consumer within the same consumer group.
+
+34. Can two partitions have the same offset?
+Answer: Yes, offsets are unique only within a partition, not across the entire topic.
+
+35. How does Kafka decide which partition receives a message?
+Answer: Kafka uses hash(messageKey) % numberOfPartitions; without a key, it uses the configured partitioner to distribute messages.
+
+36. Where are Kafka messages stored?
+Answer: Kafka stores messages as append-only log files on the broker's local disk.
+
+37. Why is Kafka faster than traditional messaging systems?
+Answer: Kafka is faster because it uses sequential disk writes, batching, zero-copy transfer, and partition-based parallelism.
+
+38. What is the default partitioner?
+Answer: The default partitioner sends messages with the same key to the same partition and distributes keyless messages evenly across partitions.
+
+39. What is the difference between Scaling and Replication?
+Answer: Scaling improves throughput by adding partitions/brokers, while replication improves fault tolerance by maintaining copies of data.
+
+40. Why is Kafka called a Distributed System?
+Answer: Kafka is distributed because data and workload are spread across multiple brokers that work together as a cluster.
+
+COMMANDS YOU SHOULD KNOW
+# Create Topic
+kafka-topics --create
+
+# List Topics
+kafka-topics --list
+
+# Describe Topic
+kafka-topics --describe
+
+# Delete Topic
+kafka-topics --delete
+
+# Producer
+kafka-console-producer
+
+# Consumer
+kafka-console-consumer
+
+# List Consumer Groups
+kafka-consumer-groups --list
+
+# Describe Consumer Group
+kafka-consumer-groups --describe
+
+# Delete Consumer Group
+kafka-consumer-groups --delete
+
+ONE-LINE REVISION
+Concept	Remember As
+Kafka	Real-time messaging platform
+Producer	Sends messages
+Consumer	Reads messages
+Topic	Folder for messages
+Partition	Split of a topic for parallelism
+Offset	Message index/position
+Broker	Kafka server
+Cluster	Group of brokers
+Replication	Copies of data for fault tolerance
+Leader	Handles reads/writes
+Follower	Replica of leader
+Consumer Group	Group of consumers sharing partitions
+Lag	Messages yet to be consumed
+Rebalancing	Redistributing partitions among consumers
+Key	Ensures message order for the same key
+Retention	Duration Kafka keeps messages
+acks	Producer acknowledgement level
+ISR	In-SSync Replicas that are fully caught up
