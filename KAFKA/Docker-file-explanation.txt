@@ -1,0 +1,47 @@
+Overall Flow
+Docker Compose File
+        │
+        ▼
+Starts ZooKeeper Container
+        │
+        ▼
+Starts Kafka Broker Container
+        │
+        ▼
+Kafka Connects to ZooKeeper
+        │
+        ▼
+Kafka Opens Port 9092 (Host Access)
+        │
+        ▼
+Kafka Opens Port 29092 (Docker Access)
+        │
+        ▼
+Producer Sends Messages
+        │
+        ▼
+Kafka Stores Messages in Topics & Partitions
+        │
+        ▼
+Consumers Read Messages
+Easy Way to Remember
+Configuration	Purpose
+version	Docker Compose file version
+services	List of containers to create
+image	Docker image to download
+container_name	Fixed name for the container
+hostname	Network name inside Docker
+ports	Connect host to container
+environment	Configuration variables
+depends_on	Start dependency first
+KAFKA_BROKER_ID	Unique Kafka broker ID
+KAFKA_ZOOKEEPER_CONNECT	ZooKeeper connection details
+KAFKA_LISTENERS	Addresses where Kafka listens
+KAFKA_ADVERTISED_LISTENERS	Addresses clients should use to connect
+KAFKA_INTER_BROKER_LISTENER_NAME	Listener used for broker-to-broker communication
+KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR	Replication factor for consumer offset topic
+KAFKA_DEFAULT_REPLICATION_FACTOR	Default replication for new topics
+KAFKA_MIN_INSYNC_REPLICAS	Minimum synchronized replicas required
+KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR	Replication for transaction metadata
+KAFKA_TRANSACTION_STATE_LOG_MIN_ISR	Minimum in-sync replicas for transaction logs
+KAFKA_AUTO_CREATE_TOPICS_ENABLE	Automatically create topics when first used
