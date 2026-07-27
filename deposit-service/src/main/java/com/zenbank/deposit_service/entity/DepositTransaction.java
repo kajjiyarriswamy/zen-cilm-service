@@ -2,6 +2,7 @@ package com.zenbank.deposit_service.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -38,9 +39,9 @@ public class DepositTransaction {
 	@JoinColumn(name="deposit_type_id",referencedColumnName ="type_id")
 	private DepositType depositType;
 		
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="deposit_channel_id",referencedColumnName ="channel_id")
-    private DepositChannel depositChannel;
+//	@ManyToOne(fetch=FetchType.LAZY)
+//	@JoinColumn(name="deposit_channel_id",referencedColumnName ="channel_id")
+//	private DepositChannel depositChannel;
 		
 	@Column(name="amount", nullable = false,updatable = false)
 	private Double amount;
@@ -49,7 +50,7 @@ public class DepositTransaction {
 	private String currency;
 	
 	@Column(name="transaction_date", nullable = false,updatable = false)
-	private LocalDateTime transactionDate;
+	private LocalDate transactionDate;
 	
 	@Column(name="value_date", nullable = false,updatable = false)
 	private LocalDate valueDate;
@@ -73,7 +74,7 @@ public class DepositTransaction {
 	private LocalDate createdDate;
 	@Column(name = "updated_by", nullable = false)
 	private String updatedBy;
-	@Column(name = "updated_date", nullable = false, updatable = false)
+	@Column(name = "updated_date", nullable = false)
 	private LocalDate updatedDate;
 	
 	
@@ -82,18 +83,21 @@ public class DepositTransaction {
 	}
 
 
+	
+
+
 	public DepositTransaction(Long depositId, String transactionReference, Long accountId, Long customerId,
-			DepositType depositType, DepositChannel depositChannel, Double amount, String currency,
-			LocalDateTime transactionDate, LocalDate valueDate, String transactionStatus, String remarks,
-			String branchCode, String branchName, String initiatedBy, String approvedBy, String approvalStatus,
-			String createdBy, LocalDate createdDate, String updatedBy, LocalDate updatedDate) {
+			DepositType depositType,  Double amount, String currency,
+			LocalDate transactionDate, LocalDate valueDate, String transactionStatus, String remarks, String branchCode,
+			String branchName, String initiatedBy, String approvedBy, String approvalStatus, String createdBy,
+			LocalDate createdDate, String updatedBy, LocalDate updatedDate, List<DepositStatusHistory> statusHistory) {
 		super();
 		this.depositId = depositId;
 		this.transactionReference = transactionReference;
 		this.accountId = accountId;
 		this.customerId = customerId;
 		this.depositType = depositType;
-		this.depositChannel = depositChannel;
+		//this.depositChannel = depositChannel;
 		this.amount = amount;
 		this.currency = currency;
 		this.transactionDate = transactionDate;
@@ -109,7 +113,15 @@ public class DepositTransaction {
 		this.createdDate = createdDate;
 		this.updatedBy = updatedBy;
 		this.updatedDate = updatedDate;
+		this.statusHistory = statusHistory;
 	}
+
+
+
+
+
+	
+
 
 
 	public Long getDepositId() {
@@ -117,9 +129,15 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setDepositId(Long depositId) {
 		this.depositId = depositId;
 	}
+
+
+
 
 
 	public String getTransactionReference() {
@@ -127,9 +145,15 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setTransactionReference(String transactionReference) {
 		this.transactionReference = transactionReference;
 	}
+
+
+
 
 
 	public Long getAccountId() {
@@ -137,9 +161,15 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setAccountId(Long accountId) {
 		this.accountId = accountId;
 	}
+
+
+
 
 
 	public Long getCustomerId() {
@@ -147,9 +177,15 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
+
+
+
 
 
 	public DepositType getDepositType() {
@@ -157,19 +193,31 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setDepositType(DepositType depositType) {
 		this.depositType = depositType;
 	}
 
 
-	public DepositChannel getDepositChannel() {
-		return depositChannel;
-	}
 
 
-	public void setDepositChannel(DepositChannel depositChannel) {
-		this.depositChannel = depositChannel;
-	}
+
+//	public DepositChannel getDepositChannel() {
+//		return depositChannel;
+//	}
+//
+//
+//
+//
+//
+//	public void setDepositChannel(DepositChannel depositChannel) {
+//		this.depositChannel = depositChannel;
+//	}
+//
+//
+//
 
 
 	public Double getAmount() {
@@ -177,9 +225,15 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
+
+
+
 
 
 	public String getCurrency() {
@@ -187,19 +241,31 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setCurrency(String currency) {
 		this.currency = currency;
 	}
 
 
-	public LocalDateTime getTransactionDate() {
+
+
+
+	public LocalDate getTransactionDate() {
 		return transactionDate;
 	}
 
 
-	public void setTransactionDate(LocalDateTime transactionDate) {
+
+
+
+	public void setTransactionDate(LocalDate transactionDate) {
 		this.transactionDate = transactionDate;
 	}
+
+
+
 
 
 	public LocalDate getValueDate() {
@@ -207,9 +273,15 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setValueDate(LocalDate valueDate) {
 		this.valueDate = valueDate;
 	}
+
+
+
 
 
 	public String getTransactionStatus() {
@@ -217,9 +289,15 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setTransactionStatus(String transactionStatus) {
 		this.transactionStatus = transactionStatus;
 	}
+
+
+
 
 
 	public String getRemarks() {
@@ -227,9 +305,15 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
+
+
+
 
 
 	public String getBranchCode() {
@@ -237,9 +321,15 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setBranchCode(String branchCode) {
 		this.branchCode = branchCode;
 	}
+
+
+
 
 
 	public String getBranchName() {
@@ -247,9 +337,15 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setBranchName(String branchName) {
 		this.branchName = branchName;
 	}
+
+
+
 
 
 	public String getInitiatedBy() {
@@ -257,9 +353,15 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setInitiatedBy(String initiatedBy) {
 		this.initiatedBy = initiatedBy;
 	}
+
+
+
 
 
 	public String getApprovedBy() {
@@ -267,9 +369,15 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setApprovedBy(String approvedBy) {
 		this.approvedBy = approvedBy;
 	}
+
+
+
 
 
 	public String getApprovalStatus() {
@@ -277,9 +385,15 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setApprovalStatus(String approvalStatus) {
 		this.approvalStatus = approvalStatus;
 	}
+
+
+
 
 
 	public String getCreatedBy() {
@@ -287,9 +401,15 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
+
+
+
 
 
 	public LocalDate getCreatedDate() {
@@ -297,9 +417,15 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setCreatedDate(LocalDate createdDate) {
 		this.createdDate = createdDate;
 	}
+
+
+
 
 
 	public String getUpdatedBy() {
@@ -307,9 +433,15 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
 	}
+
+
+
 
 
 	public LocalDate getUpdatedDate() {
@@ -317,10 +449,41 @@ public class DepositTransaction {
 	}
 
 
+
+
+
 	public void setUpdatedDate(LocalDate updatedDate) {
 		this.updatedDate = updatedDate;
 	}
+
+
+
+
+
+	public List<DepositStatusHistory> getStatusHistory() {
+		return statusHistory;
+	}
+
+
+
+
+
+	public void setStatusHistory(List<DepositStatusHistory> statusHistory) {
+		this.statusHistory = statusHistory;
+	}
+
+
+
+
+
+
+
+
+
+	@OneToMany(mappedBy = "depositTransaction", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<DepositStatusHistory> statusHistory;
+
+
 	
-	
-	
+
 }
