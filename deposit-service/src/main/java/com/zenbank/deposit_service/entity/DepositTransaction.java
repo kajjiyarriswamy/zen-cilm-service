@@ -457,31 +457,14 @@ public class DepositTransaction {
 	}
 
 
-
-
-
-	public List<DepositStatusHistory> getStatusHistory() {
-		return statusHistory;
-	}
-
-
-
-
-
-	public void setStatusHistory(List<DepositStatusHistory> statusHistory) {
-		this.statusHistory = statusHistory;
-	}
-
-
-
-
-
-
-
-
-
-	@OneToMany(mappedBy = "depositTransaction", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<DepositStatusHistory> statusHistory;
+//	@ManyToOne(fetch=FetchType.LAZY)
+//	@JoinColumn(name="deposit_type_id",referencedColumnName ="type_id")
+//	private DepositType depositType;
+//
+//	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="deposit_channel_id",referencedColumnName ="channel_id")
+	private DepositChannel depositchannel;
 
 
 	
