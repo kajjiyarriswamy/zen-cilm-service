@@ -5,5 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.zenbank.deposit_service.entity.DepositTransaction;
 
 public interface DepositTransactionRepository extends JpaRepository<DepositTransaction, Long> {
-
 }

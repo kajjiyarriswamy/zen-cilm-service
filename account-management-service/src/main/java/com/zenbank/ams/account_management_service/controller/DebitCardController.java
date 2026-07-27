@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import com.zenbank.ams.account_management_service.dto.DebitCardRequest;
 import com.zenbank.ams.account_management_service.dto.DebitCardResponse;
 import com.zenbank.ams.account_management_service.dto.DebitCardResponseDto;
+import com.zenbank.ams.account_management_service.dto.DebitCardUpdateRequest;
+import com.zenbank.ams.account_management_service.dto.DebitCardUpdateResponse;
 import com.zenbank.ams.account_management_service.service.DebitCardService;
 import com.zenbank.ams.account_management_service.utility.ApiResponseUtil;
 
@@ -45,4 +47,36 @@ public class DebitCardController {
 
         return ResponseEntity.ok(ApiResponseUtil.created(response));
     }
+ @PutMapping("/{accountId}/debit-cards/{debitCardId}")
+    
+    public ResponseEntity<DebitCardUpdateResponse> updateDebitCardRequest(
+            @PathVariable Long accountId,
+            @PathVariable Long debitCardId,
+            @Valid @RequestBody DebitCardUpdateRequest request) {
+
+        DebitCardUpdateResponse response = debitCardService
+                .updateDebitCardRequest(accountId, debitCardId, request);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+ @GetMapping("/debit-cards/search")
+ public ResponseEntity<Map<String, Object>> searchDebitCards(
+         @RequestParam(required = false) String accountNumber,
+         @RequestParam(required = false) String cardType,
+         @RequestParam(required = false) String cardStatus,
+         @RequestParam(required = false) String issueType,
+         @RequestParam(defaultValue = "0") int page,
+         @RequestParam(defaultValue = "10") int size) {
+
+     return ResponseEntity.ok(
+             debitCardService.searchDebitCards(
+                     accountNumber,
+                     cardType,
+                     cardStatus,
+                     issueType,
+                     page,
+                     size));
+ }
+
+
 }

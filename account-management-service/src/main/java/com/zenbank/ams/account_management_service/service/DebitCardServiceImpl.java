@@ -4,20 +4,31 @@ package com.zenbank.ams.account_management_service.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zenbank.ams.account_management_service.dto.DebitCardRequest;
 import com.zenbank.ams.account_management_service.dto.DebitCardResponse;
 import com.zenbank.ams.account_management_service.dto.DebitCardResponseDto;
+import com.zenbank.ams.account_management_service.dto.DebitCardUpdateRequest;
+import com.zenbank.ams.account_management_service.dto.DebitCardUpdateResponse;
 import com.zenbank.ams.account_management_service.dto.DispatchAddress;
 import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.AccountDebitCard;
 import com.zenbank.ams.account_management_service.exception.DebitCardException;
 import com.zenbank.ams.account_management_service.repository.AccountRepository;
 import com.zenbank.ams.account_management_service.repository.DebitCardRepository;
+
+import jakarta.persistence.criteria.Predicate;
 
 
 @Service
@@ -197,4 +208,118 @@ public class DebitCardServiceImpl implements DebitCardService {
 
         return response;
     }
+    @Override
+    public DebitCardUpdateResponse updateDebitCardRequest(Long accountId,
+                                                          Long debitCardId,
+                                                          DebitCardUpdateRequest request) {
+
+        AccountDebitCard debitCard = debitCardRepository
+                .findByAccount_AccountIdAndDebitCardId(accountId, debitCardId)
+                .orElseThrow(() -> new DebitCardException(
+                        "CARD_404",
+                        "Debit card request not found."));
+
+        // Cannot update after card is printed
+        if ("PRINTED".equalsIgnoreCase(debitCard.getCardStatus())) {
+            throw new DebitCardException(
+                    "CARD_400",
+                    "Debit card request cannot be updated after card is printed.");
+        }
+
+        // Update delivery mode
+        debitCard.setDeliveryMode(request.getDeliveryMode());
+
+        // Update dispatch address
+        if (request.getDispatchAddress() != null) {
+            debitCard.setDispatchAddress(
+                    serializeAddress(request.getDispatchAddress()));
+        }
+
+        // Update remarks
+        debitCard.setRemarks(request.getRemarks());
+
+        // Audit fields
+        debitCard.setUpdatedBy("SYSTEM"); // or logged-in user
+        debitCard.setUpdatedDate(LocalDateTime.now());
+
+        debitCardRepository.save(debitCard);
+
+        DebitCardUpdateResponse response = new DebitCardUpdateResponse();
+        response.setStatus("SUCCESS");
+        response.setMessage("Debit card request updated successfully.");
+
+        return response;
+        
+    }
+    @Override
+    public Map<String, Object> searchDebitCards(
+            String accountNumber,
+            String cardType,
+            String cardStatus,
+            String issueType,
+            int page,
+            int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Specification<AccountDebitCard> spec = (root, query, cb) -> {
+
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (accountNumber != null && !accountNumber.isEmpty()) {
+                predicates.add(cb.equal(root.get("accountNumber"), accountNumber));
+            }
+
+            if (cardType != null && !cardType.isEmpty()) {
+                predicates.add(cb.equal(root.get("cardType"), cardType));
+            }
+
+            if (cardStatus != null && !cardStatus.isEmpty()) {
+                predicates.add(cb.equal(root.get("cardStatus"), cardStatus));
+            }
+
+            if (issueType != null && !issueType.isEmpty()) {
+                predicates.add(cb.equal(root.get("issueType"), issueType));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        Page<AccountDebitCard> result = debitCardRepository.findAll(spec, pageable);
+
+        Map<String, Object> response = new HashMap<>();
+
+        if (result.isEmpty()) {
+            response.put("status", "FAILED");
+            response.put("message", "No debit card requests found.");
+            return response;
+        }
+
+        List<Map<String, Object>> data = new ArrayList<>();
+
+        for (AccountDebitCard card : result.getContent()) {
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("debitCardRequestId", card.getDebitCardId());
+            map.put("accountNumber", card.getAccountNumber());
+            map.put("cardType", card.getCardType());
+            map.put("cardVariant", card.getCardVariant());
+            map.put("cardStatus", card.getCardStatus());
+            map.put("issueType", card.getIssueType());
+
+            data.add(map);
+        }
+
+        response.put("status", "SUCCESS");
+        response.put("page", result.getNumber());
+        response.put("size", result.getSize());
+        response.put("totalRecords", result.getTotalElements());
+        response.put("data", data);
+
+        return response;
+    }
+
+    
 }
+

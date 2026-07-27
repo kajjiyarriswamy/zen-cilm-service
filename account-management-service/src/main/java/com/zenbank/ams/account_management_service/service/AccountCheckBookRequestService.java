@@ -1,8 +1,0 @@
-package com.zenbank.ams.account_management_service.service;
-
-import com.zenbank.ams.account_management_service.dto.AccountCheckBookRequestDto;
-import com.zenbank.ams.account_management_service.dto.AccountCheckBookResponseDto;
-
-public interface AccountCheckBookRequestService {
-AccountCheckBookResponseDto createAccountCheckBookRequest(AccountCheckBookRequestDto accountCheckBookRequestDto, Long accountId);
-}

@@ -1,0 +1,579 @@
+1. What is Kafka?
+
+Kafka is a distributed messaging system used to transfer data between applications in real-time.
+
+Simple Definition
+
+Kafka acts like a post office that delivers messages from one application to another.
+
+Real World Example
+
+Imagine Swiggy.
+
+Customer places an order.
+
+Customer
+    |
+    |
+Order Service
+    |
+    | Order Placed
+    |
+   Kafka
+    |
+--------------------------
+|           |            |
+Restaurant  Payment   Notification
+ Service     Service      Service
+
+Instead of calling every service directly,
+
+Order Service simply sends one message to Kafka.
+
+Kafka distributes it to all interested services.
+
+Advantages
+
+Loose coupling
+Faster
+Scalable
+Reliable
+2. Why Kafka?
+
+Without Kafka
+
+Order Service
+     |
+     |----> Payment
+     |
+     |----> Inventory
+     |
+     |----> Email
+     |
+     |----> Analytics
+
+Too many direct connections.
+
+If one service is down,
+the Order Service may fail.
+
+With Kafka
+
+Order Service
+
+      |
+      |
+    Kafka
+
+   /   |   \
+Payment Inventory Email Analytics
+
+Producer doesn't care who consumes.
+
+3. Kafka Components
+
+There are only five important components.
+
+Producer
+
+Topic
+
+Broker
+
+Consumer
+
+Consumer Group
+4. Producer
+
+Producer sends messages to Kafka.
+
+Example
+
+Amazon
+
+Order Service
+
+Producer
+
+↓
+
+Kafka
+
+Java Example
+
+Producer.send("Order Created")
+
+Producer only sends.
+
+It never reads.
+
+5. Consumer
+
+Consumer reads messages from Kafka.
+
+Example
+
+Kafka
+
+↓
+
+Payment Service
+
+Consumer receives
+
+Order Created
+6. Topic
+
+A Topic is a logical name where messages are stored.
+
+Think of it as a folder.
+
+Example
+
+Topics
+
+order-topic
+
+payment-topic
+
+email-topic
+
+inventory-topic
+
+Real Example
+
+Order Service
+
+↓
+
+order-topic
+
+↓
+
+Payment Service
+
+Inventory Service
+
+
+7. Partition
+
+Every Topic is divided into Partitions.
+
+Example
+
+Topic
+
+Order Topic
+
+-------------
+
+Partition 0
+
+Partition 1
+
+Partition 2
+
+Why?
+
+To process data faster.
+
+Real Example
+
+1000 Orders
+
+Instead of
+
+One Partition
+
+1000 Orders
+
+Use
+
+Partition 0 → 333
+
+Partition 1 → 333
+
+Partition 2 → 334
+
+Three consumers can work simultaneously.
+
+8. Offset
+
+Offset means message number.
+
+Example
+
+Offset
+
+0
+
+1
+
+2
+
+3
+
+4
+
+5
+
+Suppose Consumer reads till
+
+Offset 4
+
+Next time it starts from
+
+Offset 5
+
+No duplicate processing.
+
+9. Broker
+
+Broker means Kafka Server.
+
+Broker
+
+Stores Topics
+
+Stores Partitions
+
+Stores Messages
+
+Example
+
+Broker-1
+
+Order Topic
+
+Payment Topic
+10. Cluster
+
+Multiple Brokers together form a Kafka Cluster.
+
+Broker1
+
+Broker2
+
+Broker3
+
+Why?
+
+If one broker crashes,
+
+others continue serving.
+
+11. Replication
+
+Kafka keeps copies.
+
+Example
+
+Broker1
+
+Partition0
+
+↓
+
+Copied To
+
+Broker2
+
+↓
+
+Copied To
+
+Broker3
+
+If Broker1 dies,
+
+Broker2 becomes Leader.
+
+No data loss.
+
+12. Leader and Follower
+
+Each Partition has
+
+One Leader
+
+Multiple Followers
+
+Leader
+
+↓
+
+Reads
+
+Writes
+
+↓
+
+Followers
+
+Only Copy Data
+
+Producer always writes to Leader.
+
+Consumer also reads from Leader (default).
+
+13. Consumer Group
+
+Multiple consumers working together.
+
+Example
+
+Topic has
+
+P0
+
+P1
+
+P2
+
+Consumers
+
+Consumer1
+
+Consumer2
+
+Consumer3
+
+Assignment
+
+Consumer1 → P0
+
+Consumer2 → P1
+
+Consumer3 → P2
+
+One partition can be consumed by only one consumer within the same group.
+
+14. Consumer Lag
+
+Suppose Producer sent
+
+100 Messages
+
+Consumer processed
+
+80
+
+Lag
+
+100 - 80
+
+=
+
+20
+
+Meaning
+
+20 Messages are waiting.
+
+15. Rebalancing
+
+Suppose
+
+Consumer1
+
+Consumer2
+
+New Consumer joins.
+
+Kafka automatically redistributes partitions.
+
+This is called
+
+Rebalancing.
+
+16. Message Key
+
+Without Key
+
+A
+
+B
+
+C
+
+D
+
+Messages go randomly.
+
+With Key
+
+Customer-101
+
+↓
+
+Always Partition 1
+
+Guarantees order for the same key.
+
+17. Retention
+
+Kafka stores messages even after consumers read them.
+
+Example
+
+Retention
+
+7 Days
+
+Consumer crashes.
+
+Tomorrow it can read old messages.
+
+18. Producer Acknowledgements (acks)
+acks=0
+
+Producer doesn't wait.
+
+Fastest.
+
+Possible data loss.
+
+acks=1
+
+Leader confirms.
+
+Most commonly used.
+
+acks=all
+
+Leader + Followers confirm.
+
+Safest.
+
+Slowest.
+
+19. Delivery Semantics
+At Most Once
+
+May lose messages.
+
+No duplicates.
+
+At Least Once
+
+No message loss.
+
+Duplicates possible.
+
+Exactly Once
+
+No loss.
+
+No duplicates.
+
+Used in financial applications.
+
+20. Kafka Message Flow
+Producer
+
+↓
+
+Topic
+
+↓
+
+Partition
+
+↓
+
+Broker
+
+↓
+
+Consumer Group
+
+↓
+
+Consumer
+
+↓
+
+Application
+21. Real Banking Example
+
+Customer transfers ₹10,000.
+
+Mobile Banking
+
+↓
+
+Transfer Service
+
+↓
+
+Kafka
+
+↓
+
+Account Service
+
+↓
+
+Transaction Service
+
+↓
+
+Notification Service
+
+↓
+
+Audit Service
+
+Every service receives the same event independently.
+
+22. Kafka in Microservices
+
+Without Kafka
+
+Order Service
+
+↓
+
+Payment
+
+↓
+
+Inventory
+
+↓
+
+Email
+
+Tightly coupled.
+
+With Kafka
+
+Order Service
+
+↓
+
+Kafka
+
+↓
+
+Payment
+
+Inventory
+
+Email
+
+Analytics
+
+Fraud Detection
+
+Loosely coupled and scalable.
+
+
+
+
+
+One partition can be consumed by only one consumer within the same consumer group.
+One consumer can consume multiple partitions.
+If consumers > partitions, extra consumers remain idle.
+If partitions > consumers, some consumers handle multiple partitions.
+Different consumer groups can read the same partition independently because each group maintains its own offsets.
