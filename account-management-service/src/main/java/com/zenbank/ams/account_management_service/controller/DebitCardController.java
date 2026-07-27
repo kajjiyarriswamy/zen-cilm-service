@@ -59,5 +59,24 @@ public class DebitCardController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+ @GetMapping("/debit-cards/search")
+ public ResponseEntity<Map<String, Object>> searchDebitCards(
+         @RequestParam(required = false) String accountNumber,
+         @RequestParam(required = false) String cardType,
+         @RequestParam(required = false) String cardStatus,
+         @RequestParam(required = false) String issueType,
+         @RequestParam(defaultValue = "0") int page,
+         @RequestParam(defaultValue = "10") int size) {
+
+     return ResponseEntity.ok(
+             debitCardService.searchDebitCards(
+                     accountNumber,
+                     cardType,
+                     cardStatus,
+                     issueType,
+                     page,
+                     size));
+ }
+
 
 }

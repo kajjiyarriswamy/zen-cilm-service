@@ -1,0 +1,258 @@
+==========================
+KAFKA LOCAL PRACTICE STEPS
+==========================
+
+1) Create Docker Compose File
+
+File Name:
+docker-compose.kafka.yml
+
+Contains:
+- ZooKeeper
+- Kafka Broker
+
+------------------------------------------------------------
+
+2) Start Kafka Cluster
+
+docker compose -f docker-compose.kafka.yml up -d
+
+OR
+
+docker compose up -d
+
+Starts:
+- ZooKeeper
+- Kafka Broker
+
+------------------------------------------------------------
+
+3) Verify Running Containers
+
+docker ps
+
+Expected:
+- zookeeper
+- kafka
+
+------------------------------------------------------------
+
+4) Enter Kafka Broker Container
+
+docker exec -it kafka bash
+
+------------------------------------------------------------
+
+5) Create Topic
+
+kafka-topics \
+--bootstrap-server localhost:9092 \
+--create \
+--topic test-topic \
+--partitions 1 \
+--replication-factor 1
+
+Kafka Creates:
+
+test-topic
+└── Partition-0
+
+------------------------------------------------------------
+
+6) List Topics
+
+kafka-topics \
+--bootstrap-server localhost:9092 \
+--list
+
+Purpose:
+- Verify topic is created.
+
+------------------------------------------------------------
+
+7) Describe Topic
+
+kafka-topics \
+--bootstrap-server localhost:9092 \
+--describe \
+--topic test-topic
+
+Shows:
+- Topic Name
+- Partition Count
+- Replication Factor
+- Leader
+- Replicas
+- ISR (In-Sync Replicas)
+
+------------------------------------------------------------
+
+8) Start Producer
+
+kafka-console-producer \
+--bootstrap-server localhost:9092 \
+--topic test-topic
+
+Type Messages:
+
+Hello
+Kafka
+Java
+Spring Boot
+
+Press:
+Ctrl + C
+
+------------------------------------------------------------
+
+9) Consume Messages (Without Consumer Group)
+
+kafka-console-consumer \
+--bootstrap-server localhost:9092 \
+--topic test-topic \
+--from-beginning
+
+Purpose:
+- Reads all existing messages starting from Offset 0.
+
+------------------------------------------------------------
+
+10) Consume Messages (With Consumer Group)
+
+kafka-console-consumer \
+--bootstrap-server localhost:9092 \
+--topic test-topic \
+--group test-group
+
+Kafka Automatically:
+- Creates Consumer Group (test-group)
+- Tracks Offsets
+- Tracks Consumer Lag
+- Assigns Partitions
+- Stores Offsets in __consumer_offsets
+
+------------------------------------------------------------
+
+11) Produce More Messages
+
+(Open another terminal)
+
+docker exec -it kafka bash
+
+kafka-console-producer \
+--bootstrap-server localhost:9092 \
+--topic test-topic
+
+Type:
+
+Message-1
+Message-2
+Message-3
+
+Observe:
+- Consumer immediately receives new messages.
+
+------------------------------------------------------------
+
+12) List Consumer Groups
+
+kafka-consumer-groups \
+--bootstrap-server localhost:9092 \
+--list
+
+Purpose:
+- Verify Consumer Groups.
+
+Example Output:
+
+test-group
+
+------------------------------------------------------------
+
+13) Describe Consumer Group
+
+kafka-consumer-groups \
+--bootstrap-server localhost:9092 \
+--describe \
+--group test-group
+
+Shows:
+- CURRENT-OFFSET
+- LOG-END-OFFSET
+- LAG
+- MEMBER-ID
+- CLIENT-ID
+- HOST
+- PARTITION ASSIGNMENT
+
+------------------------------------------------------------
+
+14) Delete Topic
+
+kafka-topics \
+--bootstrap-server localhost:9092 \
+--delete \
+--topic test-topic
+
+Purpose:
+- Deletes the topic.
+
+------------------------------------------------------------
+
+15) Verify Topic Deleted
+
+kafka-topics \
+--bootstrap-server localhost:9092 \
+--list
+
+Purpose:
+- Ensure test-topic no longer exists.
+
+------------------------------------------------------------
+
+16) Exit Kafka Container
+
+exit
+
+------------------------------------------------------------
+
+17) Stop Kafka Cluster
+
+docker compose -f docker-compose.kafka.yml down
+
+OR
+
+docker compose down
+
+Stops:
+- Kafka Broker
+- ZooKeeper
+
+============================================================
+OPTIONAL BUT IMPORTANT COMMANDS
+============================================================
+
+Check Broker Version
+
+kafka-broker-api-versions \
+--bootstrap-server localhost:9092
+
+------------------------------------------------------------
+
+Describe All Consumer Groups
+
+kafka-consumer-groups \
+--bootstrap-server localhost:9092 \
+--describe \
+--all-groups
+
+------------------------------------------------------------
+
+Delete Consumer Group (Must Be Inactive)
+
+kafka-consumer-groups \
+--bootstrap-server localhost:9092 \
+--delete \
+--group test-group
+
+============================================================
