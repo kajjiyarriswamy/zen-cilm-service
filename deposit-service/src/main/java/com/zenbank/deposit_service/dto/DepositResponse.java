@@ -1,162 +1,180 @@
 package com.zenbank.deposit_service.dto;
 
+import java.time.LocalDateTime;
+
 public class DepositResponse {
+	
+	private String status;
+	private String message; 
+	private DepositResponseData data;
+	
+	public DepositResponse() {
+	}
 
-    private String status;
-    private String message;
-    private DepositData data;
+	public DepositResponse(String status, String message, DepositResponseData data) {
+		super();
+		this.status = status;
+		this.message = message;
+		this.data = data;
+	}
 
-    public DepositResponse() {
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public DepositResponse(String status, String message, DepositData data) {
-        this.status = status;
-        this.message = message;
-        this.data = data;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	
 
-    public String getStatus() {
-        return status;
-    }
+	public String getMessage() {
+		return message;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	public DepositResponseData getData() {
+		return data;
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	public void setData(DepositResponseData data) {
+		this.data = data;
+	}
+	
+	public static class DepositResponseData{
+		private Long depositId;
+		private String transactionReference;
+		private Long customerId;
+		private Long accountId;
+		private String depositType;
+		private String depositChannel;
+		private Double amount;
+		private String currency;
+		private String transactionStatus;
+		private LocalDateTime transactionDate;	//LocalDateTime
+		private String branchName;
+		private String receiptNumber;
+		
+		public DepositResponseData() {
+		}
 
-    public DepositData getData() {
-        return data;
-    }
+		public DepositResponseData(Long depositId, String transactionReference, Long customerId, Long accountId,
+				String depositType, String depositChannel, Double amount, String currency, String transactionStatus,
+				LocalDateTime transactionDate, String branchName, String receiptNumber) {
+			super();
+			this.depositId = depositId;
+			this.transactionReference = transactionReference;
+			this.customerId = customerId;
+			this.accountId = accountId;
+			this.depositType = depositType;
+			this.depositChannel = depositChannel;
+			this.amount = amount;
+			this.currency = currency;
+			this.transactionStatus = transactionStatus;
+			this.transactionDate = transactionDate;
+			this.branchName = branchName;
+			this.receiptNumber = receiptNumber;
+		}
 
-    public void setData(DepositData data) {
-        this.data = data;
-    }
+		public Long getDepositId() {
+			return depositId;
+		}
 
-    public static class DepositData {
-        private Long depositId;
-        private String transactionReference;
-        private Long accountId;
-        private Long customerId;
-        private Double depositAmount;
-        private String currency;
-        private String depositType;
-        private String depositChannel;
-        private String transactionStatus;
-        private String transactionDate;
-        private Double availableBalance;
+		public void setDepositId(Long depositId) {
+			this.depositId = depositId;
+		}
 
-        public DepositData() {
-        }
+		public String getTransactionReference() {
+			return transactionReference;
+		}
 
-        public DepositData(Long depositId, String transactionReference, Long accountId, Long customerId,
-                           Double depositAmount, String currency, String depositType, String depositChannel,
-                           String transactionStatus, String transactionDate, Double availableBalance) {
-            this.depositId = depositId;
-            this.transactionReference = transactionReference;
-            this.accountId = accountId;
-            this.customerId = customerId;
-            this.depositAmount = depositAmount;
-            this.currency = currency;
-            this.depositType = depositType;
-            this.depositChannel = depositChannel;
-            this.transactionStatus = transactionStatus;
-            this.transactionDate = transactionDate;
-            this.availableBalance = availableBalance;
-        }
+		public void setTransactionReference(String transactionReference) {
+			this.transactionReference = transactionReference;
+		}
 
-        public Long getDepositId() {
-            return depositId;
-        }
+		public Long getCustomerId() {
+			return customerId;
+		}
 
-        public void setDepositId(Long depositId) {
-            this.depositId = depositId;
-        }
+		public void setCustomerId(Long customerId) {
+			this.customerId = customerId;
+		}
 
-        public String getTransactionReference() {
-            return transactionReference;
-        }
+		public Long getAccountId() {
+			return accountId;
+		}
 
-        public void setTransactionReference(String transactionReference) {
-            this.transactionReference = transactionReference;
-        }
+		public void setAccountId(Long accountId) {
+			this.accountId = accountId;
+		}
 
-        public Long getAccountId() {
-            return accountId;
-        }
+		public String getDepositType() {
+			return depositType;
+		}
 
-        public void setAccountId(Long accountId) {
-            this.accountId = accountId;
-        }
+		public void setDepositType(String depositType) {
+			this.depositType = depositType;
+		}
 
-        public Long getCustomerId() {
-            return customerId;
-        }
+		public String getDepositChannel() {
+			return depositChannel;
+		}
 
-        public void setCustomerId(Long customerId) {
-            this.customerId = customerId;
-        }
+		public void setDepositChannel(String depositChannel) {
+			this.depositChannel = depositChannel;
+		}
 
-        public Double getDepositAmount() {
-            return depositAmount;
-        }
+		public Double getAmount() {
+			return amount;
+		}
 
-        public void setDepositAmount(Double depositAmount) {
-            this.depositAmount = depositAmount;
-        }
+		public void setAmount(Double amount) {
+			this.amount = amount;
+		}
 
-        public String getCurrency() {
-            return currency;
-        }
+		public String getCurrency() {
+			return currency;
+		}
 
-        public void setCurrency(String currency) {
-            this.currency = currency;
-        }
+		public void setCurrency(String currency) {
+			this.currency = currency;
+		}
 
-        public String getDepositType() {
-            return depositType;
-        }
+		public String getTransactionStatus() {
+			return transactionStatus;
+		}
 
-        public void setDepositType(String depositType) {
-            this.depositType = depositType;
-        }
+		public void setTransactionStatus(String transactionStatus) {
+			this.transactionStatus = transactionStatus;
+		}
 
-        public String getDepositChannel() {
-            return depositChannel;
-        }
+		public LocalDateTime getTransactionDate() {
+			return transactionDate;
+		}
 
-        public void setDepositChannel(String depositChannel) {
-            this.depositChannel = depositChannel;
-        }
+		public void setTransactionDate(LocalDateTime transactionDate) {
+			this.transactionDate = transactionDate;
+		}
 
-        public String getTransactionStatus() {
-            return transactionStatus;
-        }
+		public String getBranchName() {
+			return branchName;
+		}
 
-        public void setTransactionStatus(String transactionStatus) {
-            this.transactionStatus = transactionStatus;
-        }
+		public void setBranchName(String branchName) {
+			this.branchName = branchName;
+		}
 
-        public String getTransactionDate() {
-            return transactionDate;
-        }
+		public String getReceiptNumber() {
+			return receiptNumber;
+		}
 
-        public void setTransactionDate(String transactionDate) {
-            this.transactionDate = transactionDate;
-        }
+		public void setReceiptNumber(String receiptNumber) {
+			this.receiptNumber = receiptNumber;
+		}
+		
+	}
 
-        public Double getAvailableBalance() {
-            return availableBalance;
-        }
-
-        public void setAvailableBalance(Double availableBalance) {
-            this.availableBalance = availableBalance;
-        }
-    }
 }

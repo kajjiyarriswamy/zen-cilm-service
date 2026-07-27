@@ -1,13 +1,15 @@
 package com.zenbank.deposit_service.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "deposit_receipt")
@@ -18,9 +20,6 @@ public class DepositReceipt {
     @Column(name = "receipt_id")
     private Long receiptId;
 
-    @Column(name = "deposit_id", nullable = false)
-    private Long depositId;
-
     @Column(name = "receipt_number", unique = true, nullable = false, length = 50)
     private String receiptNumber;
 
@@ -30,12 +29,14 @@ public class DepositReceipt {
     @Lob
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
+    
+    @OneToOne(mappedBy = "depositReceipt")
+	private DepositTransaction depositTransaction;
 
     public DepositReceipt() {
     }
 
-    public DepositReceipt(Long depositId, String receiptNumber, LocalDateTime generatedDate, String content) {
-        this.depositId = depositId;
+    public DepositReceipt(String receiptNumber, LocalDateTime generatedDate, String content) {
         this.receiptNumber = receiptNumber;
         this.generatedDate = generatedDate;
         this.content = content;
@@ -49,13 +50,6 @@ public class DepositReceipt {
         this.receiptId = receiptId;
     }
 
-    public Long getDepositId() {
-        return depositId;
-    }
-
-    public void setDepositId(Long depositId) {
-        this.depositId = depositId;
-    }
 
     public String getReceiptNumber() {
         return receiptNumber;
@@ -80,4 +74,13 @@ public class DepositReceipt {
     public void setContent(String content) {
         this.content = content;
     }
+
+	public DepositTransaction getDepositTransaction() {
+		return depositTransaction;
+	}
+
+	public void setDepositTransaction(DepositTransaction depositTransaction) {
+		this.depositTransaction = depositTransaction;
+	}
+    
 }
