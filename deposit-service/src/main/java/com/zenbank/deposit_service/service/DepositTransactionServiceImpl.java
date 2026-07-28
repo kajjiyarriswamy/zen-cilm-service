@@ -1,5 +1,7 @@
 package com.zenbank.deposit_service.service;
 
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Service;
 
 import com.zenbank.deposit_service.dto.DepositResponse;
@@ -57,6 +59,15 @@ public class DepositTransactionServiceImpl implements DepositTransactionService 
 		
 		response.setData(data);
 		return response;
+	}
+
+
+	@Override
+	public DepositResponse searchByparams(Long customerId, Long accountId, String transactionReference,
+			String depositType, String depositChannel, String transactionStatus, LocalDate fromDate, LocalDate toDate,
+			String branchCode, Integer page, Integer size, String sortBy, String sortDirection) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.zenbank.deposit_service.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class DepositResponse {
@@ -59,6 +60,7 @@ public class DepositResponse {
 		private String receiptNumber;
 		
 		public DepositResponseData() {
+			super();
 		}
 
 		public DepositResponseData(Long depositId, String transactionReference, Long customerId, Long accountId,
@@ -155,10 +157,6 @@ public class DepositResponse {
 			return transactionDate;
 		}
 
-		public void setTransactionDate(LocalDateTime transactionDate) {
-			this.transactionDate = transactionDate;
-		}
-
 		public String getBranchName() {
 			return branchName;
 		}
@@ -177,4 +175,63 @@ public class DepositResponse {
 		
 	}
 
+
+private Long totalRecords;
+
+private Integer page;
+
+private Integer size;
+
+private List<DepositTransactionMyresponse> deposits;
+
+
+
+public DepositSearchResponse() {
+	super();
+	// TODO Auto-generated constructor stub
 }
+
+public DepositSearchResponse(Long totalRecords, Integer page, Integer size,
+		List<DepositTransactionMyresponse> deposits) {
+	super();
+	this.totalRecords = totalRecords;
+	this.page = page;
+	this.size = size;
+	this.deposits = deposits;
+}
+
+public Long getTotalRecords() {
+	return totalRecords;
+}
+
+public void setTotalRecords(Long totalRecords) {
+	this.totalRecords = totalRecords;
+}
+
+public Integer getPage() {
+	return page;
+}
+
+public void setPage(Integer page) {
+	this.page = page;
+}
+
+public Integer getSize() {
+	return size;
+}
+
+public void setSize(Integer size) {
+	this.size = size;
+}
+
+public List<DepositTransactionMyresponse> getDeposits() {
+	return deposits;
+}
+
+public void setDeposits(List<DepositTransactionMyresponse> deposits) {
+	this.deposits = deposits;
+}
+
+
+}
+
