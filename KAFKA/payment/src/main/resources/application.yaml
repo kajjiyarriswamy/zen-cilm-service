@@ -1,28 +1,32 @@
 server:
-  port: 8083
+  port: 8082
 
 spring:
   application:
     name: payment
+
   datasource:
-    url: jdbc:h2:mem:paymentdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    username: c##royal
+    password: 12345
+    driver-class-name: oracle.jdbc.OracleDriver
+
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+
   h2:
     console:
       enabled: true
+
   kafka:
     bootstrap-servers: localhost:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
     consumer:
-      group-id: payment-service-group
+      group-id: order-service-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
