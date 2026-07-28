@@ -21,7 +21,7 @@ public class DepositReceiptResponseDto {
 	
 	private Double depositAmount;
 	
-	//private String depositType;
+	private String depositType;
 	
 	private String transactionStatus;
 	
@@ -33,7 +33,7 @@ public class DepositReceiptResponseDto {
 
 	public DepositReceiptResponseDto(Long receiptId, String receiptNumber, Long depositId, String transactionReference,
 			Long customerId, Long accountId, Double depositAmount,
-			/* String depositType, */ String transactionStatus,
+			 String depositType, String transactionStatus,
 			LocalDateTime generatedDate) {
 		super();
 		this.receiptId = receiptId;
@@ -43,7 +43,7 @@ public class DepositReceiptResponseDto {
 		this.customerId = customerId;
 		this.accountId = accountId;
 		this.depositAmount = depositAmount;
-		//this.depositType = depositType;
+		this.depositType = depositType;
 		this.transactionStatus = transactionStatus;
 		this.generatedDate = generatedDate;
 	}
@@ -104,12 +104,14 @@ public class DepositReceiptResponseDto {
 		this.depositAmount = DepositAmount;
 	}
 
-	/*
-	 * public String getDepositType() { return depositType; }
-	 * 
-	 * public void setDepositType(String depositType) { this.depositType =
-	 * depositType; }
-	 */
+	public String getDepositType() {
+		return depositType;
+	}
+
+	public void setDepositType(String depositType) {
+		this.depositType = depositType;
+	}
+	 
 
 	public String getTransactionStatus() {
 		return transactionStatus;
@@ -126,12 +128,21 @@ public class DepositReceiptResponseDto {
 	public void setGeneratedDate(LocalDateTime generatedDate) {
 		this.generatedDate = generatedDate;
 	}
-	public static DepositReceiptResponseDto fromEntity(DepositReceipt depositreceipt) {
-		DepositTransaction depotrans = new DepositTransaction();
-		Double DepositAmount =depotrans.getAmount();
+	public static DepositReceiptResponseDto fromEntity(
+			DepositReceipt receipt,
+			DepositTransaction transaction) {
 		
-		return new DepositReceiptResponseDto (depositreceipt.getReceiptId(),depositreceipt.getReceiptNumber(),depositreceipt.getDepositId(),depotrans.getTransactionReference(),depotrans.getCustomerId(),depotrans.getAccountId(),depotrans.getAmount(),depotrans.getTransactionStatus(),depositreceipt.getGeneratedDate());
+		return new DepositReceiptResponseDto(
+                receipt.getReceiptId(),
+                receipt.getReceiptNumber(),
+                transaction.getDepositId(),
+                transaction.getTransactionReference(),
+                transaction.getCustomerId(),
+                transaction.getAccountId(),
+                transaction.getAmount(),
+                transaction.getDepositType().getTypeName(),
+                transaction.getTransactionStatus(),
+                receipt.getGeneratedDate());
 	}
-	//depositreceipt.getDepositType()
 
 }

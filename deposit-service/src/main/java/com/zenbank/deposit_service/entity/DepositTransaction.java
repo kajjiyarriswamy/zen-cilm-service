@@ -514,10 +514,10 @@ public class DepositTransaction {
 	@OneToMany(mappedBy = "depositTransaction", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<DepositStatusHistory> statusHistory;
 
-<<<<<<< Updated upstream
+
 
 	
-=======
+
 	
 //	  // @ManyToOne(fetch=FetchType.LAZY)
 //	  // @JoinColumn(name="deposit_type_id",referencedColumnName ="type_id") //
@@ -527,6 +527,6 @@ public class DepositTransaction {
 //	@ManyToOne(fetch=FetchType.LAZY)
 //	@JoinColumn(name="deposit_channel_id",referencedColumnName ="channel_id")
 //	private DepositChannel depositchannel;
->>>>>>> Stashed changes
+
 
 }
