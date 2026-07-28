@@ -5,7 +5,6 @@ import com.zenbank.ams.account_management_service.entity.AccountStatus;
 import com.zenbank.ams.account_management_service.service.AccountStatusService;
 import com.zenbank.ams.account_management_service.utility.ApiResponseUtility;
 import jakarta.transaction.Transactional;
-import org.hibernate.mapping.Set;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
