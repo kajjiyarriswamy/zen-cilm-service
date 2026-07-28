@@ -2,19 +2,26 @@ package com.zenbank.deposit_service.entity;
 
 import java.time.LocalDateTime;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
+
+import jakarta.persistence.Lob;
+import jakarta.persistence.OneToOne;
+
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "deposit_receipt")
 public class DepositReceipt {
+
 
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -176,7 +183,6 @@ public class DepositReceipt {
 	public void setUpdatedDate(LocalDateTime updatedDate) {
 		this.updatedDate = updatedDate;
 	}
-    
-    
-    
+
+	
 }

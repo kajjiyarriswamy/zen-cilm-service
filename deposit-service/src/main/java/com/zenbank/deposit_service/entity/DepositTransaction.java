@@ -1,6 +1,7 @@
 package com.zenbank.deposit_service.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -13,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -33,21 +35,25 @@ public class DepositTransaction {
 
 	@Column(name = "customer_id", nullable = false, updatable = false)
 	private Long customerId;
-	@Column(name = "deposit_type_id", nullable = false, updatable = false)
-	private Long depositTypeId;
-
-	@Column(name = "deposit_channel_id", nullable = false)
-	private Long depositChannelId;
-	@Column(name = "amount", nullable = false, updatable = false)
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="deposit_type_id",referencedColumnName ="type_id")
+	private DepositType depositType;
+		
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="deposit_channel_id",referencedColumnName ="channel_id")
+	private DepositChannel depositChannel;
+		
+	@Column(name="amount", nullable = false,updatable = false)
 	private Double amount;
 
 	@Column(name = "currency", nullable = false, updatable = false)
 	private String currency;
-
-	@Column(name = "transaction_date", nullable = false, updatable = false)
-	private LocalDate transactionDate;
-
-	@Column(name = "value_date", nullable = false, updatable = false)
+	
+	@Column(name="transaction_date", nullable = false,updatable = false)
+	private LocalDateTime transactionDate;
+	
+	@Column(name="value_date", nullable = false,updatable = false)
 	private LocalDate valueDate;
 	@Column(name = "transaction_status", nullable = false)
 	private String transactionStatus;
@@ -69,25 +75,33 @@ public class DepositTransaction {
 	private LocalDate createdDate;
 	@Column(name = "updated_by", nullable = false)
 	private String updatedBy;
-	@Column(name = "updated_date", nullable = false, updatable = false)
+	@Column(name = "updated_date", nullable = false)
 	private LocalDate updatedDate;
-
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="deposit_receipt_id",referencedColumnName ="receipt_id")
+	private DepositReceipt depositReceipt;
+	
 	public DepositTransaction() {
 		super();
 	}
 
+
+	
+
+
 	public DepositTransaction(Long depositId, String transactionReference, Long accountId, Long customerId,
-			Long depositTypeId, Long depositChannelId, Double amount, String currency, LocalDate transactionDate,
-			LocalDate valueDate, String transactionStatus, String remarks, String branchCode, String branchName,
-			String initiatedBy, String approvedBy, String approvalStatus, String createdBy, LocalDate createdDate,
-			String updatedBy, LocalDate updatedDate) {
+			DepositType depositType,DepositChannel depositChannel,Double amount, String currency,
+			LocalDateTime transactionDate, LocalDate valueDate, String transactionStatus, String remarks, String branchCode,
+			String branchName, String initiatedBy, String approvedBy, String approvalStatus, String createdBy,
+			LocalDate createdDate, String updatedBy, LocalDate updatedDate, List<DepositStatusHistory> statusHistory,DepositReceipt depositReceipt) {
 		super();
 		this.depositId = depositId;
 		this.transactionReference = transactionReference;
 		this.accountId = accountId;
 		this.customerId = customerId;
-		this.depositTypeId = depositTypeId;
-		this.depositChannelId = depositChannelId;
+		this.depositType = depositType;
+		this.depositChannel = depositChannel;
 		this.amount = amount;
 		this.currency = currency;
 		this.transactionDate = transactionDate;
@@ -103,186 +117,404 @@ public class DepositTransaction {
 		this.createdDate = createdDate;
 		this.updatedBy = updatedBy;
 		this.updatedDate = updatedDate;
+		this.statusHistory = statusHistory;
+		this.depositReceipt = depositReceipt;
 	}
+
+
+
+
+
+	
+
+
 
 	public Long getDepositId() {
 		return depositId;
 	}
 
+
+
+
+
 	public void setDepositId(Long depositId) {
 		this.depositId = depositId;
 	}
+
+
+
+
 
 	public String getTransactionReference() {
 		return transactionReference;
 	}
 
+
+
+
+
 	public void setTransactionReference(String transactionReference) {
 		this.transactionReference = transactionReference;
 	}
+
+
+
+
 
 	public Long getAccountId() {
 		return accountId;
 	}
 
+
+
+
+
 	public void setAccountId(Long accountId) {
 		this.accountId = accountId;
 	}
+
+
+
+
 
 	public Long getCustomerId() {
 		return customerId;
 	}
 
+
+
+
+
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
 
-	public Long getDepositTypeId() {
-		return depositTypeId;
+
+
+
+
+	public DepositType getDepositType() {
+		return depositType;
 	}
 
-	public void setDepositTypeId(Long depositTypeId) {
-		this.depositTypeId = depositTypeId;
+
+
+
+
+	public void setDepositType(DepositType depositType) {
+		this.depositType = depositType;
 	}
 
-	public Long getDepositChannelId() {
-		return depositChannelId;
+
+
+
+
+	public DepositChannel getDepositChannel() {
+		return depositChannel;
 	}
 
-	public void setDepositChannelId(Long depositChannelId) {
-		this.depositChannelId = depositChannelId;
+
+
+
+
+	public void setDepositChannel(DepositChannel depositChannel) {
+		this.depositChannel = depositChannel;
 	}
+
+
+
+
 
 	public Double getAmount() {
 		return amount;
 	}
 
+
+
+
+
 	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
+
+
+
+
 
 	public String getCurrency() {
 		return currency;
 	}
 
+
+
+
+
 	public void setCurrency(String currency) {
 		this.currency = currency;
 	}
 
-	public LocalDate getTransactionDate() {
+
+
+
+
+	public LocalDateTime getTransactionDate() {
 		return transactionDate;
 	}
 
-	public void setTransactionDate(LocalDate transactionDate) {
+
+
+
+
+	public void setTransactionDate(LocalDateTime transactionDate) {
 		this.transactionDate = transactionDate;
 	}
+
+
+
+
 
 	public LocalDate getValueDate() {
 		return valueDate;
 	}
 
+
+
+
+
 	public void setValueDate(LocalDate valueDate) {
 		this.valueDate = valueDate;
 	}
+
+
+
+
 
 	public String getTransactionStatus() {
 		return transactionStatus;
 	}
 
+
+
+
+
 	public void setTransactionStatus(String transactionStatus) {
 		this.transactionStatus = transactionStatus;
 	}
+
+
+
+
 
 	public String getRemarks() {
 		return remarks;
 	}
 
+
+
+
+
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
+
+
+
+
 
 	public String getBranchCode() {
 		return branchCode;
 	}
 
+
+
+
+
 	public void setBranchCode(String branchCode) {
 		this.branchCode = branchCode;
 	}
+
+
+
+
 
 	public String getBranchName() {
 		return branchName;
 	}
 
+
+
+
+
 	public void setBranchName(String branchName) {
 		this.branchName = branchName;
 	}
+
+
+
+
 
 	public String getInitiatedBy() {
 		return initiatedBy;
 	}
 
+
+
+
+
 	public void setInitiatedBy(String initiatedBy) {
 		this.initiatedBy = initiatedBy;
 	}
+
+
+
+
 
 	public String getApprovedBy() {
 		return approvedBy;
 	}
 
+
+
+
+
 	public void setApprovedBy(String approvedBy) {
 		this.approvedBy = approvedBy;
 	}
+
+
+
+
 
 	public String getApprovalStatus() {
 		return approvalStatus;
 	}
 
+
+
+
+
 	public void setApprovalStatus(String approvalStatus) {
 		this.approvalStatus = approvalStatus;
 	}
+
+
+
+
 
 	public String getCreatedBy() {
 		return createdBy;
 	}
 
+
+
+
+
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
+
+
+
+
 
 	public LocalDate getCreatedDate() {
 		return createdDate;
 	}
 
+
+
+
+
 	public void setCreatedDate(LocalDate createdDate) {
 		this.createdDate = createdDate;
 	}
+
+
+
+
 
 	public String getUpdatedBy() {
 		return updatedBy;
 	}
 
+
+
+
+
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
 	}
+
+
+
+
 
 	public LocalDate getUpdatedDate() {
 		return updatedDate;
 	}
 
+
+
+
+
 	public void setUpdatedDate(LocalDate updatedDate) {
 		this.updatedDate = updatedDate;
 	}
 
+
+
+
+
+	public List<DepositStatusHistory> getStatusHistory() {
+		return statusHistory;
+	}
+
+
+
+
+
+	public void setStatusHistory(List<DepositStatusHistory> statusHistory) {
+		this.statusHistory = statusHistory;
+	}
+	
+	
+	
+
+
+
+
+
+
+
+
+
+	public DepositReceipt getDepositReceipt() {
+		return depositReceipt;
+	}
+
+
+
+
+
+	public void setDepositReceipt(DepositReceipt depositReceipt) {
+		this.depositReceipt = depositReceipt;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
 	@OneToMany(mappedBy = "depositTransaction", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<DepositStatusHistory> statusHistory;
 
-//	@ManyToOne(fetch=FetchType.LAZY)
-//	@JoinColumn(name="deposit_type_id",referencedColumnName ="type_id")
-//	private DepositType depositType;
-//
-//	
-//	@ManyToOne(fetch=FetchType.LAZY)
-//	@JoinColumn(name="deposit_channel_id",referencedColumnName ="channel_id")
-//	private DepositChannel depositchannel;
+
+	
 
 }
