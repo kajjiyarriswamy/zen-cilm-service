@@ -1,36 +1,30 @@
 package com.zenbank.cilm.dto;
 
 public class CustomerPreferenceResponseDto {
-	private String preferenceId;
+
+    private Long preferenceId;
+    private String customerId;
     private String language;
     private String communicationMode;
     private Boolean emailEnabled;
     private Boolean smsEnabled;
     private Boolean marketingEnabled;
 
-    public CustomerPreferenceResponseDto() {
-    }
 
-    public CustomerPreferenceResponseDto(String preferenceId,
-                                         String language,
-                                         String communicationMode,
-                                         Boolean emailEnabled,
-                                         Boolean smsEnabled,
-                                         Boolean marketingEnabled) {
-        this.preferenceId = preferenceId;
-        this.language = language;
-        this.communicationMode = communicationMode;
-        this.emailEnabled = emailEnabled;
-        this.smsEnabled = smsEnabled;
-        this.marketingEnabled = marketingEnabled;
-    }
-
-    public String getPreferenceId() {
+    public Long getPreferenceId() {
         return preferenceId;
     }
 
-    public void setPreferenceId(String preferenceId) {
+    public void setPreferenceId(Long preferenceId) {
         this.preferenceId = preferenceId;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
     public String getLanguage() {
@@ -72,6 +66,4 @@ public class CustomerPreferenceResponseDto {
     public void setMarketingEnabled(Boolean marketingEnabled) {
         this.marketingEnabled = marketingEnabled;
     }
-
-
 }

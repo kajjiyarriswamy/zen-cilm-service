@@ -1,0 +1,54 @@
+package com.zenbank.ams.account_management_service.controller;
+
+
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import com.zenbank.ams.account_management_service.dto.AccountAlertPreferenceResponse;
+import com.zenbank.ams.account_management_service.dto.CreateAccountAlertPreferenceRequest;
+import com.zenbank.ams.account_management_service.dto.GetAlertPreference;
+import com.zenbank.ams.account_management_service.service.AccountAlertPreferenceService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/api/v1/accounts")
+@Validated
+public class AccountAlertPreferenceController {
+
+    private final AccountAlertPreferenceService service;
+
+    public AccountAlertPreferenceController(
+            AccountAlertPreferenceService service) {
+        this.service = service;
+    }
+
+    @PostMapping("/{accountId}/alert-preferences")
+    public ResponseEntity<AccountAlertPreferenceResponse> createPreference(
+            @PathVariable Long accountId,
+            @Valid @RequestBody CreateAccountAlertPreferenceRequest request) {
+
+        return new ResponseEntity<>(
+                service.createPreferance(accountId, request),
+                HttpStatus.CREATED);
+    }
+    
+    @GetMapping("/{accountId}/alert-preferences")
+    public ResponseEntity<GetAlertPreference> getAlertPreference(
+            @PathVariable Long accountId) {
+
+        return ResponseEntity.ok(
+                service.getAlertPreference(accountId));
+    }
+    @PutMapping("/{accountId}/alert-preferences")
+    public ResponseEntity<AccountAlertPreferenceResponse> updateAlertPreference(
+            @PathVariable Long accountId,
+            @Valid @RequestBody CreateAccountAlertPreferenceRequest request) {
+
+        return ResponseEntity.ok(
+                service.updateAlertPreference(accountId, request));
+    }
+}

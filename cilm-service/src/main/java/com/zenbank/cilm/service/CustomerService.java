@@ -17,13 +17,18 @@ import com.zenbank.cilm.Enum.CustomerStatus;
 import com.zenbank.cilm.repository.CustomerRepository;
 
 import com.zenbank.cilm.repository.CustomerContactRepository;
+import com.zenbank.cilm.repository.CustomerDocumentRepository;
 import com.zenbank.cilm.repository.CustomerKycRepository;
 
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +40,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class CustomerService {
@@ -47,21 +53,22 @@ public class CustomerService {
 	private final CustomerKycRepository customerKycRepository;
 	private final CustomerAuditRepository customerAuditRepository;
 	private final CustomerContactRepository customerContactRepository;
-	
+	private final CustomerDocumentRepository customerDocumentRepository;
 
     public CustomerService(CustomerRepository customerRepository, CustomerNomineeRepository customerNomineeRepository,AddressRepository customerAddressRepository,CustomerKycRepository customerKycRepository,CustomerContactRepository customerContactRepository,
-            CustomerAuditRepository customerAuditRepository) {
+            CustomerAuditRepository customerAuditRepository, CustomerDocumentRepository customerDocumentRepository) {
         this.customerRepository = customerRepository;
         this.customerNomineeRepository = customerNomineeRepository;
 		this.customerAddressRepository = customerAddressRepository;
 		this. customerKycRepository=customerKycRepository;
 		this.customerContactRepository = customerContactRepository;
 		this.customerAuditRepository = customerAuditRepository;
+		this.customerDocumentRepository = customerDocumentRepository;
     }
 
-	
 
-	
+
+
 
 	@Transactional
 	public CustomerResponseDto createCustomer(CustomerRequestDto dto) {
@@ -384,7 +391,7 @@ customerAuditRepository.save(audit);
         }
 
 
-	public CustomerPreferenceResponseDto getCustomerPreference(Long customerId) {
+	/*public CustomerPreferenceResponseDto getCustomerPreference(Long customerId) {
 
 		Customer customer = customerRepository.findById(customerId)
 				.orElseThrow(() -> new RuntimeException("Customer not found"));
@@ -400,9 +407,9 @@ customerAuditRepository.save(audit);
 		return new CustomerPreferenceResponseDto(preferenceId, preference.getLanguage(),
 				preference.getCommunicationMode(), preference.getEmailEnabled(), preference.getSmsEnabled(),
 				preference.getMarketingEnabled());
-	}
+	}*/
 
-	public CustomerPreference createPreference(Long customerId, CustomerPreference preference) {
+	public CustomerPreferences createPreference(Long customerId, CustomerPreferences preference) {
 
 		Customer customer = customerRepository.findById(customerId)
 				.orElseThrow(() -> new RuntimeException("Customer not found"));
@@ -417,7 +424,7 @@ customerAuditRepository.save(audit);
 
 		return customer.getCustomerPreference();
 	}
-
+	
 	public void updateCustomer(Long customerId, CustomerRequestDto requestDto) {
 		Customer customer = customerRepository.findById(customerId)
 	            .orElseThrow(() -> new RuntimeException("Customer not found"));
@@ -429,16 +436,16 @@ customerAuditRepository.save(audit);
 	    customerRepository.save(customer);
 	}
 
-	
+
 	public void updateNotificationPreferences(Long customerId,
-	                                          CustomerPreference request) {
+	                                          CustomerPreferences request) {
 
 // Check customer exists
 		Customer customer = customerRepository.findById(customerId)
 				.orElseThrow(() -> new RuntimeException("Customer not found"));
 
 // Check preference exists
-		CustomerPreference preference = customer.getCustomerPreference();
+		CustomerPreferences preference = customer.getCustomerPreference();
 
 		if (preference == null) {
 			throw new RuntimeException("Customer preferences not found.");
@@ -450,9 +457,9 @@ customerAuditRepository.save(audit);
 
 // Save
 		customerRepository.save(customer);
-		
+
 	}
-	
+
 
 	public CustomerContactResponseDto addContact(String customerId, @Valid CustomerContactRequestDto requestDto) {
 
@@ -460,7 +467,7 @@ customerAuditRepository.save(audit);
 	}
 
 	/**public AddressResponseDto addAddress(Long customerId, AddressRequestDto requestDto) {
-	
+
 		Customer customer =  customerRepository.findByCustomerId(String.valueOf(customerId))
 
 		Customer customer = customerRepository.findByCustomerId(customerId)
@@ -492,7 +499,7 @@ customerAuditRepository.save(audit);
 		);
 	}*/
 	public void updatePreferences(Long customerId,
-            CustomerPreference request) {
+            CustomerPreferences request) {
 
 // Validate Customer
 Customer customer = customerRepository.findById(customerId)
@@ -500,7 +507,7 @@ Customer customer = customerRepository.findById(customerId)
   new RuntimeException("Customer not found"));
 
 // Validate Preferences
-CustomerPreference preference = customer.getCustomerPreference();
+CustomerPreferences preference = customer.getCustomerPreference();
 
 if (preference == null) {
 throw new RuntimeException("Customer preferences not found");
@@ -555,7 +562,7 @@ audit.setNewValue(
 customerAuditRepository.save(audit);
 }
 
-	
+
 	public CustomerKycResponseDto getCustomerKyc(Long customerId) {
 
 	    Customer customer = customerRepository.findById(customerId)
@@ -579,7 +586,7 @@ customerAuditRepository.save(audit);
 	                                       String performedBy, String fromDate,
 	                                       String toDate, int page, int size) {*/
 
-
+// Add Addresses by using customerID
 public AddressResponseDto addAddress(String customerId, AddressRequestDto requestDto)
 {
 	Customer customer =  customerRepository.findByCustomerId(customerId)
@@ -603,7 +610,6 @@ public AddressResponseDto addAddress(String customerId, AddressRequestDto reques
 			throw new RuntimeException("Primary Address already exists");
 		}
 	}
-
 
 	CustomerAddress customerAddress = new CustomerAddress();
 	customerAddress.setCustomer(customer);
@@ -690,6 +696,7 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 	return response;
 }
 
+// Update Mobile number by using customerId
 	public CustomerContactResponseDto updateMobileNumber(
 			String customerId, CustomerContactRequestDto contactRequestDto) {
 		// Find customer
@@ -726,32 +733,32 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 			throw new RuntimeException("Customer verification failed");
 		}
 
-		//Store the old mobile number before updating it.
+//		Store the old mobile number before updating it.
 		String oldMobileNumber = customerContact.getMobileNumber();
 
-		// Update mobile number
+//		 Update mobile number
 		customerContact.setMobileNumber(mobile);
 		customerContactRepository.save(customerContact);
 
 		CustomerContactResponseDto response = null;
 		return response;
 	}
-	
+
 	public void verifyNominee(Long customerId, Long nomineeId, CustomerNomineeRequestDto dto) {
-		
+
 		Customer customer=customerRepository.findById(customerId)
 				.orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-		
+
 		CustomerNominee nominee=customerNomineeRepository.findByNomineeIdAndCustomer(nomineeId, customer)
 				.orElseThrow(() -> new ResourceNotFoundException("Nominee not found"));
-		
+
 		if ("VERIFIED".equalsIgnoreCase(nominee.getVerificationStatus())) {
-			
+
 			throw new NomineeAlreadyVerifiedException("Nominee already verified");
 		}
-		
+
 		nominee.setVerificationStatus("VERIFIED");
-		
+
 		customerNomineeRepository.save(nominee);
 	}
 
@@ -808,58 +815,112 @@ public Map<String, Object> getAuditDetails(String customerId, String auditId) {
 		return response;
 
 	}
+	public CustomerContactResponseDto updateEmail(String customerId, CustomerContactRequestDto requestDto) {
+		Customer customer = customerRepository.findByCustomerId(customerId)
+				.orElseThrow(()->
+						new RuntimeException("Customer not found"));
+
+		CustomerContact customerContact = customerContactRepository.findByCustomer(customer)
+				.orElseThrow(()->
+						new RuntimeException("contact not found"));
+
+		String email = requestDto.getEmail();
+		if (email == null || email.isBlank()) {
+			throw new RuntimeException("Email cannot be null");
+		}
+
+		if(email.equals(customerContact.getEmail())) {
+			throw new RuntimeException("New email must be different from the existing email");
+		}
+
+		if(customerContactRepository.existsByEmail(email)) {
+			throw new RuntimeException("Email already exists");
+		}
+
+//		Store the old email number before updating it.
+		String oldEmail = customerContact.getEmail();
+
+//		update email
+		customerContact.setEmail(email);
+		customerContactRepository.save(customerContact);
+
+		CustomerAudit customerAudit = new CustomerAudit();
+		customerAudit.setCustomer(customer);
+		customerAudit.setAction("EMAIL_UPDATED");
+		customerAudit.setPerformedBy("BANK_EMPLOYEE");
+		customerAudit.setOldValue(oldEmail);
+		customerAudit.setNewValue(email);
+		customerAuditRepository.save(customerAudit);
+
+		CustomerContactResponseDto contactResponseDto = new CustomerContactResponseDto();
+		contactResponseDto.setStatus("SUCCESS");
+		contactResponseDto.setMessage("Email updated successfully.");
+
+		return contactResponseDto;
+
+	}
+
+
+	public void addCustomerKyc(Long customerId, CustomerKycRequestDto requestDto) {
+		Customer customer = customerRepository.findById(customerId)
+	            .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+	    CustomerKyc customerKyc = new CustomerKyc();
+
+
+	    customerKyc.setCustomer(customer);
+	    customerKyc.setPanVerified(requestDto.getPanVerified());
+	    customerKyc.setAadhaarVerified(requestDto.getAadhaarVerified());
+	    customerKyc.setKycStatus(requestDto.getKycStatus());
+	    customerKyc.setVerifiedBy(requestDto.getVerifiedBy());
+	    //customerKyc.setVerifiedDate(requestDto.getVerifiedDate());
+
+	    customerKycRepository.save(customerKyc);
+
+	}
 
 	public void deleteNominee(Long customerId, Long nomineeId) {
+//		Customer customer = customerRepository.findByCustomerId(customerId)
+//				.orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
+
+//		CustomerNominee nominee = customerNomineeRepository.findByNomineeIdAndCustomer(nomineeId, customer)
+//				.orElseThrow(() -> new ResourceNotFoundException("Nominee not found"));
+
+//		customerNomineeRepository.delete(nominee);
 	}
 
-	public void deleteCustomer(Long customerId, CustomerRequestDto requestDto) {
-		Customer customer=customerRepository.findById(customerId)
-				.orElseThrow(() -> new ResourceNotFoundException("Customer not found"));
-        customerRepository.deleteById(customerId);
+	public CustomerKycResubmitResponseDto resubmitKyc(
+	        Long customerId,
+	        CustomerKycResubmitRequestDto request) {
 
-		customerRepository.save(customer);
+	    Customer customer = customerRepository.findById(customerId)
+	            .orElseThrow(() ->
+	                    new RuntimeException("Customer not found."));
+
+	    CustomerKyc customerKyc = customerKycRepository
+	            .findByCustomer(customer)
+	            .orElseThrow(() ->
+	                    new RuntimeException("Customer KYC not found."));
+
+	    if (!customerKyc.getKycStatus().equalsIgnoreCase("REJECTED")) {
+	        throw new RuntimeException("Customer KYC is already verified.");
+	    }
+
+	    List<CustomerDocument> documents = customerDocumentRepository.findByCustomer(customer);
+
+	    if (documents.isEmpty()) {
+	        throw new RuntimeException("Updated documents not found.");
+	    }
+
+	    customerKyc.setKycStatus("PENDING");
+	    customerKycRepository.save(customerKyc);
+
+	    CustomerKycResubmitResponseDto response = new CustomerKycResubmitResponseDto();
+	    response.setStatus("SUCCESS");
+	    response.setMessage("KYC resubmitted successfully.");
+	    response.setKycStatus("PENDING");
+
+	    return response;
 	}
 
-
-//	public void addCustomerKyc(Long customerId, CustomerKycRequestDto requestDto) {
-//		Customer customer = customerRepos;itory.findById(customerId)
-//	            .orElseThrow(() -> new RuntimeException("Customer not found"));
-//
-//	    CustomerKyc customerKyc = new CustomerKyc();
-//
-//
-//	    customerKyc.setCustomer(customer);
-//	    customerKyc.setPanVerified(requestDto.getPanVerified());
-//	    customerKyc.setAadhaarVerified(requestDto.getAadhaarVerified());
-//	    customerKyc.setKycStatus(requestDto.getKycStatus());
-//	    customerKyc.setVerifiedBy(requestDto.getVerifiedBy());
-//	    //customerKyc.setVerifiedDate(requestDto.getVerifiedDate());
-//
-//	    customerKycRepository.save(customerKyc);
-//
-//	}
-//
-//
-//	public void addCustomerKyc(Long customerId, CustomerKycRequestDto requestDto) {
-//		Customer customer = customerRepository.findById(customerId)
-//	            .orElseThrow(() -> new RuntimeException("Customer not found"));
-//
-//	    CustomerKyc customerKyc = new CustomerKyc();
-//
-//
-//	    customerKyc.setCustomer(customer);
-//	    customerKyc.setPanVerified(requestDto.getPanVerified());
-//	    customerKyc.setAadhaarVerified(requestDto.getAadhaarVerified());
-//	    customerKyc.setKycStatus(requestDto.getKycStatus());
-//	    customerKyc.setVerifiedBy(requestDto.getVerifiedBy());
-//	    //customerKyc.setVerifiedDate(requestDto.getVerifiedDate());
-//
-//	    customerKycRepository.save(customerKyc);
-//
-//	}
-	
-	
 }
-
-
-
