@@ -33,3 +33,9 @@ app:
     region: ${AWS_REGION:us-east-1}
     access-key: ${AWS_ACCESS_KEY_ID:}
     secret-key: ${AWS_SECRET_ACCESS_KEY:}
+
+services:
+  payment:
+    base-url: ${PAYMENT_SERVICE_URL:http://localhost:8082}
+  inventory:
+    base-url: ${INVENTORY_SERVICE_URL:http://localhost:8083}
