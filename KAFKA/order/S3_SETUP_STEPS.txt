@@ -1,0 +1,102 @@
+AWS S3 Setup Steps for the Order Service
+======================================
+
+This guide helps any developer configure the order service to upload files to Amazon S3.
+
+1. Create an AWS account
+- Go to https://aws.amazon.com/
+- Sign in or create a new account.
+
+2. Create an S3 bucket
+- Open the AWS S3 console.
+- Click Create bucket.
+- Enter a unique bucket name, for example:
+  my-order-documents-bucket
+- Choose the region where the bucket will be created.
+- Keep the default settings unless you have a specific requirement.
+- Click Create bucket.
+
+3. Create an IAM user for the application
+- Open IAM in the AWS console.
+- Go to Users -> Create user.
+- Enter a username, for example:
+  order-service-s3-user
+- Attach a policy that allows S3 uploads.
+- For local testing, AmazonS3FullAccess is acceptable, but production should use a narrower policy.
+- Create the user.
+
+4. Create access keys
+- Open the IAM user.
+- Go to Security credentials.
+- Create access key.
+- Copy the Access key ID and Secret access key.
+
+5. Configure the service with environment variables
+The service now reads S3 settings from environment variables.
+Set these before running the application:
+
+Windows PowerShell:
+$env:AWS_ACCESS_KEY_ID="your-access-key"
+$env:AWS_SECRET_ACCESS_KEY="your-secret-key"
+$env:AWS_REGION="us-east-1"
+$env:AWS_S3_BUCKET_NAME="your-bucket-name"
+
+Linux/macOS:
+export AWS_ACCESS_KEY_ID="your-access-key"
+export AWS_SECRET_ACCESS_KEY="your-secret-key"
+export AWS_REGION="us-east-1"
+export AWS_S3_BUCKET_NAME="your-bucket-name"
+
+You can also set these in your IDE run configuration.
+
+6. Confirm the Spring configuration
+The relevant configuration is in:
+- KAFKA/order/src/main/resources/application.yaml
+
+It should contain:
+app:
+  s3:
+    bucket-name: ${AWS_S3_BUCKET_NAME:your-bucket-name}
+    region: ${AWS_REGION:us-east-1}
+    access-key: ${AWS_ACCESS_KEY_ID:}
+    secret-key: ${AWS_SECRET_ACCESS_KEY:}
+
+The S3 client is created in:
+- KAFKA/order/src/main/java/com/zen/order/config/S3Config.java
+
+7. Run the order service
+- Start the Spring Boot service.
+- Test the upload API using:
+
+curl -X POST http://localhost:8081/documents/upload \
+  -F "file=@/path/to/your/file.pdf"
+
+8. Verify the upload
+- Open the S3 bucket in the AWS console.
+- Check that the uploaded file appears in the bucket.
+
+Recommended IAM policy
+Use a minimal policy for better security:
+
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowPutObject",
+      "Effect": "Allow",
+      "Action": ["s3:PutObject"],
+      "Resource": "arn:aws:s3:::your-bucket-name/*"
+    },
+    {
+      "Sid": "AllowListBucket",
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket"],
+      "Resource": "arn:aws:s3:::your-bucket-name"
+    }
+  ]
+}
+
+Important notes
+- Never commit AWS credentials to Git.
+- Prefer environment variables or a secrets manager in real environments.
+- If the bucket is in a region other than us-east-1, set AWS_REGION to that region.
