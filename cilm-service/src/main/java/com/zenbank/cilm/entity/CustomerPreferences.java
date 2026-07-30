@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 
 @Entity
 	@Table(name = "customer_preferences")
-	public class CustomerPreference {
+	public class CustomerPreferences {
 
 	    @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +45,7 @@ import jakarta.persistence.Table;
 	    @Column(name = "marketing_enabled")
 	    private Boolean marketingEnabled;
 	    
-	    public CustomerPreference() {
+	    public CustomerPreferences() {
 	    }
 
 	    public Long getPreferenceId() {

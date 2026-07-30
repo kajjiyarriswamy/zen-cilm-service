@@ -8,7 +8,9 @@ import jakarta.validation.Valid;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,7 +25,7 @@ public class CustomerContactController {
 
     @PostMapping("/{customerId}/contacts")
     public ResponseEntity<?> addContact(@PathVariable String customerId,
-                                        @Valid @RequestBody CustomerContactRequestDto requestDto) {
+                                        @Validated(CustomerContactRequestDto.Create.class) @RequestBody CustomerContactRequestDto requestDto) {
         try {
             CustomerContactResponseDto response =
                     customerService.addContact(customerId, requestDto);
@@ -31,8 +33,7 @@ public class CustomerContactController {
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new CustomerContactResponseDto("FAILED", e.getMessage(), null, null)
-            );
+                    new CustomerContactResponseDto("FAILED", e.getMessage(), null, null));
         }
     }
     @PutMapping("/{customerId}/contacts/mobile")
@@ -40,7 +41,13 @@ public class CustomerContactController {
             @PathVariable String customerId, @RequestBody CustomerContactRequestDto contactRequestDto) {
         return ResponseEntity.ok(customerService.updateMobileNumber(customerId, contactRequestDto));
     }
-    
+
+    @PutMapping("/{customerId}/contacts/email")
+    public ResponseEntity<CustomerContactResponseDto> updateCustomerContactEmail(
+            @PathVariable String customerId, @Valid @RequestBody CustomerContactRequestDto customerContactRequestDto){
+        return ResponseEntity.ok(customerService.updateEmail(customerId, customerContactRequestDto));
+    }
+
 //    get customer contact details by customerId
     @GetMapping("/{customerId}/contacts")
     public ResponseEntity<Map<String, Object>> getCustomerContacts(@PathVariable String customerId) {
@@ -51,8 +58,5 @@ public class CustomerContactController {
 
         return ResponseEntity.ok(response);
     }
-    
-    
-    
-    
+
 }
