@@ -28,7 +28,9 @@ public class DepositReceipt {
 
     @Lob
     @Column(name = "content", columnDefinition = "TEXT")
-    private String content;
+    private String content; 	 	
+    
+    private String filePath;
     
     @OneToOne(mappedBy = "depositReceipt")
 	private DepositTransaction depositTransaction;
@@ -74,6 +76,14 @@ public class DepositReceipt {
     public void setContent(String content) {
         this.content = content;
     }
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
 
 	public DepositTransaction getDepositTransaction() {
 		return depositTransaction;
