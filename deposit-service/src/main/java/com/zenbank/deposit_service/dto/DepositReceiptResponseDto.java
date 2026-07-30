@@ -1,9 +1,9 @@
 package com.zenbank.deposit_service.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.zenbank.deposit_service.entity.DepositReceipt;
-
 import com.zenbank.deposit_service.entity.DepositTransaction;
 public class DepositReceiptResponseDto {
 	
@@ -19,7 +19,7 @@ public class DepositReceiptResponseDto {
 	
 	private Long accountId;
 	
-	private Double depositAmount;
+	private BigDecimal depositAmount;
 	
 	private String depositType;
 	
@@ -32,7 +32,7 @@ public class DepositReceiptResponseDto {
 	}
 
 	public DepositReceiptResponseDto(Long receiptId, String receiptNumber, Long depositId, String transactionReference,
-			Long customerId, Long accountId, Double depositAmount,
+			Long customerId, Long accountId, BigDecimal depositAmount,
 			 String depositType, String transactionStatus,
 			LocalDateTime generatedDate) {
 		super();
@@ -96,12 +96,12 @@ public class DepositReceiptResponseDto {
 		this.accountId = accountId;
 	}
 
-	public Double getDepositAmount() {
+	public BigDecimal getDepositAmount() {
 		return depositAmount;
 	}
 
-	public void setDepositAmount(Double DepositAmount) {
-		this.depositAmount = DepositAmount;
+	public void setDepositAmount(BigDecimal depositAmount) {
+		this.depositAmount = depositAmount;
 	}
 
 	public String getDepositType() {
@@ -128,6 +128,7 @@ public class DepositReceiptResponseDto {
 	public void setGeneratedDate(LocalDateTime generatedDate) {
 		this.generatedDate = generatedDate;
 	}
+	
 	public static DepositReceiptResponseDto fromEntity(
 			DepositReceipt receipt,
 			DepositTransaction transaction) {

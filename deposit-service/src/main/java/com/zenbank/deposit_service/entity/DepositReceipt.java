@@ -1,5 +1,6 @@
 package com.zenbank.deposit_service.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -28,20 +29,22 @@ public class DepositReceipt {
 
     @Lob
     @Column(name = "content", columnDefinition = "TEXT")
-    private String content; 	 	
+    private String content; 	 
     
+    @Column(name="file_path")
     private String filePath;
-    
+     
     @OneToOne(mappedBy = "depositReceipt")
 	private DepositTransaction depositTransaction;
-
+    
     public DepositReceipt() {
     }
 
-    public DepositReceipt(String receiptNumber, LocalDateTime generatedDate, String content) {
+    public DepositReceipt(String receiptNumber, LocalDateTime generatedDate, String content,String filePath) {
         this.receiptNumber = receiptNumber;
         this.generatedDate = generatedDate;
         this.content = content;
+        this.filePath=filePath;
     }
 
     public Long getReceiptId() {
@@ -77,20 +80,22 @@ public class DepositReceipt {
         this.content = content;
     }
 
-	public String getFilePath() {
-		return filePath;
-	}
-
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
-	}
-
 	public DepositTransaction getDepositTransaction() {
 		return depositTransaction;
 	}
 
 	public void setDepositTransaction(DepositTransaction depositTransaction) {
 		this.depositTransaction = depositTransaction;
+		
+			}
+
+	public String getFilePath() {
+		
+		return filePath;
 	}
     
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
 }

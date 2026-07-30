@@ -14,5 +14,13 @@ public class ApiResponseUtil {
 		return response;
 		
 	}
+	
+	public static Map<String,Object> success(Object data){
+		var response=new LinkedHashMap<String,Object>();
+		response.put("status", "SUCCESS");
+		response.put("message", "Deposit receipt generated successfully.");
+		response.put("data", data);
+		return response;
 
+	}
 }

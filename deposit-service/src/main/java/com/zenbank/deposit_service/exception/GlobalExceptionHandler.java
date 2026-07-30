@@ -46,8 +46,8 @@ public class GlobalExceptionHandler {
 	//DepositReceiptTransaction
 	
 	@ExceptionHandler(DepositReceiptNotFound.class)
-	public ResponseEntity<DepositReceiptError>handleReceiptException(Exception ex){
-		DepositReceiptError error= new DepositReceiptError(
+	public ResponseEntity<ErrorResponse>handleReceiptException(Exception ex){
+		ErrorResponse error= new ErrorResponse(
 				"FAILED",
 				"RCP001",
 				ex.getMessage());
@@ -56,8 +56,8 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(ReceiptAlreadyGeneratedException.class)
-	public ResponseEntity<DepositReceiptError> handleAlreadyException(Exception ex){
-		DepositReceiptError error= new DepositReceiptError(
+	public ResponseEntity<ErrorResponse> handleAlreadyException(Exception ex){
+		ErrorResponse error= new ErrorResponse(
 				"FAILED",
 				"RCP002",
 				ex.getMessage());
@@ -65,8 +65,8 @@ public class GlobalExceptionHandler {
 	}
 	
 	@ExceptionHandler(DepositTransactionFailedException.class)
-	public ResponseEntity<DepositReceiptError> handleFailedException(Exception ex){
-		DepositReceiptError error= new DepositReceiptError(
+	public ResponseEntity<ErrorResponse> handleFailedException(Exception ex){
+		ErrorResponse error= new ErrorResponse(
 				"FAILED",
 				"RCP003",
 				ex.getMessage());
