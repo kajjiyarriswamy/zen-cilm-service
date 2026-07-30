@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -39,9 +40,9 @@ public class DepositTransaction {
 	@JoinColumn(name="deposit_type_id",referencedColumnName ="type_id")
 	private DepositType depositType;
 		
-//	@ManyToOne(fetch=FetchType.LAZY)
-//	@JoinColumn(name="deposit_channel_id",referencedColumnName ="channel_id")
-//	private DepositChannel depositChannel;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="deposit_channel_id",referencedColumnName ="channel_id")
+	private DepositChannel depositChannel;
 		
 	@Column(name="amount", nullable = false,updatable = false)
 	private Double amount;
@@ -50,7 +51,7 @@ public class DepositTransaction {
 	private String currency;
 	
 	@Column(name="transaction_date", nullable = false,updatable = false)
-	private LocalDate transactionDate;
+	private LocalDateTime transactionDate;
 	
 	@Column(name="value_date", nullable = false,updatable = false)
 	private LocalDate valueDate;
@@ -77,6 +78,9 @@ public class DepositTransaction {
 	@Column(name = "updated_date", nullable = false)
 	private LocalDate updatedDate;
 	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="deposit_receipt_id",referencedColumnName ="receipt_id")
+	private DepositReceipt depositReceipt;
 	
 	public DepositTransaction() {
 		super();
@@ -87,17 +91,17 @@ public class DepositTransaction {
 
 
 	public DepositTransaction(Long depositId, String transactionReference, Long accountId, Long customerId,
-			DepositType depositType,  Double amount, String currency,
-			LocalDate transactionDate, LocalDate valueDate, String transactionStatus, String remarks, String branchCode,
+			DepositType depositType,DepositChannel depositChannel,Double amount, String currency,
+			LocalDateTime transactionDate, LocalDate valueDate, String transactionStatus, String remarks, String branchCode,
 			String branchName, String initiatedBy, String approvedBy, String approvalStatus, String createdBy,
-			LocalDate createdDate, String updatedBy, LocalDate updatedDate, List<DepositStatusHistory> statusHistory) {
+			LocalDate createdDate, String updatedBy, LocalDate updatedDate, List<DepositStatusHistory> statusHistory,DepositReceipt depositReceipt) {
 		super();
 		this.depositId = depositId;
 		this.transactionReference = transactionReference;
 		this.accountId = accountId;
 		this.customerId = customerId;
 		this.depositType = depositType;
-		//this.depositChannel = depositChannel;
+		this.depositChannel = depositChannel;
 		this.amount = amount;
 		this.currency = currency;
 		this.transactionDate = transactionDate;
@@ -114,6 +118,7 @@ public class DepositTransaction {
 		this.updatedBy = updatedBy;
 		this.updatedDate = updatedDate;
 		this.statusHistory = statusHistory;
+		this.depositReceipt = depositReceipt;
 	}
 
 
@@ -204,20 +209,20 @@ public class DepositTransaction {
 
 
 
-//	public DepositChannel getDepositChannel() {
-//		return depositChannel;
-//	}
-//
-//
-//
-//
-//
-//	public void setDepositChannel(DepositChannel depositChannel) {
-//		this.depositChannel = depositChannel;
-//	}
-//
-//
-//
+	public DepositChannel getDepositChannel() {
+		return depositChannel;
+	}
+
+
+
+
+
+	public void setDepositChannel(DepositChannel depositChannel) {
+		this.depositChannel = depositChannel;
+	}
+
+
+
 
 
 	public Double getAmount() {
@@ -252,7 +257,7 @@ public class DepositTransaction {
 
 
 
-	public LocalDate getTransactionDate() {
+	public LocalDateTime getTransactionDate() {
 		return transactionDate;
 	}
 
@@ -260,7 +265,7 @@ public class DepositTransaction {
 
 
 
-	public void setTransactionDate(LocalDate transactionDate) {
+	public void setTransactionDate(LocalDateTime transactionDate) {
 		this.transactionDate = transactionDate;
 	}
 
@@ -471,6 +476,32 @@ public class DepositTransaction {
 	public void setStatusHistory(List<DepositStatusHistory> statusHistory) {
 		this.statusHistory = statusHistory;
 	}
+	
+	
+	
+
+
+
+
+
+
+
+
+
+	public DepositReceipt getDepositReceipt() {
+		return depositReceipt;
+	}
+
+
+
+
+
+	public void setDepositReceipt(DepositReceipt depositReceipt) {
+		this.depositReceipt = depositReceipt;
+	}
+
+
+
 
 
 

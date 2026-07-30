@@ -1,11 +1,13 @@
 package com.zenbank.deposit_service.service;
 
-import com.zenbank.deposit_service.dto.CreateDepositRequest;
-import com.zenbank.deposit_service.dto.DepositResponse;
+import org.springframework.stereotype.Service;
 
+import com.zenbank.deposit_service.dto.CreateDepositRequest;
+import com.zenbank.deposit_service.dto.DepositSearchResponse;
+@Service
 public class DepositService {
 
-	 public DepositResponse executeDeposit(CreateDepositRequest request) {
+	 public DepositSearchResponse executeDeposit(CreateDepositRequest request) {
 			
 		 return null;
 	 }

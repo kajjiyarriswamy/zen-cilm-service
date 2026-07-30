@@ -1,76 +1,82 @@
 package com.zenbank.deposit_service.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.zenbank.deposit_service.dto.DepositResponse;
+import com.zenbank.deposit_service.dto.DepositSearchResponse;
+import com.zenbank.deposit_service.dto.DepositTransactionResponse;
 import com.zenbank.deposit_service.entity.DepositTransaction;
-import com.zenbank.deposit_service.exception.DepositNotFoundException;
-import com.zenbank.deposit_service.exception.InvalidDepositIDException;
 import com.zenbank.deposit_service.repository.DepositTransactionRepository;
-import com.zenbank.deposit_service.repository.DepositTypeRepository;
-
 
 @Service
 public class DepositTransactionServiceImpl implements DepositTransactionService {
 	
-	private final DepositTransactionRepository depositTransactionRepository;
-	private final DepositTypeRepository depositTypeRepository;
-//	private final DepositReceiptRepository depositReceiptRepository;
-	
-
-	public DepositTransactionServiceImpl(DepositTransactionRepository depositTransactionRepository,
-			DepositTypeRepository depositTypeRepository) {		//DepositReceiptRepository depositReceiptRepository
-		super();
-		this.depositTransactionRepository = depositTransactionRepository;
-		this.depositTypeRepository = depositTypeRepository;
-//		this.depositReceiptRepository = depositReceiptRepository;
-	}
-
+    @Autowired
+    private  DepositTransactionRepository depositTransactionRepository;
 
 	@Override
-	public DepositResponse getDepositTransactionDetails(Long depositId) {
+	public DepositSearchResponse searchByparams(Long depositId,
+			String transactionReference,
+			Long customerId,
+			Long accountId,
+			String depositType,
+			String depositChannel, 
+			Double amount,
+			String transactionStatus,
+			LocalDate fromDate,
+			LocalDate toDate,
+			String branchCode,
+			Integer page,
+			Integer size,
+			String sortBy, 
+			String sortDirection) {
+		      
+		Pageable pageable = PageRequest.of(page, size,Sort.by(Sort.Direction.fromString(sortDirection),sortBy));
 		
-		if(depositId == null || depositId <= 0) {
-			throw new InvalidDepositIDException("Invalid Deposit ID.");
+		Page<DepositTransaction> transactions = depositTransactionRepository.searchDeposits(depositId,
+				transactionReference,
+				customerId,
+				accountId,
+				depositType,
+			    depositChannel,
+			    amount,
+				transactionStatus, 
+				fromDate, 
+				toDate, 
+				branchCode,
+				pageable );
+		
+		List<DepositTransactionResponse> depositList = new ArrayList<>();
+		
+		for(DepositTransaction deposit: transactions.getContent()) {
+			
+			DepositTransactionResponse response = new DepositTransactionResponse();
+			
+			BeanUtils.copyProperties(deposit, response);
+			
+			depositList.add(response);
+			
 		}
 		
-		DepositTransaction depositTransaction=depositTransactionRepository.findById(depositId).orElseThrow(() -> new DepositNotFoundException("Deposit transaction not found."));
+		DepositSearchResponse searchResponse = new DepositSearchResponse();
 		
-		DepositResponse response=new DepositResponse();
+		searchResponse.setTotalrecords(transactions.getTotalElements());
+		searchResponse.setPage(transactions.getNumber());
+		searchResponse.setSize(transactions.getSize());
+		searchResponse.setDeposits(depositList);
+			
+		return searchResponse;
 		
-		response.setStatus("SUCCESS");
-		response.setMessage("Deposit details retrieved successfully.");;
-		
-		DepositResponse.DepositResponseData data= new DepositResponse.DepositResponseData();
-		data.setDepositId(depositTransaction.getDepositId());
-		data.setTransactionReference(depositTransaction.getTransactionReference());
-		data.setCustomerId(depositTransaction.getCustomerId());
-		data.setAccountId(depositTransaction.getAccountId());
-		data.setDepositType(depositTransaction.getDepositType().getTypeName());
-		data.setDepositChannel(depositTransaction.getDepositChannel().getChannelName());
-		data.setAmount(depositTransaction.getAmount());
-		data.setCurrency(depositTransaction.getCurrency());
-		data.setTransactionStatus(depositTransaction.getTransactionStatus());
-		data.setTransactionDate(depositTransaction.getTransactionDate());
-		data.setBranchName(depositTransaction.getBranchName());
-//		data.setReceiptNumber(depositTransaction.getReceiptNumber());
-		
-		response.setData(data);
-		return response;
-	}
-
-
-	@Override
-	public DepositResponse searchByparams(Long customerId, Long accountId, String transactionReference,
-			String depositType, String depositChannel, String transactionStatus, LocalDate fromDate, LocalDate toDate,
-			String branchCode, Integer page, Integer size, String sortBy, String sortDirection) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	}   
+	
 }
 
-//If you later map entities outside the transactional context, you'll get a LazyInitializationException
-//@Transactional(readOnly=true)

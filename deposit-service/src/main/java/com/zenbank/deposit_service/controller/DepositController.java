@@ -1,7 +1,7 @@
 package com.zenbank.deposit_service.controller;
 
 import com.zenbank.deposit_service.dto.CreateDepositRequest;
-import com.zenbank.deposit_service.dto.DepositResponse;
+import com.zenbank.deposit_service.dto.DepositSearchResponse;
 import com.zenbank.deposit_service.service.DepositService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +19,8 @@ public class DepositController {
     private DepositService depositService;
 
     @PostMapping(value = "/deposits", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<DepositResponse> createDeposit(@RequestBody CreateDepositRequest request) {
-        DepositResponse response = depositService.executeDeposit(request);
+    public ResponseEntity<DepositSearchResponse> createDeposit(@RequestBody CreateDepositRequest request) {
+        DepositSearchResponse response = depositService.executeDeposit(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

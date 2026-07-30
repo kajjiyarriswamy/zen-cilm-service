@@ -161,8 +161,4 @@ public class DepositType {
 	    this.depositTransactions = depositTransactions;
 	}
 	
-	
-	
-	
-
 }
