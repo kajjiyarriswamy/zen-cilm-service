@@ -64,15 +64,15 @@ public class DepositTransaction {
 	private String transactionStatus;
 	@Column(name = "remarks", nullable = false)
 	private String remarks;
-	@Column(name = "branch_code", nullable = false, updatable = false)
+	@Column(name = "branch_code", nullable = false)
 	private String branchCode;
-	@Column(name = "branch_name", nullable = false, updatable = false)
+	@Column(name = "branch_name", nullable = false)
 	private String branchName;
 	@Column(name = "initiated_by", nullable = false, updatable = false)
 	private String initiatedBy;
-	@Column(name = "approved_by", nullable = false, updatable = false)
+	@Column(name = "approved_by", nullable = false)
 	private String approvedBy;
-	@Column(name = "approval_status", nullable = false)
+	@Column(name = "approval_status")
 	private String approvalStatus;
 	@Column(name = "created_by", nullable = false)
 	private String createdBy;
@@ -81,7 +81,7 @@ public class DepositTransaction {
 	@Column(name = "updated_by", nullable = false)
 	private String updatedBy;
 	@Column(name = "updated_date", nullable = false)
-	private LocalDate updatedDate;
+	private LocalDateTime updatedDate;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="deposit_receipt_id",referencedColumnName ="receipt_id")
@@ -95,7 +95,7 @@ public class DepositTransaction {
 			DepositType depositType,DepositChannel depositChannel,BigDecimal amount, String currency,
 			LocalDateTime transactionDate, LocalDate valueDate, String transactionStatus, String remarks, String branchCode,
 			String branchName, String initiatedBy, String approvedBy, String approvalStatus, String createdBy,
-			LocalDate createdDate, String updatedBy, LocalDate updatedDate, List<DepositStatusHistory> statusHistory,DepositReceipt depositReceipt) {
+			LocalDate createdDate, String updatedBy, LocalDateTime updatedDate, List<DepositStatusHistory> statusHistory,DepositReceipt depositReceipt) {
 		super();
 		this.depositId = depositId;
 		this.transactionReference = transactionReference;
@@ -283,12 +283,13 @@ public class DepositTransaction {
 		this.updatedBy = updatedBy;
 	}
 
-	public LocalDate getUpdatedDate() {
+
+	public LocalDateTime getUpdatedDate() {
 		return updatedDate;
 	}
 
 
-	public void setUpdatedDate(LocalDate updatedDate) {
+	public void setUpdatedDate(LocalDateTime updatedDate) {
 		this.updatedDate = updatedDate;
 	}
 

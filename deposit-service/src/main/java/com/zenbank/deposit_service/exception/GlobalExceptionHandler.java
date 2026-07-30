@@ -31,6 +31,30 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 		
 	}
+		
+	@ExceptionHandler(TransactionAlreadyCompletedException.class)
+	public ResponseEntity<ErrorResponse> handleTransactionAlreadyCompleted(TransactionAlreadyCompletedException ex){
+		
+		ErrorResponse error=new ErrorResponse(
+				"FAILED",
+				"DEP010",
+				ex.getMessage()
+				);
+		return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+		
+	}
+		
+	@ExceptionHandler(InvalidApprovalStatusException.class)
+	public ResponseEntity<ErrorResponse> handleInvalidApprovalStatus(InvalidApprovalStatusException ex){
+		
+		ErrorResponse error=new ErrorResponse(
+				"FAILED",
+				"DEP011",
+				ex.getMessage()
+				);
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+		
+	}
 	
 	@ExceptionHandler(Exception.class)
 	  public ResponseEntity<ErrorResponse> handleException(Exception ex) {

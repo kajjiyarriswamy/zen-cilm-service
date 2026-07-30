@@ -26,3 +26,16 @@ spring:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+app:
+  s3:
+    bucket-name: ${AWS_S3_BUCKET_NAME:your-bucket-name}
+    region: ${AWS_REGION:us-east-1}
+    access-key: ${AWS_ACCESS_KEY_ID:}
+    secret-key: ${AWS_SECRET_ACCESS_KEY:}
+
+services:
+  payment:
+    base-url: ${PAYMENT_SERVICE_URL:http://localhost:8082}
+  inventory:
+    base-url: ${INVENTORY_SERVICE_URL:http://localhost:8083}

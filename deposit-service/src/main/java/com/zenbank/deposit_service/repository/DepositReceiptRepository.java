@@ -11,4 +11,8 @@ import org.springframework.stereotype.Repository;
 public interface DepositReceiptRepository extends JpaRepository<DepositReceipt, Long> {
 
 	Optional<DepositReceipt> findByDepositTransactionDepositId(Long depositId);
+
+    Optional<DepositReceipt> findByReceiptNumber(String receiptNumber);
+
+    boolean existsByReceiptNumber(String receiptNumber);
 }
