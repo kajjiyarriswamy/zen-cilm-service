@@ -40,7 +40,7 @@ public interface DepositTransactionRepository extends JpaRepository<DepositTrans
 	    		@Param("depositChannel") String depositChannel,
 	    		@Param("amount") Double amount,
 	    		@Param("transactionStatus") String transactionStatus,
-	    		@Param("fromDate") LocalDate formDate,
+	    		@Param("fromDate") LocalDate fromDate,
 	    		@Param("toDate")LocalDate toDate,
 	    		@Param("branchCode") String branchCode,
 	    		

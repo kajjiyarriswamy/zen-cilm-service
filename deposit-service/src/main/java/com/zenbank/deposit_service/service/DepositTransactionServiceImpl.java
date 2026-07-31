@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import com.zenbank.deposit_service.dto.DepositSearchResponse;
 import com.zenbank.deposit_service.dto.DepositTransactionResponse;
 import com.zenbank.deposit_service.entity.DepositTransaction;
+import com.zenbank.deposit_service.exception.InvalidDateRangeException;
+import com.zenbank.deposit_service.exception.InvalidSearchParameterException;
 import com.zenbank.deposit_service.repository.DepositTransactionRepository;
 
 @Service
@@ -39,10 +41,36 @@ public class DepositTransactionServiceImpl implements DepositTransactionService 
 			Integer size,
 			String sortBy, 
 			String sortDirection) {
+		
+		 if (fromDate != null && toDate != null && fromDate.isAfter(toDate)) {
+		        throw new InvalidDateRangeException();
+		    }
+		
+		if (depositType != null &&
+	            !(depositType.equalsIgnoreCase("CASH")
+	            || depositType.equalsIgnoreCase("CHEQUE")
+	            || depositType.equalsIgnoreCase("UPI"))) {
+	        throw new InvalidSearchParameterException();
+	    }
+
+	    if (depositChannel != null &&
+	            !(depositChannel.equalsIgnoreCase("BRANCH")
+	            || depositChannel.equalsIgnoreCase("ATM")
+	            || depositChannel.equalsIgnoreCase("MOBILE"))) {
+	        throw new InvalidSearchParameterException();
+	    }
+
+	    if (transactionStatus != null &&
+	            !(transactionStatus.equalsIgnoreCase("SUCCESS")
+	            || transactionStatus.equalsIgnoreCase("PENDING")
+	            || transactionStatus.equalsIgnoreCase("FAILED"))) {
+	        throw new InvalidSearchParameterException();
+	    }
 		      
 		Pageable pageable = PageRequest.of(page, size,Sort.by(Sort.Direction.fromString(sortDirection),sortBy));
-		
-		Page<DepositTransaction> transactions = depositTransactionRepository.searchDeposits(depositId,
+		Page<DepositTransaction> transactions=null;
+	
+		 transactions = depositTransactionRepository.searchDeposits(depositId,
 				transactionReference,
 				customerId,
 				accountId,

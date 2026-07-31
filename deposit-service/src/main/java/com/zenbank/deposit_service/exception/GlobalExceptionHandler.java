@@ -32,6 +32,30 @@ public class GlobalExceptionHandler {
 		
 	}
 	
+	@ExceptionHandler(InvalidDateRangeException.class)
+	public ResponseEntity<ErrorResponse> InvalidDateRangeException(InvalidDateRangeException ex){
+		
+		ErrorResponse error=new ErrorResponse(
+				"FAILED",
+				"DEP012",
+				ex.getMessage()
+				);
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+		
+	}
+	
+	@ExceptionHandler(InvalidSearchParameterException.class)
+	public ResponseEntity<ErrorResponse> InvalidSearchParameterException(InvalidSearchParameterException ex) {
+		
+		ErrorResponse error = new ErrorResponse(
+		      "FAILED",
+		      "DEP013",
+		      ex.getMessage()
+		      );
+		      
+		      return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+	}
+	
 	@ExceptionHandler(Exception.class)
 	  public ResponseEntity<ErrorResponse> handleException(Exception ex) {
 
@@ -42,6 +66,7 @@ public class GlobalExceptionHandler {
 
 	        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
+	
 	
 	
 	
