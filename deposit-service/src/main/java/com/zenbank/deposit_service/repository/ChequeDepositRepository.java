@@ -8,9 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
 import com.zenbank.deposit_service.entity.ChequeDeposit;
-import com.zenbank.deposit_service.enums.ChequeStatus;
 
 public interface ChequeDepositRepository extends JpaRepository<ChequeDeposit, Long> {
 
@@ -38,7 +36,7 @@ public interface ChequeDepositRepository extends JpaRepository<ChequeDeposit, Lo
 	    		@Param("account") Long account,
 	    		@Param("issuingBank") String issuingBank,
 	    		@Param("ifscCode") String  ifscCode,
-	    		@Param("chequeStatus") ChequeStatus chequeStatus,
+	    		@Param("chequeStatus") String chequeStatus,
 	    		@Param("transactionStatus") String transactionStatus,
 	    		@Param("fromDate") LocalDate fromDate,
 	    		@Param("toDate")LocalDate toDate,
