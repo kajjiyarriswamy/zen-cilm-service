@@ -1,5 +1,6 @@
 package com.zenbank.deposit_service.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 
@@ -53,6 +54,30 @@ public class DepositReceipt {
     @Column(name = "receipt_date")
     private LocalDateTime receiptDate;
 
+    @Lob
+    @Column(name = "content", columnDefinition = "TEXT")
+    private String content; 	 
+    
+    @Column(name="file_path")
+    private String filePath;
+    
+    @Column(name="generated_date")
+    private LocalDateTime generatedDate;
+    
+	/*
+	 * @OneToOne(mappedBy = "depositReceipt") private DepositTransaction
+	 * depositTransaction;
+	 */
+    
+    public DepositReceipt() {
+    }
+
+    public DepositReceipt(String receiptNumber, LocalDateTime generatedDate, String content,String filePath) {
+        this.receiptNumber = receiptNumber;
+        this.generatedDate = generatedDate;
+        this.content = content;
+        this.filePath=filePath;
+    }
     @Column(name = "receipt_type", length = 30)
     private String receiptType;
 
@@ -94,6 +119,16 @@ public class DepositReceipt {
 
 	public void setDepositTransaction(DepositTransaction depositTransaction) {
 		this.depositTransaction = depositTransaction;
+		
+			}
+
+	public String getFilePath() {
+		
+		return filePath;
+	}
+    
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}
 
 	public String getReceiptNumber() {
@@ -182,6 +217,22 @@ public class DepositReceipt {
 
 	public void setUpdatedDate(LocalDateTime updatedDate) {
 		this.updatedDate = updatedDate;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public LocalDateTime getGeneratedDate() {
+		return generatedDate;
+	}
+
+	public void setGeneratedDate(LocalDateTime generatedDate) {
+		this.generatedDate = generatedDate;
 	}
 
 	
