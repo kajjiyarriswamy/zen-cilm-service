@@ -43,6 +43,12 @@ public class DepositTransaction {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="deposit_channel_id",referencedColumnName ="channel_id")
 	private DepositChannel depositChannel;
+	
+	@OneToMany(
+	        mappedBy = "depositTransaction",
+	        cascade = CascadeType.ALL,
+	        orphanRemoval = true)
+	private List<DepositVerification> depositVerifications;
 		
 	@Column(name="amount", nullable = false,updatable = false)
 	private Double amount;
@@ -72,11 +78,11 @@ public class DepositTransaction {
 	@Column(name = "created_by", nullable = false)
 	private String createdBy;
 	@Column(name = "created_date", nullable = false, updatable = false)
-	private LocalDate createdDate;
+	private LocalDateTime createdDate;
 	@Column(name = "updated_by", nullable = false)
 	private String updatedBy;
 	@Column(name = "updated_date", nullable = false)
-	private LocalDate updatedDate;
+	private LocalDateTime updatedDate;
 	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="deposit_receipt_id",referencedColumnName ="receipt_id")
@@ -91,10 +97,10 @@ public class DepositTransaction {
 
 
 	public DepositTransaction(Long depositId, String transactionReference, Long accountId, Long customerId,
-			DepositType depositType,DepositChannel depositChannel,Double amount, String currency,
+			DepositType depositType,DepositChannel depositChannel,List<DepositVerification> depositVerification,Double amount, String currency,
 			LocalDateTime transactionDate, LocalDate valueDate, String transactionStatus, String remarks, String branchCode,
 			String branchName, String initiatedBy, String approvedBy, String approvalStatus, String createdBy,
-			LocalDate createdDate, String updatedBy, LocalDate updatedDate, List<DepositStatusHistory> statusHistory,DepositReceipt depositReceipt) {
+			LocalDateTime createdDate, String updatedBy, LocalDateTime updatedDate, List<DepositStatusHistory> statusHistory,DepositReceipt depositReceipt) {
 		super();
 		this.depositId = depositId;
 		this.transactionReference = transactionReference;
@@ -102,6 +108,7 @@ public class DepositTransaction {
 		this.customerId = customerId;
 		this.depositType = depositType;
 		this.depositChannel = depositChannel;
+		this.depositVerifications=depositVerification;
 		this.amount = amount;
 		this.currency = currency;
 		this.transactionDate = transactionDate;
@@ -219,6 +226,22 @@ public class DepositTransaction {
 
 	public void setDepositChannel(DepositChannel depositChannel) {
 		this.depositChannel = depositChannel;
+	}
+
+
+
+
+
+	public List<DepositVerification> getDepositVerifications() {
+		return depositVerifications;
+	}
+
+
+
+
+
+	public void setDepositVerifications(List<DepositVerification> depositVerifications) {
+		this.depositVerifications = depositVerifications;
 	}
 
 
@@ -417,7 +440,7 @@ public class DepositTransaction {
 
 
 
-	public LocalDate getCreatedDate() {
+	public LocalDateTime getCreatedDate() {
 		return createdDate;
 	}
 
@@ -425,7 +448,7 @@ public class DepositTransaction {
 
 
 
-	public void setCreatedDate(LocalDate createdDate) {
+	public void setCreatedDate(LocalDateTime createdDate) {
 		this.createdDate = createdDate;
 	}
 
@@ -449,7 +472,7 @@ public class DepositTransaction {
 
 
 
-	public LocalDate getUpdatedDate() {
+	public LocalDateTime getUpdatedDate() {
 		return updatedDate;
 	}
 
@@ -457,7 +480,7 @@ public class DepositTransaction {
 
 
 
-	public void setUpdatedDate(LocalDate updatedDate) {
+	public void setUpdatedDate(LocalDateTime updatedDate) {
 		this.updatedDate = updatedDate;
 	}
 

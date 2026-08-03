@@ -1,10 +1,13 @@
 package com.zenbank.deposit_service.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -13,9 +16,10 @@ public class DepositVerification {
 	@Id
 	@Column (name="verification_id",length = 19)
 	private Long verificationId;
-	
-	@Column (name = "deposit_id",length=19)
-	private Long depositId;
+		
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="deposit_id")
+	private DepositTransaction depositTransaction;
 	
 	@Column (name = "verification_type",length = 30)
 	private String verificationType;
@@ -24,7 +28,7 @@ public class DepositVerification {
     private String verifiedBy;
 	
 	@Column (name = "verified_date")
-	private LocalDate verifiedDate;
+	private LocalDateTime verifiedDate;
 	
 	@Column (name = "approval_status",length = 20)
 	private String approvalStatus;
@@ -39,24 +43,24 @@ public class DepositVerification {
 	 private String createdBy;
 	
 	@Column (name = "created_date")
-	private LocalDate createdDate;
+	private LocalDateTime createdDate;
 	
 	@Column (name = "updated_by",length = 50)
 	private String updatedBy;
 	
 	@Column (name = "updated_date")
-	private LocalDate updatedDate;
+	private LocalDateTime updatedDate;
 
 	public DepositVerification() {
 		super();
 	}
 
-	public DepositVerification(Long verificationId, Long depositId, String verificationType, String verifiedBy,
-			LocalDate verifiedDate, String approvalStatus, String rejectionReason, String remarks, String createdBy,
-			LocalDate createdDate, String updatedBy, LocalDate updatedDate) {
+	public DepositVerification(Long verificationId, DepositTransaction depositTransaction, String verificationType, String verifiedBy,
+			LocalDateTime verifiedDate, String approvalStatus, String rejectionReason, String remarks, String createdBy,
+			LocalDateTime createdDate, String updatedBy, LocalDateTime updatedDate) {
 		super();
 		this.verificationId = verificationId;
-		this.depositId = depositId;
+		this.depositTransaction=depositTransaction;
 		this.verificationType = verificationType;
 		this.verifiedBy = verifiedBy;
 		this.verifiedDate = verifiedDate;
@@ -76,13 +80,16 @@ public class DepositVerification {
 	public void setVerificationId(Long verificationId) {
 		this.verificationId = verificationId;
 	}
+	
+	
 
-	public Long getDepositId() {
-		return depositId;
+
+	public DepositTransaction getDepositTransaction() {
+		return depositTransaction;
 	}
 
-	public void setDepositId(Long depositId) {
-		this.depositId = depositId;
+	public void setDepositTransaction(DepositTransaction depositTransaction) {
+		this.depositTransaction = depositTransaction;
 	}
 
 	public String getVerificationType() {
@@ -101,11 +108,11 @@ public class DepositVerification {
 		this.verifiedBy = verifiedBy;
 	}
 
-	public LocalDate getVerifiedDate() {
+	public LocalDateTime getVerifiedDate() {
 		return verifiedDate;
 	}
 
-	public void setVerifiedDate(LocalDate verifiedDate) {
+	public void setVerifiedDate(LocalDateTime verifiedDate) {
 		this.verifiedDate = verifiedDate;
 	}
 
@@ -141,11 +148,11 @@ public class DepositVerification {
 		this.createdBy = createdBy;
 	}
 
-	public LocalDate getCreatedDate() {
+	public LocalDateTime getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(LocalDate createdDate) {
+	public void setCreatedDate(LocalDateTime createdDate) {
 		this.createdDate = createdDate;
 	}
 
@@ -157,11 +164,11 @@ public class DepositVerification {
 		this.updatedBy = updatedBy;
 	}
 
-	public LocalDate getUpdatedDate() {
+	public LocalDateTime getUpdatedDate() {
 		return updatedDate;
 	}
 
-	public void setUpdatedDate(LocalDate updatedDate) {
+	public void setUpdatedDate(LocalDateTime updatedDate) {
 		this.updatedDate = updatedDate;
 	}
 	
