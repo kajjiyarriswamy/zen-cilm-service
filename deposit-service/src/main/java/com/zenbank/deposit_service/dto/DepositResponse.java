@@ -1,5 +1,6 @@
 package com.zenbank.deposit_service.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class DepositResponse {
@@ -51,7 +52,7 @@ public class DepositResponse {
 		private Long accountId;
 		private String depositType;
 		private String depositChannel;
-		private Double amount;
+		private BigDecimal amount;
 		private String currency;
 		private String transactionStatus;
 		private LocalDateTime transactionDate;	//LocalDateTime
@@ -62,7 +63,7 @@ public class DepositResponse {
 		}
 
 		public DepositResponseData(Long depositId, String transactionReference, Long customerId, Long accountId,
-				String depositType, String depositChannel, Double amount, String currency, String transactionStatus,
+				String depositType, String depositChannel, BigDecimal amount, String currency, String transactionStatus,
 				LocalDateTime transactionDate, String branchName, String receiptNumber) {
 			super();
 			this.depositId = depositId;
@@ -127,11 +128,11 @@ public class DepositResponse {
 			this.depositChannel = depositChannel;
 		}
 
-		public Double getAmount() {
+		public BigDecimal getAmount() {
 			return amount;
 		}
 
-		public void setAmount(Double amount) {
+		public void setAmount(BigDecimal amount) {
 			this.amount = amount;
 		}
 

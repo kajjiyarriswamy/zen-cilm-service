@@ -1,5 +1,6 @@
 package com.zenbank.deposit_service.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,11 +22,15 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "deposit_transaction")
 public class DepositTransaction {
-	@Id
-	@SequenceGenerator(name = "bank", sequenceName = "depositid", initialValue = 1000, allocationSize = 1)
-	@GeneratedValue(generator = "bank", strategy = GenerationType.SEQUENCE)
-	@Column(name = "deposit_id", unique = true, nullable = false, updatable = false, length = 20)
-	private Long depositId;
+	
+	  @Id
+	  @SequenceGenerator(name = "bank", sequenceName = "depositid", initialValue =
+	  1000, allocationSize = 1)
+	  @GeneratedValue(generator = "bank", strategy = GenerationType.SEQUENCE)	
+	  
+	  @Column(name = "deposit_id", unique = true, nullable = false, updatable =
+	  false, length = 20) private Long depositId;
+
 
 	@Column(name = "transaction_reference", unique = true, nullable = false, updatable = false, length = 20)
 	private String transactionReference;
@@ -45,7 +50,7 @@ public class DepositTransaction {
 	private DepositChannel depositChannel;
 		
 	@Column(name="amount", nullable = false,updatable = false)
-	private Double amount;
+	private BigDecimal amount;
 
 	@Column(name = "currency", nullable = false, updatable = false)
 	private String currency;
@@ -86,12 +91,8 @@ public class DepositTransaction {
 		super();
 	}
 
-
-	
-
-
 	public DepositTransaction(Long depositId, String transactionReference, Long accountId, Long customerId,
-			DepositType depositType,DepositChannel depositChannel,Double amount, String currency,
+			DepositType depositType,DepositChannel depositChannel,BigDecimal amount, String currency,
 			LocalDateTime transactionDate, LocalDate valueDate, String transactionStatus, String remarks, String branchCode,
 			String branchName, String initiatedBy, String approvedBy, String approvalStatus, String createdBy,
 			LocalDate createdDate, String updatedBy, LocalDateTime updatedDate, List<DepositStatusHistory> statusHistory,DepositReceipt depositReceipt) {
@@ -121,332 +122,166 @@ public class DepositTransaction {
 		this.depositReceipt = depositReceipt;
 	}
 
-
-
-
-
-	
-
-
-
 	public Long getDepositId() {
 		return depositId;
 	}
-
-
-
-
 
 	public void setDepositId(Long depositId) {
 		this.depositId = depositId;
 	}
 
-
-
-
-
 	public String getTransactionReference() {
 		return transactionReference;
 	}
-
-
-
-
 
 	public void setTransactionReference(String transactionReference) {
 		this.transactionReference = transactionReference;
 	}
 
-
-
-
-
 	public Long getAccountId() {
 		return accountId;
 	}
-
-
-
-
 
 	public void setAccountId(Long accountId) {
 		this.accountId = accountId;
 	}
 
-
-
-
-
 	public Long getCustomerId() {
 		return customerId;
 	}
-
-
-
-
 
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
 
-
-
-
-
 	public DepositType getDepositType() {
 		return depositType;
 	}
-
-
-
-
 
 	public void setDepositType(DepositType depositType) {
 		this.depositType = depositType;
 	}
 
-
-
-
-
 	public DepositChannel getDepositChannel() {
 		return depositChannel;
 	}
-
-
-
-
 
 	public void setDepositChannel(DepositChannel depositChannel) {
 		this.depositChannel = depositChannel;
 	}
 
-
-
-
-
-	public Double getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 
-
-
-
-
-	public void setAmount(Double amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
-
-
-
-
 
 	public String getCurrency() {
 		return currency;
 	}
 
-
-
-
-
 	public void setCurrency(String currency) {
 		this.currency = currency;
 	}
-
-
-
-
 
 	public LocalDateTime getTransactionDate() {
 		return transactionDate;
 	}
 
-
-
-
-
 	public void setTransactionDate(LocalDateTime transactionDate) {
 		this.transactionDate = transactionDate;
 	}
-
-
-
-
 
 	public LocalDate getValueDate() {
 		return valueDate;
 	}
 
-
-
-
-
 	public void setValueDate(LocalDate valueDate) {
 		this.valueDate = valueDate;
 	}
-
-
-
-
 
 	public String getTransactionStatus() {
 		return transactionStatus;
 	}
 
-
-
-
-
 	public void setTransactionStatus(String transactionStatus) {
 		this.transactionStatus = transactionStatus;
 	}
-
-
-
-
 
 	public String getRemarks() {
 		return remarks;
 	}
 
-
-
-
-
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
-
-
-
-
 
 	public String getBranchCode() {
 		return branchCode;
 	}
 
-
-
-
-
 	public void setBranchCode(String branchCode) {
 		this.branchCode = branchCode;
 	}
-
-
-
-
 
 	public String getBranchName() {
 		return branchName;
 	}
 
-
-
-
-
 	public void setBranchName(String branchName) {
 		this.branchName = branchName;
 	}
-
-
-
-
 
 	public String getInitiatedBy() {
 		return initiatedBy;
 	}
 
 
-
-
-
 	public void setInitiatedBy(String initiatedBy) {
 		this.initiatedBy = initiatedBy;
 	}
-
-
-
-
 
 	public String getApprovedBy() {
 		return approvedBy;
 	}
 
-
-
-
-
 	public void setApprovedBy(String approvedBy) {
 		this.approvedBy = approvedBy;
 	}
-
-
-
-
 
 	public String getApprovalStatus() {
 		return approvalStatus;
 	}
 
-
-
-
-
 	public void setApprovalStatus(String approvalStatus) {
 		this.approvalStatus = approvalStatus;
 	}
-
-
-
-
 
 	public String getCreatedBy() {
 		return createdBy;
 	}
 
-
-
-
-
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-
-
-
-
 
 	public LocalDate getCreatedDate() {
 		return createdDate;
 	}
 
-
-
-
-
 	public void setCreatedDate(LocalDate createdDate) {
 		this.createdDate = createdDate;
 	}
-
-
-
-
 
 	public String getUpdatedBy() {
 		return updatedBy;
 	}
 
-
-
-
-
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
 	}
-
-
-
 
 
 	public LocalDateTime getUpdatedDate() {
@@ -454,67 +289,38 @@ public class DepositTransaction {
 	}
 
 
-
-
-
 	public void setUpdatedDate(LocalDateTime updatedDate) {
 		this.updatedDate = updatedDate;
 	}
-
-
-
-
 
 	public List<DepositStatusHistory> getStatusHistory() {
 		return statusHistory;
 	}
 
-
-
-
-
 	public void setStatusHistory(List<DepositStatusHistory> statusHistory) {
 		this.statusHistory = statusHistory;
 	}
 	
-	
-	
-
-
-
-
-
-
-
-
-
 	public DepositReceipt getDepositReceipt() {
 		return depositReceipt;
 	}
-
-
-
-
 
 	public void setDepositReceipt(DepositReceipt depositReceipt) {
 		this.depositReceipt = depositReceipt;
 	}
 
-
-
-
-
-
-
-
-
-
-
-
 	@OneToMany(mappedBy = "depositTransaction", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<DepositStatusHistory> statusHistory;
 
-
 	
+//	  // @ManyToOne(fetch=FetchType.LAZY)
+//	  // @JoinColumn(name="deposit_type_id",referencedColumnName ="type_id") //
+//	  private DepositType depositType;
+//	 //
+//	
+//	@ManyToOne(fetch=FetchType.LAZY)
+//	@JoinColumn(name="deposit_channel_id",referencedColumnName ="channel_id")
+//	private DepositChannel depositchannel;
+
 
 }

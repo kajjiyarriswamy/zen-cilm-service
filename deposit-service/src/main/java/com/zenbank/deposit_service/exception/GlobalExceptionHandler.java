@@ -67,7 +67,35 @@ public class GlobalExceptionHandler {
 	        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	
+	//DepositReceiptTransaction
 	
+	@ExceptionHandler(DepositReceiptNotFound.class)
+	public ResponseEntity<ErrorResponse>handleReceiptException(Exception ex){
+		ErrorResponse error= new ErrorResponse(
+				"FAILED",
+				"RCP001",
+				ex.getMessage());
+		return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
+		
+	}
 
+	@ExceptionHandler(ReceiptAlreadyGeneratedException.class)
+	public ResponseEntity<ErrorResponse> handleAlreadyException(Exception ex){
+		ErrorResponse error= new ErrorResponse(
+				"FAILED",
+				"RCP002",
+				ex.getMessage());
+		return new ResponseEntity<>(error,HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(DepositTransactionFailedException.class)
+	public ResponseEntity<ErrorResponse> handleFailedException(Exception ex){
+		ErrorResponse error= new ErrorResponse(
+				"FAILED",
+				"RCP003",
+				ex.getMessage());
+		return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
+	}
+	
 }
 
