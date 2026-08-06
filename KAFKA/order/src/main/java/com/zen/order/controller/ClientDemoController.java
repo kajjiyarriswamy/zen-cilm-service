@@ -1,7 +1,9 @@
 package com.zen.order.controller;
 
 import com.zen.order.service.ExternalServiceDemoService;
+//import com.zen.order.service.OrderResponse;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,23 +18,38 @@ public class ClientDemoController {
         this.externalServiceDemoService = externalServiceDemoService;
     }
 
-    @GetMapping("/rest-template")
-    public String restTemplateDemo(@RequestParam String url) {
-        return externalServiceDemoService.demoRestTemplate(url);
-    }
-
-    @GetMapping("/webclient")
-    public String webClientDemo(@RequestParam String url) {
-        return externalServiceDemoService.demoWebClient(url);
-    }
-
-    @GetMapping("/feign/payment")
-    public String feignPaymentDemo() {
-        return externalServiceDemoService.demoFeignPayment();
-    }
-
-    @GetMapping("/feign/inventory")
-    public String feignInventoryDemo() {
-        return externalServiceDemoService.demoFeignInventory();
-    }
+//    @GetMapping("/rest-template")
+//    public String restTemplateDemo(@RequestParam String url) {
+//        return externalServiceDemoService.demoRestTemplate(url);
+//    }
+//
+//    @GetMapping("/webclient")
+//    public String webClientDemo(@RequestParam String url) {
+//        return externalServiceDemoService.demoWebClient(url);
+//    }
+//
+//    @GetMapping("/feign/payment")
+//    public String feignPaymentDemo() {
+//        return externalServiceDemoService.demoFeignPayment();
+//    }
+//
+//    @GetMapping("/feign/inventory")
+//    public String feignInventoryDemo() {
+//        return externalServiceDemoService.demoFeignInventory();
+//    }
+//
+//    @GetMapping("/rest-template/order/{orderId}")
+//    public OrderResponse getOrderWithProductNameUsingRestTemplate(@PathVariable Long orderId) {
+//        return externalServiceDemoService.getOrderWithProductNameUsingRestTemplate(orderId);
+//    }
+//
+//    @GetMapping("/webclient/order/{orderId}")
+//    public OrderResponse getOrderWithProductNameUsingWebClient(@PathVariable Long orderId) {
+//        return externalServiceDemoService.getOrderWithProductNameUsingWebClient(orderId);
+//    }
+//
+//    @GetMapping("/feign/order/{orderId}")
+//    public OrderResponse getOrderWithProductNameUsingFeign(@PathVariable Long orderId) {
+//        return externalServiceDemoService.getOrderWithProductNameUsingFeign(orderId);
+//    }
 }
