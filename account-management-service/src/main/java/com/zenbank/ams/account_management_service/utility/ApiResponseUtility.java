@@ -5,8 +5,10 @@ import java.util.Map;
 
 public class ApiResponseUtility {
 
+	public static Map<String, Object> success(String message) {
 		Map<String, Object> response = new LinkedHashMap<>();
 		response.put("status", "SUCCESS");
+		response.put("message", message);
 		return response;
 	}
 
@@ -18,7 +20,10 @@ public class ApiResponseUtility {
 		return response;
 	}
 
+	public static Map<String, Object> getAccountsByCustomerId(String customerId, Object accounts) {
 		Map<String, Object> response = new LinkedHashMap<>();
+		response.put("customerId", customerId);
+		response.put("accounts", accounts);
 		return response;
 	}
 }
