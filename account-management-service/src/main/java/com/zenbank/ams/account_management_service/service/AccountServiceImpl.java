@@ -22,6 +22,8 @@ import com.zenbank.ams.account_management_service.entity.Account;
 import com.zenbank.ams.account_management_service.entity.NumOfRecordsResponseDto;
 import com.zenbank.ams.account_management_service.exception.CustomerNotFound;
 import com.zenbank.ams.account_management_service.repository.AccountRepository;
+import com.zenbank.ams.account_management_service.dto.AccountDetailsResponseDto;
+import com.zenbank.ams.account_management_service.dto.BalanceUpdateRequestDto;
 
 @Service
 public class AccountServiceImpl implements AccountServiceI {
@@ -155,7 +157,42 @@ public class AccountServiceImpl implements AccountServiceI {
 		
 		throw new CustomerNotFound("Enter valid account Id..");
 	}
-	
-	
+
+	@Override
+	public AccountDetailsResponseDto getAccountDetails(Long accountId) {
+		Account acc = accountrepository.findById(accountId)
+				.orElseThrow(() -> new CustomerNotFound("Account not found with ID: " + accountId));
+		return new AccountDetailsResponseDto(
+				acc.getAccountId(),
+				acc.getCustomerId(),
+				acc.getAccountNumber(),
+				acc.getAccountType(),
+				acc.getBranchCode(),
+				acc.getCurrency(),
+				acc.getAvailableBalance(),
+				acc.getLedgerBalance(),
+				acc.getAccountStatus()
+		);
+	}
+
+	@Override
+	public AccountDetailsResponseDto updateAccountBalance(Long accountId, BalanceUpdateRequestDto requestDto) {
+		Account acc = accountrepository.findById(accountId)
+				.orElseThrow(() -> new CustomerNotFound("Account not found with ID: " + accountId));
+		acc.setAvailableBalance(acc.getAvailableBalance() + requestDto.getAmount());
+		acc.setLedgerBalance(acc.getLedgerBalance() + requestDto.getAmount());
+		Account savedAcc = accountrepository.save(acc);
+		return new AccountDetailsResponseDto(
+				savedAcc.getAccountId(),
+				savedAcc.getCustomerId(),
+				savedAcc.getAccountNumber(),
+				savedAcc.getAccountType(),
+				savedAcc.getBranchCode(),
+				savedAcc.getCurrency(),
+				savedAcc.getAvailableBalance(),
+				savedAcc.getLedgerBalance(),
+				savedAcc.getAccountStatus()
+		);
+	}
 
 }

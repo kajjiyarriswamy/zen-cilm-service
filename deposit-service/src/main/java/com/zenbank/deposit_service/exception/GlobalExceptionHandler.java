@@ -96,6 +96,20 @@ public class GlobalExceptionHandler {
 				ex.getMessage());
 		return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
 	}
+
+	@ExceptionHandler(DepositException.class)
+	public ResponseEntity<ErrorResponse> handleDepositException(DepositException ex){
+		ErrorResponse error = new ErrorResponse(
+				"FAILED",
+				ex.getErrorCode(),
+				ex.getMessage()
+				);
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		if ("DEP_001".equals(ex.getErrorCode()) || "DEP_004".equals(ex.getErrorCode())) {
+			status = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<>(error, status);
+	}
 	
 }
 

@@ -10,12 +10,24 @@ public class DepositAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "audit_id")
+    @Column(name = "audit_id", nullable = false)
     private Long auditId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deposit_id", nullable = false)
     private DepositTransaction depositTransaction;
+
+    @Column(name = "account_id", nullable = false)
+    private Long accountId;
+
+    @Column(name = "customer_id", nullable = false, length = 20)
+    private String customerId;
+
+    @Column(name = "amount", nullable = false)
+    private Double amount;
+
+    @Column(name = "status", nullable = false, length = 20)
+    private String status;
 
 //    @Column(name = "deposit_id")
 //    private Long depositId;
@@ -138,5 +150,37 @@ public class DepositAudit {
 
     public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public Long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

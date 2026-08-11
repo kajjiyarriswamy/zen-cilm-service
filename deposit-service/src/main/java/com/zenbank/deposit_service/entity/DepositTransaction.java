@@ -83,6 +83,39 @@ public class DepositTransaction {
 	@Column(name = "updated_date", nullable = false)
 	private LocalDateTime updatedDate;
 	
+	public String getDepositChannelName() {
+		return depositChannelName;
+	}
+
+	public void setDepositChannelName(String depositChannelName) {
+		this.depositChannelName = depositChannelName;
+	}
+
+	public String getDepositTypeName() {
+		return depositTypeName;
+	}
+
+	public void setDepositTypeName(String depositTypeName) {
+		this.depositTypeName = depositTypeName;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	@Column(name = "deposit_channel", nullable = false)
+	private String depositChannelName;
+
+	@Column(name = "deposit_type", nullable = false)
+	private String depositTypeName;
+
+	@Column(name = "status", nullable = false)
+	private String status;
+	
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="deposit_receipt_id",referencedColumnName ="receipt_id")
 	private DepositReceipt depositReceipt;
@@ -95,7 +128,8 @@ public class DepositTransaction {
 			DepositType depositType,DepositChannel depositChannel,BigDecimal amount, String currency,
 			LocalDateTime transactionDate, LocalDate valueDate, String transactionStatus, String remarks, String branchCode,
 			String branchName, String initiatedBy, String approvedBy, String approvalStatus, String createdBy,
-			LocalDate createdDate, String updatedBy, LocalDateTime updatedDate, List<DepositStatusHistory> statusHistory,DepositReceipt depositReceipt) {
+			LocalDate createdDate, String updatedBy, LocalDateTime updatedDate, List<DepositStatusHistory> statusHistory,DepositReceipt depositReceipt, 
+			String depositChannelName, String depositTypeName, String status) {
 		super();
 		this.depositId = depositId;
 		this.transactionReference = transactionReference;
@@ -120,6 +154,9 @@ public class DepositTransaction {
 		this.updatedDate = updatedDate;
 		this.statusHistory = statusHistory;
 		this.depositReceipt = depositReceipt;
+		this.depositChannelName = depositChannelName;
+		this.depositTypeName = depositTypeName;
+		this.status = status;
 	}
 
 	public Long getDepositId() {

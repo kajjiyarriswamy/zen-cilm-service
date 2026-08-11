@@ -11,11 +11,16 @@ import com.zenbank.ams.account_management_service.dto.UnblockRequestDto;
 import com.zenbank.ams.account_management_service.dto.UnblockedResponseDto;
 import com.zenbank.ams.account_management_service.entity.NumOfRecordsResponseDto;
 
+import com.zenbank.ams.account_management_service.dto.AccountDetailsResponseDto;
+import com.zenbank.ams.account_management_service.dto.BalanceUpdateRequestDto;
+
 public interface AccountServiceI {
 	public AccountResponseDto accountCreate(AccountRequestDto requestdto);
 	public List<CustomerAccountsResponseDto> getAccountsByCustomerId(String custId);
 	public NumOfRecordsResponseDto getAccountsByParameters(String customerId,Long accountNumber,Long mobileNumber,String panNumber,String status,String branchCode,Integer page,Integer size);
 	public BlockedResponseDto accountBlockingById(Long accountId,BlockedRequestDto blockeddto);
 	public UnblockedResponseDto unblockingAccountById(Long accountId,UnblockRequestDto unblockdto);
+	public AccountDetailsResponseDto getAccountDetails(Long accountId);
+	public AccountDetailsResponseDto updateAccountBalance(Long accountId, BalanceUpdateRequestDto requestDto);
 
 }
