@@ -1,0 +1,30 @@
+{
+  "family": "zenbank-app",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::123456789012:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "auth-service",
+      "image": "123456789012.dkr.ecr.us-east-1.amazonaws.com/zenbank-app:auth-latest",
+      "essential": true,
+      "portMappings": [
+        { "containerPort": 9090, "hostPort": 9090, "protocol": "tcp" }
+      ],
+      "environment": [
+        { "name": "SERVER_PORT", "value": "9090" },
+        { "name": "EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE", "value": "http://eureka-service:8761/eureka/" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/zenbank-auth",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}

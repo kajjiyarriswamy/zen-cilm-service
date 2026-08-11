@@ -29,4 +29,9 @@ public class PaymentController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/info")
+    public ResponseEntity<String> info() {
+        return ResponseEntity.ok("Payment service is ready for transaction status checks");
+    }
 }

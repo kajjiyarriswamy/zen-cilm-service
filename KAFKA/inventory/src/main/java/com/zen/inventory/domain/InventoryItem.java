@@ -17,6 +17,7 @@ public class InventoryItem {
     private String productCode;
     private Integer stock;
     private String status;
+    private String name;
 
     public InventoryItem() {
     }
@@ -50,4 +51,22 @@ public class InventoryItem {
     public void setStock(Integer stock) {
         this.stock = stock;
     }
+
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+    
+    
 }
