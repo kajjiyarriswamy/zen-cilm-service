@@ -26,8 +26,6 @@ public class DepositResponse {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
-	
 
 	public String getMessage() {
 		return message;
@@ -45,38 +43,38 @@ public class DepositResponse {
 		this.data = data;
 	}
 	
-	public static class DepositResponseData{
+	public static class DepositResponseData {
 		private Long depositId;
 		private String transactionReference;
 		private Long customerId;
 		private Long accountId;
 		private String depositType;
 		private String depositChannel;
-		private BigDecimal amount;
+		private BigDecimal depositAmount;
 		private String currency;
 		private String transactionStatus;
-		private LocalDateTime transactionDate;	//LocalDateTime
-		private String branchName;
+		private LocalDateTime transactionDate;
+		private Double availableBalance;
 		private String receiptNumber;
 		
 		public DepositResponseData() {
 		}
 
 		public DepositResponseData(Long depositId, String transactionReference, Long customerId, Long accountId,
-				String depositType, String depositChannel, BigDecimal amount, String currency, String transactionStatus,
-				LocalDateTime transactionDate, String branchName, String receiptNumber) {
+				String depositType, String depositChannel, BigDecimal depositAmount, String currency, String transactionStatus,
+				LocalDateTime transactionDate, Double availableBalance, String receiptNumber) {
 			super();
 			this.depositId = depositId;
 			this.transactionReference = transactionReference;
 			this.customerId = customerId;
 			this.accountId = accountId;
+			this.depositAmount = depositAmount;
+			this.currency = currency;
 			this.depositType = depositType;
 			this.depositChannel = depositChannel;
-			this.amount = amount;
-			this.currency = currency;
 			this.transactionStatus = transactionStatus;
 			this.transactionDate = transactionDate;
-			this.branchName = branchName;
+			this.availableBalance = availableBalance;
 			this.receiptNumber = receiptNumber;
 		}
 
@@ -128,12 +126,12 @@ public class DepositResponse {
 			this.depositChannel = depositChannel;
 		}
 
-		public BigDecimal getAmount() {
-			return amount;
+		public BigDecimal getDepositAmount() {
+			return depositAmount;
 		}
 
-		public void setAmount(BigDecimal amount) {
-			this.amount = amount;
+		public void setDepositAmount(BigDecimal depositAmount) {
+			this.depositAmount = depositAmount;
 		}
 
 		public String getCurrency() {
@@ -160,12 +158,12 @@ public class DepositResponse {
 			this.transactionDate = transactionDate;
 		}
 
-		public String getBranchName() {
-			return branchName;
+		public Double getAvailableBalance() {
+			return availableBalance;
 		}
 
-		public void setBranchName(String branchName) {
-			this.branchName = branchName;
+		public void setAvailableBalance(Double availableBalance) {
+			this.availableBalance = availableBalance;
 		}
 
 		public String getReceiptNumber() {
@@ -175,7 +173,5 @@ public class DepositResponse {
 		public void setReceiptNumber(String receiptNumber) {
 			this.receiptNumber = receiptNumber;
 		}
-		
 	}
-
 }

@@ -43,7 +43,7 @@ import jakarta.persistence.Table;
 		private Double openingBalance;
 		@Column(name = "initial_deposit", nullable = false, updatable = false)
 		private Double initialDeposit;
-		@Column(name = "available_balance", nullable = false, updatable = true)
+		@Column(name = "available_balance", nullable = false, updatable =	 true)
 		private Double availableBalance;
 		@Column(name = "cheque_book_facility_enabled")
 		private Boolean chequeBookFacilityEnabled;

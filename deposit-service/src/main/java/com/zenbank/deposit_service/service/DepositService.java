@@ -6,15 +6,13 @@ import com.zenbank.deposit_service.dto.CreateDepositRequest;
 import com.zenbank.deposit_service.dto.DepositResponse;
 import com.zenbank.deposit_service.dto.CustomerDetailsResponseDto;
 import com.zenbank.deposit_service.dto.CilmResponseWrapper;
-import com.zenbank.deposit_service.entity.DepositAudit;
 import com.zenbank.deposit_service.entity.DepositChannel;
 import com.zenbank.deposit_service.entity.DepositReceipt;
 import com.zenbank.deposit_service.entity.DepositTransaction;
 import com.zenbank.deposit_service.entity.DepositType;
 import com.zenbank.deposit_service.enums.DepositStatus;
 import com.zenbank.deposit_service.enums.DepositTypeCode;
-import com.zenbank.deposit_service.event.DepositNotificationEvent;
-import com.zenbank.deposit_service.event.DepositStatementEvent;
+
 import com.zenbank.deposit_service.exception.DepositException;
 import com.zenbank.deposit_service.repository.DepositAuditRepository;
 import com.zenbank.deposit_service.repository.DepositChannelRepository;
@@ -39,10 +37,8 @@ public class DepositService {
     private final RestTemplate restTemplate;
     private final DepositTransactionRepository depositTransactionRepository;
     private final DepositReceiptRepository depositReceiptRepository;
-    private final DepositAuditRepository depositAuditRepository;
     private final DepositTypeRepository depositTypeRepository;
     private final DepositChannelRepository depositChannelRepository;
-    private final ApplicationEventPublisher eventPublisher;
 
     @Value("${cilm-service.url}")
     private String cilmServiceUrl;
@@ -61,10 +57,8 @@ public class DepositService {
         this.restTemplate = restTemplate;
         this.depositTransactionRepository = depositTransactionRepository;
         this.depositReceiptRepository = depositReceiptRepository;
-        this.depositAuditRepository = depositAuditRepository;
         this.depositTypeRepository = depositTypeRepository;
         this.depositChannelRepository = depositChannelRepository;
-        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -169,7 +163,7 @@ public class DepositService {
 
         DepositTransaction savedTransaction = depositTransactionRepository.save(transaction);
 
-        // 8. Generate Receipt Record
+        //  Generate Receipt Record
         DepositReceipt receipt = new DepositReceipt();
         receipt.setDepositTransaction(savedTransaction);
         receipt.setReceiptNumber("REC" + savedTransaction.getDepositId() + LocalDateTime.now().format(DateTimeFormatter.ofPattern("SSS")));
@@ -187,45 +181,26 @@ public class DepositService {
         DepositReceipt savedReceipt = depositReceiptRepository.save(receipt);
         savedTransaction.setDepositReceipt(savedReceipt);
         depositTransactionRepository.save(savedTransaction);
+//
+//        // Create Audit Record
+//        DepositAudit audit = new DepositAudit();
+//        audit.setDepositTransaction(savedTransaction);
+//        audit.setAccountId(request.getAccountId());
+//        audit.setCustomerId("CUS" + request.getCustomerId());
+//        audit.setAmount(request.getAmount());
+//        audit.setStatus("SUCCESS");
+//        audit.setAction("CREATE_DEPOSIT");
+//        audit.setPerformedBy("TELLER");
+//        audit.setOldValue("AVAILABLE_BALANCE: " + accountDetails.getAvailableBalance());
+//        audit.setNewValue("AVAILABLE_BALANCE: " + updatedAccount.getAvailableBalance());
+//        audit.setIpAddress("127.0.0.1");
+//        audit.setDeviceInfo("Web-Client");
+//        audit.setAuditStatus("SUCCESS");
+//        audit.setCreatedDate(LocalDate.now());
+//
+//        depositAuditRepository.save(audit);
 
-        // 9. Create Audit Record
-        DepositAudit audit = new DepositAudit();
-        audit.setDepositTransaction(savedTransaction);
-        audit.setAccountId(request.getAccountId());
-        audit.setCustomerId("CUS" + request.getCustomerId());
-        audit.setAmount(request.getAmount());
-        audit.setStatus("SUCCESS");
-        audit.setAction("CREATE_DEPOSIT");
-        audit.setPerformedBy("TELLER");
-        audit.setOldValue("AVAILABLE_BALANCE: " + accountDetails.getAvailableBalance());
-        audit.setNewValue("AVAILABLE_BALANCE: " + updatedAccount.getAvailableBalance());
-        audit.setIpAddress("127.0.0.1");
-        audit.setDeviceInfo("Web-Client");
-        audit.setAuditStatus("SUCCESS");
-        audit.setCreatedDate(LocalDate.now());
-
-        depositAuditRepository.save(audit);
-
-        // 10. Publish downstream events
-        eventPublisher.publishEvent(new DepositNotificationEvent(
-                savedTransaction.getAccountId(),
-                savedTransaction.getCustomerId(),
-                savedTransaction.getAmount(),
-                savedTransaction.getCurrency(),
-                savedTransaction.getTransactionReference(),
-                savedTransaction.getTransactionDate()
-        ));
-
-        eventPublisher.publishEvent(new DepositStatementEvent(
-                savedTransaction.getAccountId(),
-                savedTransaction.getCustomerId(),
-                savedTransaction.getAmount(),
-                savedTransaction.getCurrency(),
-                savedTransaction.getTransactionReference(),
-                savedTransaction.getTransactionDate()
-        ));
-
-        // 11. Prepare and return success response DTO
+        //  Prepare and return success response DTO
         DepositResponse.DepositResponseData data = new DepositResponse.DepositResponseData(
                 savedTransaction.getDepositId(),
                 savedTransaction.getTransactionReference(),
@@ -237,11 +212,11 @@ public class DepositService {
                 savedTransaction.getCurrency(),
                 savedTransaction.getTransactionStatus(),
                 savedTransaction.getTransactionDate(),
-                savedTransaction.getBranchName(),
+                updatedAccount.getAvailableBalance(),
                 savedReceipt.getReceiptNumber()
         );
 
-        return new DepositResponse("SUCCESS", "Deposit completed successfully.", data);
+        return new DepositResponse("SUCCESS", "Deposit transaction created successfully.", data);
     }
 
     private AccountDetailsResponseDto updateAccountBalance(Long accountId, Double amount) {
