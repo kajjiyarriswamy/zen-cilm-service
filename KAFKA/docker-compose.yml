@@ -22,22 +22,93 @@ services:
       - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
-
-      # ZooKeeper
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-
-      # Listeners
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-
-      # Single broker settings
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_DEFAULT_REPLICATION_FACTOR: 1
       KAFKA_MIN_INSYNC_REPLICAS: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-
-      # Optional
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+
+  eureka-server:
+    build:
+      context: ./eureka-server
+    ports:
+      - "8761:8761"
+    environment:
+      SERVER_PORT: ${EUREKA_SERVER_PORT:-8761}
+
+  auth-service:
+    build:
+      context: ./auth-service
+    ports:
+      - "9090:9090"
+    environment:
+      SERVER_PORT: ${AUTH_SERVICE_PORT:-9090}
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE:-http://eureka-server:8761/eureka/}
+    depends_on:
+      - eureka-server
+
+  order-service:
+    build:
+      context: ./order
+    ports:
+      - "8081:8081"
+    environment:
+      SERVER_PORT: ${ORDER_SERVICE_PORT:-8081}
+      AUTH_SERVICE_VALIDATE_URL: ${AUTH_SERVICE_VALIDATE_URL:-http://auth-service:9090/auth/validate}
+      PAYMENT_SERVICE_URL: ${PAYMENT_SERVICE_URL:-http://payment-service:8083}
+      INVENTORY_SERVICE_URL: ${INVENTORY_SERVICE_URL:-http://inventory-service:8082}
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE:-http://eureka-server:8761/eureka/}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:-kafka:29092}
+    depends_on:
+      - eureka-server
+      - auth-service
+      - payment-service
+      - inventory-service
+      - kafka
+
+  inventory-service:
+    build:
+      context: ./inventory
+    ports:
+      - "8082:8082"
+    environment:
+      SERVER_PORT: ${INVENTORY_SERVICE_PORT:-8082}
+      AUTH_SERVICE_VALIDATE_URL: ${AUTH_SERVICE_VALIDATE_URL:-http://auth-service:9090/auth/validate}
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE:-http://eureka-server:8761/eureka/}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:-kafka:29092}
+
+  payment-service:
+    build:
+      context: ./payment
+    ports:
+      - "8083:8083"
+    environment:
+      SERVER_PORT: ${PAYMENT_SERVICE_PORT:-8083}
+      AUTH_SERVICE_VALIDATE_URL: ${AUTH_SERVICE_VALIDATE_URL:-http://auth-service:9090/auth/validate}
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE:-http://eureka-server:8761/eureka/}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:-kafka:29092}
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - "9091:9091"
+    environment:
+      SERVER_PORT: ${API_GATEWAY_PORT:-9091}
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE:-http://eureka-server:8761/eureka/}
+      AUTH_SERVICE_URL: ${AUTH_SERVICE_URL:-http://auth-service:9090}
+      ORDER_SERVICE_URL: ${ORDER_SERVICE_URL:-http://order-service:8081}
+      INVENTORY_SERVICE_URL: ${INVENTORY_SERVICE_URL:-http://inventory-service:8082}
+      PAYMENT_SERVICE_URL: ${PAYMENT_SERVICE_URL:-http://payment-service:8083}
+    depends_on:
+      - eureka-server
+      - auth-service
+      - order-service
+      - inventory-service
+      - payment-service

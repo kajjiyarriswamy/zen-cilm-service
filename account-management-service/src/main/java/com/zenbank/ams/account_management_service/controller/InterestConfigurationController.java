@@ -13,7 +13,7 @@ import com.zenbank.ams.account_management_service.dto.CreateInterestConfiguratio
 import com.zenbank.ams.account_management_service.dto.InterestConfigurationResponse;
 import com.zenbank.ams.account_management_service.dto.UpdateInterestConfigurationRequest;
 import com.zenbank.ams.account_management_service.dto.UpdateInterestConfigurationResponseDto;
-import com.zenbank.ams.account_management_service.dto.ViewInterestConfigurationResponseDto;
+//import com.zenbank.ams.account_management_service.dto.ViewInterestConfigurationResponseDto;
 import com.zenbank.ams.account_management_service.service.InterestConfigurationService;
 
 @RestController
@@ -26,10 +26,13 @@ public class InterestConfigurationController {
 	public ResponseEntity<InterestConfigurationResponse>create(@RequestBody CreateInterestConfigurationRequest request){
 		return ResponseEntity.ok(intresetConfigurationService.createInterestConfiguration(request));
 	}
-	@GetMapping
-	public ResponseEntity<ViewInterestConfigurationResponseDto>getInterestConfigurationResponse(){
-		return ResponseEntity.ok(intresetConfigurationService.viewInterestConfiguration());
-	}
+
+	/*
+	 * @GetMapping public ResponseEntity<ViewInterestConfigurationResponseDto>
+	 * getInterestConfigurationResponse(){ return
+	 * ResponseEntity.ok(intresetConfigurationService.viewInterestConfiguration());
+	 * }
+	 */
 	@PutMapping("/{interestId}")
 	public ResponseEntity<UpdateInterestConfigurationResponseDto> updateInterestConfiguration(
 	        @PathVariable Long interestId,

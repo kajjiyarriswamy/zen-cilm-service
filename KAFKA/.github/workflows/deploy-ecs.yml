@@ -1,0 +1,42 @@
+name: Deploy to ECS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: us-east-1
+      ECR_REPOSITORY: zenbank-app
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Run unit tests
+        run: |
+          cd auth-service && mvn test
+          cd ../order && mvn test
+          cd ../inventory && mvn test
+          cd ../payment && mvn test
+          cd ../api-gateway && mvn test
+
+      - name: Build Docker images
+        run: |
+          docker build -t zenbank-auth ./auth-service
+          docker build -t zenbank-order ./order
+          docker build -t zenbank-inventory ./inventory
+          docker build -t zenbank-payment ./payment
+          docker build -t zenbank-gateway ./api-gateway
+
+      - name: Prepare AWS deployment
+        run: |
+          echo "This workflow is ready to push images to ECR and deploy to ECS."
+          echo "Add AWS credentials and ECS task definition wiring for full deployment."
