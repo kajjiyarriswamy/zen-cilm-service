@@ -24,15 +24,37 @@ pipeline {
                 }
             }
         }
+
+        stage('Docker Build') {
+            steps {
+                dir('cilm-service') {
+                    sh 'docker build -t cilm-service:latest .'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                    docker stop cilm-service || true
+                    docker rm cilm-service || true
+
+                    docker run -d \
+                      --name cilm-service \
+                      -p 8081:8081 \
+                      cilm-service:latest
+                '''
+            }
+        }
     }
 
     post {
         success {
-            echo 'Build and tests completed successfully!'
+            echo 'Build, Test, Docker Build and Deployment completed successfully!'
         }
 
         failure {
-            echo 'Build failed. Please check the console output.'
+            echo 'Pipeline failed. Check the console output.'
         }
     }
 }
