@@ -44,7 +44,7 @@ pipeline {
                       --add-host=host.docker.internal:host-gateway \
                       -p 8081:8081 \
                       -e DB_URL="jdbc:mysql://host.docker.internal:3306/cilm" \
-                      -e DB_USERNAME="root" \
+                      -e DB_USERNAME="cilm_root" \
                       -e DB_PASSWORD="root" \
                       cilm-service:latest
 
