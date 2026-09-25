@@ -33,23 +33,39 @@ pipeline {
             }
         }
 
-       stage('Deploy') {
-    steps {
-        sh '''
-            docker stop cilm-service || true
-            docker rm cilm-service || true
+        stage('Deploy') {
+            steps {
+                sh '''
+                    docker stop cilm-service || true
+                    docker rm cilm-service || true
 
-            docker run -d \
-              --name cilm-service \
-              --add-host=host.docker.internal:host-gateway \
-              -p 8081:8081 \
-              -e DB_URL="jdbc:mysql://host.docker.internal:3306/cilm" \
-              -e DB_USERNAME="root" \
-              -e DB_PASSWORD="root" \
-              cilm-service:latest
-        '''
+                    docker run -d \
+                      --name cilm-service \
+                      --add-host=host.docker.internal:host-gateway \
+                      -p 8081:8081 \
+                      -e DB_URL="jdbc:mysql://host.docker.internal:3306/cilm" \
+                      -e DB_USERNAME="root" \
+                      -e DB_PASSWORD="root" \
+                      cilm-service:latest
+
+                    echo "Waiting for application to start..."
+                    sleep 15
+
+                    echo "Container status:"
+                    docker ps -a --filter "name=cilm-service"
+
+                    if [ "$(docker inspect -f '{{.State.Running}}' cilm-service)" != "true" ]; then
+                        echo "Container failed to start!"
+                        echo "Container logs:"
+                        docker logs cilm-service
+                        exit 1
+                    fi
+
+                    echo "Container is running successfully!"
+                '''
+            }
+        }
     }
-}
 
     post {
         success {
