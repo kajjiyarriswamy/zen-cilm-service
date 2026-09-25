@@ -33,20 +33,23 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                sh '''
-                    docker stop cilm-service || true
-                    docker rm cilm-service || true
+       stage('Deploy') {
+    steps {
+        sh '''
+            docker stop cilm-service || true
+            docker rm cilm-service || true
 
-                    docker run -d \
-                      --name cilm-service \
-                      -p 8081:8081 \
-                      cilm-service:latest
-                '''
-            }
-        }
+            docker run -d \
+              --name cilm-service \
+              --add-host=host.docker.internal:host-gateway \
+              -p 8081:8081 \
+              -e DB_URL="jdbc:mysql://host.docker.internal:3306/cilm" \
+              -e DB_USERNAME="root" \
+              -e DB_PASSWORD="root" \
+              cilm-service:latest
+        '''
     }
+}
 
     post {
         success {
