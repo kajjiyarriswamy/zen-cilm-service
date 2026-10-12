@@ -48,7 +48,7 @@ docker exec -it kafka bash
 kafka-topics \
 --bootstrap-server localhost:9092 \
 --create \
---topic test-topic \
+--topic order-topic \
 --partitions 1 \
 --replication-factor 1
 
